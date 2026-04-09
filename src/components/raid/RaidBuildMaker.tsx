@@ -143,12 +143,21 @@ function SearchDropdown<T>({
 
 // ── Main Component ────────────────────────────────────────────────────────────
 
+interface AIBossTarget {
+  name: string;
+  stars: number;
+  teraType: string;
+}
+
 export function RaidBuildMaker() {
   const [build, setBuild] = useState<BuildState>(createEmptyBuild);
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState("");
   const [showExport, setShowExport] = useState(false);
   const [tab, setTab] = useState<"build" | "bosses">("build");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState("");
+  const [aiTarget, setAiTarget] = useState<AIBossTarget | null>(null);
 
   const totalEvs = Object.values(build.evs).reduce((a, b) => a + b, 0);
 
@@ -214,6 +223,55 @@ export function RaidBuildMaker() {
     });
   }, [build]);
 
+  const generateAIBuild = useCallback(async (target: AIBossTarget) => {
+    setAiLoading(true);
+    setAiError("");
+    setAiTarget(target);
+    try {
+      const res = await fetch("/api/generate-build", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bossName: target.name,
+          bossStars: target.stars,
+          bossTeraType: target.teraType,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erro ao gerar build");
+
+      const ai = data.build;
+      const pokemon = allPokemon.find(
+        (p) => p.name.toLowerCase() === ai.pokemonName.toLowerCase()
+      );
+      const nature = natures.find(
+        (n) => n.name.toLowerCase() === ai.nature.toLowerCase()
+      ) || natures[0];
+
+      setBuild({
+        pokemon: pokemon || null,
+        teraType: ai.teraType as PokemonType,
+        nature,
+        ability: ai.ability,
+        item: ai.item,
+        moves: [
+          ai.moves[0] || null, ai.moves[1] || null,
+          ai.moves[2] || null, ai.moves[3] || null,
+        ],
+        evs: ai.evs,
+        ivs: Object.fromEntries(STAT_NAMES.map((s) => [s, 31])) as Record<StatName, number>,
+        level: 100,
+        notes: `🤖 AI Build — Counter para ${target.stars}★ ${target.name} (Tera ${target.teraType})\n\n${ai.strategy}`,
+      });
+      setTab("build");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Erro desconhecido";
+      setAiError(msg);
+    } finally {
+      setAiLoading(false);
+    }
+  }, []);
+
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
   const itemFilter = useCallback((i: { name: string }, q: string) => i.name.toLowerCase().includes(q), []);
@@ -243,13 +301,35 @@ export function RaidBuildMaker() {
             tab === "bosses" ? "bg-violet-500/15 text-white" : "text-gray-400"
           }`}
         >
-          👑 Raid Bosses
+          🤖 AI Raid Counter
         </button>
       </div>
 
       {/* Raid Bosses Tab */}
       {tab === "bosses" && (
         <div>
+          {/* AI Loading Overlay */}
+          {aiLoading && (
+            <div className="mb-4 flex items-center gap-3 rounded-xl border border-violet-500/30 bg-violet-500/10 p-4">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
+              <div>
+                <div className="text-sm font-bold text-violet-300">
+                  Gerando build com IA...
+                </div>
+                {aiTarget && (
+                  <div className="text-xs text-gray-400">
+                    Analisando counter para {aiTarget.stars}★ {aiTarget.name} (Tera {aiTarget.teraType})
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          {aiError && (
+            <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+              {aiError}
+            </div>
+          )}
+
           {[7, 6, 5].map((stars) => {
             const bosses = RAID_BOSSES.filter((b) => b.stars === stars);
             if (bosses.length === 0) return null;
@@ -261,16 +341,11 @@ export function RaidBuildMaker() {
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {bosses.map((boss) => (
                     <BuildCard key={`${boss.name}-${boss.teraType}`} boss={boss} onClick={() => {
-                      const pokemon = allPokemon.find((p) => p.nationalDex === boss.nationalDex);
-                      if (pokemon) {
-                        setBuild((prev) => ({
-                          ...prev,
-                          pokemon: null,
-                          teraType: boss.teraType as PokemonType,
-                          notes: `Counter build for ${boss.stars}★ ${boss.name} (Tera ${boss.teraType})`,
-                        }));
-                        setTab("build");
-                      }
+                      generateAIBuild({
+                        name: boss.name,
+                        stars: boss.stars,
+                        teraType: boss.teraType,
+                      });
                     }} />
                   ))}
                 </div>
@@ -283,8 +358,28 @@ export function RaidBuildMaker() {
       {/* Build Maker Tab */}
       {tab === "build" && (
         <div className="space-y-4">
+          {/* AI Generate Banner */}
+          {aiLoading && (
+            <div className="flex items-center gap-3 rounded-xl border border-violet-500/30 bg-violet-500/10 p-4">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
+              <div>
+                <div className="text-sm font-bold text-violet-300">Gerando build com IA...</div>
+                {aiTarget && (
+                  <div className="text-xs text-gray-400">
+                    Counter para {aiTarget.stars}★ {aiTarget.name} (Tera {aiTarget.teraType})
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          {aiError && (
+            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+              {aiError}
+            </div>
+          )}
+
           {/* Import/Export Bar */}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setShowImport(!showImport)}
               className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-400 hover:text-white"
@@ -298,6 +393,14 @@ export function RaidBuildMaker() {
             >
               📤 Export Showdown
             </button>
+            {aiTarget && !aiLoading && (
+              <button
+                onClick={() => generateAIBuild(aiTarget)}
+                className="rounded-lg border border-violet-500/30 bg-violet-500/15 px-3 py-1.5 text-xs font-semibold text-violet-300 hover:bg-violet-500/25"
+              >
+                🤖 Regenerar Build IA
+              </button>
+            )}
             <button
               onClick={() => setBuild(createEmptyBuild())}
               className="ml-auto rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20"
