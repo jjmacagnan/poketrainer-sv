@@ -1,0 +1,534 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import naturesData from "@/data/generated/natures.json";
+import pokemonData from "@/data/generated/pokemon.json";
+import { STAT_NAMES, STAT_LABELS, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
+import type { StatName } from "@/lib/constants";
+import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
+import { PageHeader } from "@/components/shared/PageHeader";
+
+interface Nature {
+  name: string;
+  increased: string | null;
+  decreased: string | null;
+  likes: string | null;
+  dislikes: string | null;
+}
+
+interface Pokemon {
+  nationalDex: number;
+  name: string;
+  types: string[];
+  baseStats: Record<string, number>;
+  sprite: string;
+}
+
+const natures = naturesData as Nature[];
+const allPokemon = pokemonData as Pokemon[];
+
+const ROLE_SUGGESTIONS: { role: string; nature: string; desc: string }[] = [
+  { role: "Physical Attacker", nature: "Adamant", desc: "+Atk / -SpA" },
+  { role: "Special Attacker", nature: "Modest", desc: "+SpA / -Atk" },
+  { role: "Fast Physical", nature: "Jolly", desc: "+Spe / -SpA" },
+  { role: "Fast Special", nature: "Timid", desc: "+Spe / -Atk" },
+  { role: "Physical Wall", nature: "Impish", desc: "+Def / -SpA" },
+  { role: "Special Wall", nature: "Careful", desc: "+SpD / -SpA" },
+  { role: "Bulky Physical", nature: "Brave", desc: "+Atk / -Spe" },
+  { role: "Bulky Special", nature: "Quiet", desc: "+SpA / -Spe" },
+  { role: "Mixed Wall", nature: "Bold", desc: "+Def / -Atk" },
+  { role: "Relaxed Tank", nature: "Relaxed", desc: "+Def / -Spe" },
+];
+
+type Tab = "table" | "calculator" | "comparator";
+
+export function NatureCalc() {
+  const [tab, setTab] = useState<Tab>("table");
+  const [selectedNature, setSelectedNature] = useState<Nature | null>(null);
+
+  // Calculator state
+  const [calcPokemon, setCalcPokemon] = useState<Pokemon | null>(null);
+  const [calcSearch, setCalcSearch] = useState("");
+  const [calcNature, setCalcNature] = useState<Nature>(natures[0]);
+  const [calcLevel, setCalcLevel] = useState(100);
+  const [calcIVs, setCalcIVs] = useState<Record<StatName, number>>(
+    Object.fromEntries(STAT_NAMES.map((s) => [s, MAX_IV])) as Record<StatName, number>
+  );
+  const [calcEVs, setCalcEVs] = useState<Record<StatName, number>>(
+    Object.fromEntries(STAT_NAMES.map((s) => [s, 0])) as Record<StatName, number>
+  );
+
+  // Comparator state
+  const [compNature1, setCompNature1] = useState<Nature>(natures.find((n) => n.name === "Adamant") || natures[0]);
+  const [compNature2, setCompNature2] = useState<Nature>(natures.find((n) => n.name === "Modest") || natures[1]);
+  const [compPokemon, setCompPokemon] = useState<Pokemon | null>(null);
+  const [compSearch, setCompSearch] = useState("");
+
+  const filteredCalcPokemon = useMemo(() => {
+    if (!calcSearch.trim()) return [];
+    const q = calcSearch.toLowerCase();
+    return allPokemon.filter((p) => p.name.toLowerCase().includes(q)).slice(0, 20);
+  }, [calcSearch]);
+
+  const filteredCompPokemon = useMemo(() => {
+    if (!compSearch.trim()) return [];
+    const q = compSearch.toLowerCase();
+    return allPokemon.filter((p) => p.name.toLowerCase().includes(q)).slice(0, 20);
+  }, [compSearch]);
+
+  const tabs: { id: Tab; label: string }[] = [
+    { id: "table", label: "📋 Tabela de Natures" },
+    { id: "calculator", label: "🧮 Calculadora" },
+    { id: "comparator", label: "⚖️ Comparador" },
+  ];
+
+  return (
+    <div className="mx-auto max-w-4xl px-4 py-6">
+      <PageHeader
+        emoji="🧮"
+        title="Nature Calculator"
+        subtitle="Tabela de natures, calculadora de stats e comparador"
+        gradient="linear-gradient(135deg, #F95587, #FA92B2, #D685AD)"
+      />
+
+      {/* Tabs */}
+      <div className="mb-6 flex gap-1 rounded-xl bg-white/5 p-1">
+        {tabs.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className={`flex-1 rounded-lg px-2 py-2.5 text-center text-sm font-bold transition-all ${
+              tab === t.id
+                ? "border-b-2 border-violet-500 bg-violet-500/15 text-white"
+                : "border-b-2 border-transparent text-gray-400"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Nature Table */}
+      {tab === "table" && (
+        <div>
+          {/* Mint Suggestions */}
+          <div className="mb-5 rounded-xl border border-white/10 bg-white/5 p-4">
+            <h3 className="mb-3 text-sm font-bold text-gray-300">
+              🌿 Sugestão de Mint por Role
+            </h3>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {ROLE_SUGGESTIONS.map((r) => (
+                <div
+                  key={r.role}
+                  className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2"
+                >
+                  <span className="text-sm font-semibold text-gray-200">
+                    {r.role}
+                  </span>
+                  <span className="rounded-md bg-violet-500/20 px-2 py-0.5 text-xs font-bold text-violet-300">
+                    {r.nature} ({r.desc})
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Nature Grid */}
+          <div className="overflow-x-auto rounded-xl border border-white/10">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/10 bg-white/5">
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-gray-400">
+                    Nature
+                  </th>
+                  {STAT_NAMES.filter((s) => s !== "HP").map((stat) => (
+                    <th
+                      key={stat}
+                      className="px-3 py-2 text-center text-xs font-semibold text-gray-400"
+                    >
+                      {STAT_LABELS[stat]}
+                    </th>
+                  ))}
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">
+                    Flavor
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {natures.map((nature) => (
+                  <tr
+                    key={nature.name}
+                    onClick={() =>
+                      setSelectedNature(
+                        selectedNature?.name === nature.name ? null : nature
+                      )
+                    }
+                    className={`cursor-pointer border-b border-white/5 transition-colors hover:bg-white/5 ${
+                      selectedNature?.name === nature.name ? "bg-violet-500/10" : ""
+                    }`}
+                  >
+                    <td className="px-3 py-2 font-semibold text-gray-100">
+                      {nature.name}
+                      {!nature.increased && (
+                        <span className="ml-1.5 text-[10px] text-gray-500">
+                          NEUTRAL
+                        </span>
+                      )}
+                    </td>
+                    {STAT_NAMES.filter((s) => s !== "HP").map((stat) => {
+                      const isUp = nature.increased === stat;
+                      const isDown = nature.decreased === stat;
+                      return (
+                        <td
+                          key={stat}
+                          className={`px-3 py-2 text-center text-xs font-bold ${
+                            isUp
+                              ? "text-emerald-400"
+                              : isDown
+                                ? "text-red-400"
+                                : "text-gray-600"
+                          }`}
+                        >
+                          {isUp ? "▲ +10%" : isDown ? "▼ -10%" : "—"}
+                        </td>
+                      );
+                    })}
+                    <td className="px-3 py-2 text-center text-xs text-gray-500">
+                      {nature.likes && nature.dislikes
+                        ? `${nature.likes} / ${nature.dislikes}`
+                        : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Calculator */}
+      {tab === "calculator" && (
+        <div className="space-y-4">
+          {/* Pokemon Selector */}
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="mb-3 text-sm font-bold text-gray-300">
+              Selecionar Pokémon
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                value={calcPokemon ? calcPokemon.name : calcSearch}
+                onChange={(e) => {
+                  setCalcSearch(e.target.value);
+                  setCalcPokemon(null);
+                }}
+                placeholder="Buscar Pokémon..."
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-violet-500/50"
+              />
+              {filteredCalcPokemon.length > 0 && !calcPokemon && (
+                <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-white/10 bg-gray-900">
+                  {filteredCalcPokemon.map((p) => (
+                    <button
+                      key={p.nationalDex}
+                      onClick={() => {
+                        setCalcPokemon(p);
+                        setCalcSearch("");
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-white/10"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p.sprite} alt={p.name} width={28} height={28} className="pixelated" />
+                      <span className="font-semibold text-gray-100">{p.name}</span>
+                      <span className="text-xs text-gray-500">#{p.nationalDex}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {calcPokemon && (
+              <div className="mt-3 flex items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={calcPokemon.sprite} alt={calcPokemon.name} width={48} height={48} className="pixelated" />
+                <div>
+                  <div className="text-sm font-bold text-gray-100">{calcPokemon.name}</div>
+                  <div className="text-xs text-gray-500">
+                    Base: {STAT_NAMES.map((s) => `${s} ${calcPokemon.baseStats[s]}`).join(" / ")}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Nature + Level */}
+          <div className="flex gap-3">
+            <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="mb-2 text-xs font-bold text-gray-400">Nature</div>
+              <select
+                value={calcNature.name}
+                onChange={(e) => {
+                  const n = natures.find((x) => x.name === e.target.value);
+                  if (n) setCalcNature(n);
+                }}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+              >
+                {natures.map((n) => (
+                  <option key={n.name} value={n.name}>
+                    {n.name}
+                    {n.increased ? ` (+${n.increased} / -${n.decreased})` : " (Neutral)"}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="w-28 rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="mb-2 text-xs font-bold text-gray-400">Level</div>
+              <input
+                type="number"
+                min={1}
+                max={100}
+                value={calcLevel}
+                onChange={(e) => setCalcLevel(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+              />
+            </div>
+          </div>
+
+          {/* Stats Table */}
+          <div className="overflow-x-auto rounded-xl border border-white/10">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/10 bg-white/5">
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-gray-400">Stat</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Base</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">IV</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">EV</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Nature</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Final</th>
+                </tr>
+              </thead>
+              <tbody>
+                {STAT_NAMES.map((stat) => {
+                  const base = calcPokemon?.baseStats[stat] ?? 0;
+                  const mod = getNatureModifier(stat, calcNature.increased, calcNature.decreased);
+                  const final_ = calcPokemon
+                    ? calculateStat({
+                        stat,
+                        base,
+                        iv: calcIVs[stat],
+                        ev: calcEVs[stat],
+                        level: calcLevel,
+                        natureModifier: mod,
+                      })
+                    : 0;
+                  return (
+                    <tr key={stat} className="border-b border-white/5">
+                      <td className="px-3 py-2 font-semibold text-gray-200">
+                        {STAT_LABELS[stat]}
+                      </td>
+                      <td className="px-3 py-2 text-center font-mono text-gray-400">
+                        {base || "—"}
+                      </td>
+                      <td className="px-3 py-2 text-center">
+                        <input
+                          type="number"
+                          min={0}
+                          max={MAX_IV}
+                          value={calcIVs[stat]}
+                          onChange={(e) =>
+                            setCalcIVs((prev) => ({
+                              ...prev,
+                              [stat]: Math.min(MAX_IV, Math.max(0, parseInt(e.target.value) || 0)),
+                            }))
+                          }
+                          className="w-14 rounded border border-white/10 bg-white/5 px-2 py-1 text-center text-xs text-gray-100"
+                        />
+                      </td>
+                      <td className="px-3 py-2 text-center">
+                        <input
+                          type="number"
+                          min={0}
+                          max={MAX_EV_PER_STAT}
+                          value={calcEVs[stat]}
+                          onChange={(e) =>
+                            setCalcEVs((prev) => ({
+                              ...prev,
+                              [stat]: Math.min(MAX_EV_PER_STAT, Math.max(0, parseInt(e.target.value) || 0)),
+                            }))
+                          }
+                          className="w-14 rounded border border-white/10 bg-white/5 px-2 py-1 text-center text-xs text-gray-100"
+                        />
+                      </td>
+                      <td
+                        className={`px-3 py-2 text-center text-xs font-bold ${
+                          mod > 1
+                            ? "text-emerald-400"
+                            : mod < 1
+                              ? "text-red-400"
+                              : "text-gray-600"
+                        }`}
+                      >
+                        {mod > 1 ? "×1.1" : mod < 1 ? "×0.9" : "×1.0"}
+                      </td>
+                      <td className="px-3 py-2 text-center font-mono text-lg font-bold text-white">
+                        {calcPokemon ? final_ : "—"}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Comparator */}
+      {tab === "comparator" && (
+        <div className="space-y-4">
+          {/* Pokemon Selector */}
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="mb-3 text-sm font-bold text-gray-300">
+              Selecionar Pokémon para comparar
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                value={compPokemon ? compPokemon.name : compSearch}
+                onChange={(e) => {
+                  setCompSearch(e.target.value);
+                  setCompPokemon(null);
+                }}
+                placeholder="Buscar Pokémon..."
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-violet-500/50"
+              />
+              {filteredCompPokemon.length > 0 && !compPokemon && (
+                <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-white/10 bg-gray-900">
+                  {filteredCompPokemon.map((p) => (
+                    <button
+                      key={p.nationalDex}
+                      onClick={() => {
+                        setCompPokemon(p);
+                        setCompSearch("");
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-white/10"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p.sprite} alt={p.name} width={28} height={28} className="pixelated" />
+                      <span className="font-semibold text-gray-100">{p.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Nature Selectors */}
+          <div className="flex gap-3">
+            <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="mb-2 text-xs font-bold text-gray-400">Nature A</div>
+              <select
+                value={compNature1.name}
+                onChange={(e) => {
+                  const n = natures.find((x) => x.name === e.target.value);
+                  if (n) setCompNature1(n);
+                }}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+              >
+                {natures.map((n) => (
+                  <option key={n.name} value={n.name}>
+                    {n.name}
+                    {n.increased ? ` (+${n.increased}/-${n.decreased})` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="mb-2 text-xs font-bold text-gray-400">Nature B</div>
+              <select
+                value={compNature2.name}
+                onChange={(e) => {
+                  const n = natures.find((x) => x.name === e.target.value);
+                  if (n) setCompNature2(n);
+                }}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+              >
+                {natures.map((n) => (
+                  <option key={n.name} value={n.name}>
+                    {n.name}
+                    {n.increased ? ` (+${n.increased}/-${n.decreased})` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Comparison Table */}
+          {compPokemon && (
+            <div className="overflow-x-auto rounded-xl border border-white/10">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/5">
+                    <th className="px-3 py-2 text-left text-xs font-semibold text-gray-400">Stat</th>
+                    <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Base</th>
+                    <th className="px-3 py-2 text-center text-xs font-semibold text-violet-400">
+                      {compNature1.name}
+                    </th>
+                    <th className="px-3 py-2 text-center text-xs font-semibold text-cyan-400">
+                      {compNature2.name}
+                    </th>
+                    <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Diff</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {STAT_NAMES.map((stat) => {
+                    const base = compPokemon.baseStats[stat] ?? 0;
+                    const mod1 = getNatureModifier(stat, compNature1.increased, compNature1.decreased);
+                    const mod2 = getNatureModifier(stat, compNature2.increased, compNature2.decreased);
+                    const val1 = calculateStat({ stat, base, iv: MAX_IV, ev: 252, level: 100, natureModifier: mod1 });
+                    const val2 = calculateStat({ stat, base, iv: MAX_IV, ev: 252, level: 100, natureModifier: mod2 });
+                    const diff = val2 - val1;
+                    return (
+                      <tr key={stat} className="border-b border-white/5">
+                        <td className="px-3 py-2 font-semibold text-gray-200">
+                          {STAT_LABELS[stat]}
+                        </td>
+                        <td className="px-3 py-2 text-center font-mono text-gray-400">
+                          {base}
+                        </td>
+                        <td className={`px-3 py-2 text-center font-mono font-bold ${mod1 > 1 ? "text-emerald-400" : mod1 < 1 ? "text-red-400" : "text-gray-300"}`}>
+                          {val1}
+                        </td>
+                        <td className={`px-3 py-2 text-center font-mono font-bold ${mod2 > 1 ? "text-emerald-400" : mod2 < 1 ? "text-red-400" : "text-gray-300"}`}>
+                          {val2}
+                        </td>
+                        <td
+                          className={`px-3 py-2 text-center font-mono text-xs font-bold ${
+                            diff > 0
+                              ? "text-emerald-400"
+                              : diff < 0
+                                ? "text-red-400"
+                                : "text-gray-600"
+                          }`}
+                        >
+                          {diff > 0 ? `+${diff}` : diff === 0 ? "—" : diff}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <div className="border-t border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-500">
+                Comparação com IVs 31, EVs 252 em todos os stats, Level 100
+              </div>
+            </div>
+          )}
+
+          {!compPokemon && (
+            <div className="py-10 text-center text-gray-500">
+              Selecione um Pokémon para comparar as natures
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
