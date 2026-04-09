@@ -35,7 +35,7 @@ const TOOLS = [
     desc: "Monte e compartilhe builds otimizadas para Tera Raids 5★/6★/7★",
     gradient: "from-purple-500/20 to-violet-500/20",
     border: "hover:border-purple-500/40",
-    ready: false,
+    ready: true,
   },
   {
     href: "/nature-calc",
