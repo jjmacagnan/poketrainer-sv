@@ -17,7 +17,7 @@ const TOOLS = [
     desc: "Lista pesquisável de todos os Pokémon com EV yields e localizações",
     gradient: "from-blue-500/20 to-cyan-500/20",
     border: "hover:border-blue-500/40",
-    ready: false,
+    ready: true,
   },
   {
     href: "/ev-tracker",
