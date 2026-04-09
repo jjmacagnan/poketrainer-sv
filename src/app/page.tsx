@@ -26,7 +26,7 @@ const TOOLS = [
     desc: "Rastreie o progresso de EV training do seu time com Pokérus e Power Items",
     gradient: "from-green-500/20 to-emerald-500/20",
     border: "hover:border-green-500/40",
-    ready: false,
+    ready: true,
   },
   {
     href: "/raid-builder",
