@@ -44,7 +44,7 @@ const TOOLS = [
     desc: "Calculadora de natures, stats e sugestão de Mints por role",
     gradient: "from-pink-500/20 to-rose-500/20",
     border: "hover:border-pink-500/40",
-    ready: false,
+    ready: true,
   },
 ];
 
