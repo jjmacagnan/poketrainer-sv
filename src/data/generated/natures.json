@@ -1,0 +1,177 @@
+[
+  {
+    "name": "Hardy",
+    "increased": null,
+    "decreased": null,
+    "likes": null,
+    "dislikes": null
+  },
+  {
+    "name": "Bold",
+    "increased": "Def",
+    "decreased": "Atk",
+    "likes": "Sour",
+    "dislikes": "Spicy"
+  },
+  {
+    "name": "Modest",
+    "increased": "SpA",
+    "decreased": "Atk",
+    "likes": "Dry",
+    "dislikes": "Spicy"
+  },
+  {
+    "name": "Calm",
+    "increased": "SpD",
+    "decreased": "Atk",
+    "likes": "Bitter",
+    "dislikes": "Spicy"
+  },
+  {
+    "name": "Timid",
+    "increased": "Spe",
+    "decreased": "Atk",
+    "likes": "Sweet",
+    "dislikes": "Spicy"
+  },
+  {
+    "name": "Lonely",
+    "increased": "Atk",
+    "decreased": "Def",
+    "likes": "Spicy",
+    "dislikes": "Sour"
+  },
+  {
+    "name": "Docile",
+    "increased": null,
+    "decreased": null,
+    "likes": null,
+    "dislikes": null
+  },
+  {
+    "name": "Mild",
+    "increased": "SpA",
+    "decreased": "Def",
+    "likes": "Dry",
+    "dislikes": "Sour"
+  },
+  {
+    "name": "Gentle",
+    "increased": "SpD",
+    "decreased": "Def",
+    "likes": "Bitter",
+    "dislikes": "Sour"
+  },
+  {
+    "name": "Hasty",
+    "increased": "Spe",
+    "decreased": "Def",
+    "likes": "Sweet",
+    "dislikes": "Sour"
+  },
+  {
+    "name": "Adamant",
+    "increased": "Atk",
+    "decreased": "SpA",
+    "likes": "Spicy",
+    "dislikes": "Dry"
+  },
+  {
+    "name": "Impish",
+    "increased": "Def",
+    "decreased": "SpA",
+    "likes": "Sour",
+    "dislikes": "Dry"
+  },
+  {
+    "name": "Bashful",
+    "increased": null,
+    "decreased": null,
+    "likes": null,
+    "dislikes": null
+  },
+  {
+    "name": "Careful",
+    "increased": "SpD",
+    "decreased": "SpA",
+    "likes": "Bitter",
+    "dislikes": "Dry"
+  },
+  {
+    "name": "Rash",
+    "increased": "SpA",
+    "decreased": "SpD",
+    "likes": "Dry",
+    "dislikes": "Bitter"
+  },
+  {
+    "name": "Jolly",
+    "increased": "Spe",
+    "decreased": "SpA",
+    "likes": "Sweet",
+    "dislikes": "Dry"
+  },
+  {
+    "name": "Naughty",
+    "increased": "Atk",
+    "decreased": "SpD",
+    "likes": "Spicy",
+    "dislikes": "Bitter"
+  },
+  {
+    "name": "Lax",
+    "increased": "Def",
+    "decreased": "SpD",
+    "likes": "Sour",
+    "dislikes": "Bitter"
+  },
+  {
+    "name": "Quirky",
+    "increased": null,
+    "decreased": null,
+    "likes": null,
+    "dislikes": null
+  },
+  {
+    "name": "Naive",
+    "increased": "Spe",
+    "decreased": "SpD",
+    "likes": "Sweet",
+    "dislikes": "Bitter"
+  },
+  {
+    "name": "Brave",
+    "increased": "Atk",
+    "decreased": "Spe",
+    "likes": "Spicy",
+    "dislikes": "Sweet"
+  },
+  {
+    "name": "Relaxed",
+    "increased": "Def",
+    "decreased": "Spe",
+    "likes": "Sour",
+    "dislikes": "Sweet"
+  },
+  {
+    "name": "Quiet",
+    "increased": "SpA",
+    "decreased": "Spe",
+    "likes": "Dry",
+    "dislikes": "Sweet"
+  },
+  {
+    "name": "Sassy",
+    "increased": "SpD",
+    "decreased": "Spe",
+    "likes": "Bitter",
+    "dislikes": "Sweet"
+  },
+  {
+    "name": "Serious",
+    "increased": null,
+    "decreased": null,
+    "likes": null,
+    "dislikes": null
+  }
+]
