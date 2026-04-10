@@ -6,6 +6,7 @@ import { TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
 import { STAT_NAMES } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
+import { useI18n } from "@/i18n";
 
 const STAT_COLORS: Record<StatName, string> = {
   HP: "#FF5959", Atk: "#F5AC78", Def: "#FAE078",
@@ -32,6 +33,7 @@ export function BuildExport({
   pokemon, teraType, nature, ability, item, moves, evs, stats, notes,
 }: BuildExportProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const { t } = useI18n();
 
   const handleExport = useCallback(async () => {
     if (!cardRef.current) return;
@@ -45,9 +47,9 @@ export function BuildExport({
       link.href = dataUrl;
       link.click();
     } catch {
-      alert("Erro ao exportar imagem");
+      alert(t("raid.exportError"));
     }
-  }, [pokemon.name]);
+  }, [pokemon.name, t]);
 
   const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.nationalDex}.png`;
   const teraColor = teraType ? TYPE_COLORS[teraType] : "#888";
@@ -58,7 +60,7 @@ export function BuildExport({
         onClick={handleExport}
         className="rounded-lg border border-emerald-500/30 bg-emerald-500/15 px-3 py-1.5 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/25"
       >
-        📸 Exportar PNG
+        {t("raid.exportPng")}
       </button>
 
       {/* Card for export — rendered off-screen */}

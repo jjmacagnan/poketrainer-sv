@@ -21,19 +21,32 @@ const I18nContext = createContext<I18nContextType>({
 });
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("pt");
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    try {
+      const saved = localStorage.getItem("poketrainer-locale") as Locale | null;
+      if (saved && (saved === "pt" || saved === "en")) {
+        document.documentElement.lang = saved === "pt" ? "pt-BR" : "en";
+        return saved;
+      }
+    } catch {
+      // localStorage unavailable (private mode, quota exceeded, etc.)
+    }
+    document.documentElement.lang = "pt-BR";
+    return "pt";
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem("poketrainer-locale") as Locale | null;
-    if (saved && (saved === "pt" || saved === "en")) {
-      setLocaleState(saved);
-    }
-  }, []);
+    // Update lang attribute when locale changes (e.g., via setLocale)
+    document.documentElement.lang = locale === "pt" ? "pt-BR" : "en";
+  }, [locale]);
 
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
-    localStorage.setItem("poketrainer-locale", newLocale);
-    document.documentElement.lang = newLocale === "pt" ? "pt-BR" : "en";
+    try {
+      localStorage.setItem("poketrainer-locale", newLocale);
+    } catch {
+      // localStorage unavailable
+    }
   }, []);
 
   const t = useCallback((key: string, params?: Record<string, string | number>) => {

@@ -48,7 +48,9 @@
     "anyType": "Any Type...",
     "power": "Power",
     "noRecipes": "No recipes found with these filters 😅",
+    "shinyTitle": "✨ Shiny Hunt Recipes",
     "shinyInfo": "All give Sparkling Power Lv.3 + Encounter Power Lv.3. Require 2x Herba Mystica of the same type.",
+    "encounterTitle": "🔍 Encounter Recipes",
     "encounterInfo": "No Herba Mystica needed. Great for EV farming and completing the Pokédex.",
     "noEncounter": "No Encounter recipe for this type yet 🔧",
     "footer": "PokéTrainer SV Tools — Sandwich Builder v1.0",
@@ -145,6 +147,6 @@
     "copyLink": "🔗 Copy Build Link",
     "exportPng": "📸 Export PNG",
     "exportError": "Error exporting image",
-    "starRaids": "★ {stars}-Star Raids"
+    "starRaids": "{stars}-Star Raids"
   }
 }

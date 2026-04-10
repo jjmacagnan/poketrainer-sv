@@ -205,7 +205,7 @@ export function SandwichBuilder() {
               border: "1px solid rgba(255,215,0,0.2)",
             }}
           >
-            <strong className="text-yellow-400">✨ Shiny Hunt Recipes</strong>{" "}
+            <strong className="text-yellow-400">{t("sandwich.shinyTitle")}</strong>{" "}
             — {t("sandwich.shinyInfo")}
           </div>
           <div className="grid gap-2.5 sm:grid-cols-2">
@@ -227,7 +227,7 @@ export function SandwichBuilder() {
               border: "1px solid rgba(78,205,196,0.2)",
             }}
           >
-            <strong className="text-teal-400">🔍 Encounter Recipes</strong> —{" "}
+            <strong className="text-teal-400">{t("sandwich.encounterTitle")}</strong> —{" "}
             {t("sandwich.encounterInfo")}
           </div>
           <div className="grid gap-2.5 sm:grid-cols-2">
