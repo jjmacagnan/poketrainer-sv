@@ -132,9 +132,9 @@ export function BuildExport({
           {/* Info Row */}
           <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
             {[
-              { label: "Nature", value: nature },
-              { label: "Ability", value: ability },
-              { label: "Item", value: item },
+              { label: t("common.nature"), value: nature },
+              { label: t("common.ability"), value: ability },
+              { label: t("raid.heldItem"), value: item },
             ].map((info) => (
               info.value && (
                 <div
@@ -161,7 +161,7 @@ export function BuildExport({
           {/* Moves */}
           <div style={{ marginBottom: 12 }}>
             <div style={{ fontSize: 9, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", marginBottom: 6 }}>
-              Moves
+              {t("raid.moves")}
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
               {moves.filter(Boolean).map((move, i) => (
@@ -184,7 +184,7 @@ export function BuildExport({
           {/* Stats */}
           <div style={{ marginBottom: 12 }}>
             <div style={{ fontSize: 9, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", marginBottom: 6 }}>
-              Stats (EVs)
+              {t("raid.evsAndStats")}
             </div>
             {STAT_NAMES.map((stat) => (
               <div
