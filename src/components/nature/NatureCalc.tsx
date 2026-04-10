@@ -6,6 +6,7 @@ import pokemonData from "@/data/generated/pokemon.json";
 import { STAT_NAMES, STAT_LABELS, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
+import { useI18n } from "@/i18n";
 import { PageHeader } from "@/components/shared/PageHeader";
 
 interface Nature {
@@ -43,6 +44,7 @@ const ROLE_SUGGESTIONS: { role: string; nature: string; desc: string }[] = [
 type Tab = "table" | "calculator" | "comparator";
 
 export function NatureCalc() {
+  const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("table");
   const [selectedNature, setSelectedNature] = useState<Nature | null>(null);
 
@@ -77,17 +79,17 @@ export function NatureCalc() {
   }, [compSearch]);
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: "table", label: "📋 Tabela de Natures" },
-    { id: "calculator", label: "🧮 Calculadora" },
-    { id: "comparator", label: "⚖️ Comparador" },
+    { id: "table", label: t("natureCalc.tabTable") },
+    { id: "calculator", label: t("natureCalc.tabCalc") },
+    { id: "comparator", label: t("natureCalc.tabCompare") },
   ];
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
       <PageHeader
         emoji="🧮"
-        title="Nature Calculator"
-        subtitle="Tabela de natures, calculadora de stats e comparador"
+        title={t("natureCalc.title")}
+        subtitle={t("natureCalc.subtitle")}
         gradient="linear-gradient(135deg, #F95587, #FA92B2, #D685AD)"
       />
 
@@ -114,7 +116,7 @@ export function NatureCalc() {
           {/* Mint Suggestions */}
           <div className="mb-5 rounded-xl border border-white/10 bg-white/5 p-4">
             <h3 className="mb-3 text-sm font-bold text-gray-300">
-              🌿 Sugestão de Mint por Role
+              {t("natureCalc.mintSuggestion")}
             </h3>
             <div className="grid gap-2 sm:grid-cols-2">
               {ROLE_SUGGESTIONS.map((r) => (
@@ -139,7 +141,7 @@ export function NatureCalc() {
               <thead>
                 <tr className="border-b border-white/10 bg-white/5">
                   <th className="px-3 py-2 text-left text-xs font-semibold text-gray-400">
-                    Nature
+                    {t("common.nature")}
                   </th>
                   {STAT_NAMES.filter((s) => s !== "HP").map((stat) => (
                     <th
@@ -150,7 +152,7 @@ export function NatureCalc() {
                     </th>
                   ))}
                   <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">
-                    Flavor
+                    {t("natureCalc.flavor")}
                   </th>
                 </tr>
               </thead>
@@ -171,7 +173,7 @@ export function NatureCalc() {
                       {nature.name}
                       {!nature.increased && (
                         <span className="ml-1.5 text-[10px] text-gray-500">
-                          NEUTRAL
+                          {t("natureCalc.neutral")}
                         </span>
                       )}
                     </td>
@@ -212,7 +214,7 @@ export function NatureCalc() {
           {/* Pokemon Selector */}
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <div className="mb-3 text-sm font-bold text-gray-300">
-              Selecionar Pokémon
+              {t("natureCalc.selectPokemon")}
             </div>
             <div className="relative">
               <input
@@ -222,7 +224,7 @@ export function NatureCalc() {
                   setCalcSearch(e.target.value);
                   setCalcPokemon(null);
                 }}
-                placeholder="Buscar Pokémon..."
+                placeholder={t("natureCalc.searchPokemon")}
                 className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-violet-500/50"
               />
               {filteredCalcPokemon.length > 0 && !calcPokemon && (
@@ -387,7 +389,7 @@ export function NatureCalc() {
           {/* Pokemon Selector */}
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <div className="mb-3 text-sm font-bold text-gray-300">
-              Selecionar Pokémon para comparar
+              {t("natureCalc.selectToCompare")}
             </div>
             <div className="relative">
               <input
@@ -397,7 +399,7 @@ export function NatureCalc() {
                   setCompSearch(e.target.value);
                   setCompPokemon(null);
                 }}
-                placeholder="Buscar Pokémon..."
+                placeholder={t("natureCalc.searchPokemon")}
                 className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-violet-500/50"
               />
               {filteredCompPokemon.length > 0 && !compPokemon && (
@@ -424,7 +426,7 @@ export function NatureCalc() {
           {/* Nature Selectors */}
           <div className="flex gap-3">
             <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">Nature A</div>
+              <div className="mb-2 text-xs font-bold text-gray-400">{t("natureCalc.natureA")}</div>
               <select
                 value={compNature1.name}
                 onChange={(e) => {
@@ -442,7 +444,7 @@ export function NatureCalc() {
               </select>
             </div>
             <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">Nature B</div>
+              <div className="mb-2 text-xs font-bold text-gray-400">{t("natureCalc.natureB")}</div>
               <select
                 value={compNature2.name}
                 onChange={(e) => {
@@ -475,7 +477,7 @@ export function NatureCalc() {
                     <th className="px-3 py-2 text-center text-xs font-semibold text-cyan-400">
                       {compNature2.name}
                     </th>
-                    <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Diff</th>
+                    <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">{t("natureCalc.diff")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -517,14 +519,14 @@ export function NatureCalc() {
                 </tbody>
               </table>
               <div className="border-t border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-500">
-                Comparação com IVs 31, EVs 252 em todos os stats, Level 100
+                {t("natureCalc.compareNote")}
               </div>
             </div>
           )}
 
           {!compPokemon && (
             <div className="py-10 text-center text-gray-500">
-              Selecione um Pokémon para comparar as natures
+              {t("natureCalc.selectToComparePrompt")}
             </div>
           )}
         </div>
