@@ -5,6 +5,7 @@ import pokemonData from "@/data/generated/pokemon.json";
 import { STAT_NAMES } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useI18n } from "@/i18n";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { PokemonSlot, createEmptySlot } from "./PokemonSlot";
@@ -47,6 +48,7 @@ const EV_TEMPLATES: { label: string; evs: Record<StatName, number> }[] = [
 ];
 
 export function EVTracker() {
+  const { t } = useI18n();
   const [slots, setSlots] = useLocalStorage<PokemonSlotData[]>(
     "sv-ev-tracker-slots",
     Array.from({ length: 6 }, (_, i) => createEmptySlot(i))
@@ -99,7 +101,7 @@ export function EVTracker() {
       <div className="mx-auto max-w-2xl px-4 py-6">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-100">
-            Selecionar Pokémon — Slot {selectingSlot + 1}
+            {t("evTracker.selectPokemon", { slot: selectingSlot + 1 })}
           </h2>
           <button
             onClick={() => {
@@ -108,7 +110,7 @@ export function EVTracker() {
             }}
             className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-gray-400 hover:text-white"
           >
-            ← Voltar
+            {t("common.back")}
           </button>
         </div>
 
@@ -116,7 +118,7 @@ export function EVTracker() {
           <SearchInput
             value={pokemonSearch}
             onChange={setPokemonSearch}
-            placeholder="Buscar Pokémon..."
+            placeholder={t("evTracker.searchPokemon")}
           />
         </div>
 
@@ -155,8 +157,8 @@ export function EVTracker() {
     <div className="mx-auto max-w-4xl px-4 py-6">
       <PageHeader
         emoji="📊"
-        title="EV Training Tracker"
-        subtitle="Rastreie o progresso de EV training do seu time"
+        title={t("evTracker.title")}
+        subtitle={t("evTracker.subtitle")}
         gradient="linear-gradient(135deg, #7AC74C, #4ECDC4, #6390F0)"
       />
 
@@ -165,10 +167,10 @@ export function EVTracker() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="text-sm font-bold text-gray-100">
-              Time ({slots.filter((s) => s.name).length}/6 Pokémon)
+              {t("evTracker.teamCount", { count: slots.filter((s) => s.name).length })}
             </div>
             <div className="text-xs text-gray-400">
-              Dados salvos automaticamente no navegador
+              {t("evTracker.autoSave")}
             </div>
           </div>
           <div className="flex gap-2">
@@ -180,7 +182,7 @@ export function EVTracker() {
               }}
               className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20"
             >
-              Resetar Tudo
+              {t("evTracker.resetAll")}
             </button>
           </div>
         </div>
@@ -202,32 +204,32 @@ export function EVTracker() {
       {/* Legend */}
       <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
         <h3 className="mb-2 text-sm font-bold text-gray-300">
-          📖 Referência Rápida
+          {t("evTracker.quickRef")}
         </h3>
         <div className="grid gap-2 text-xs text-gray-400 sm:grid-cols-2">
           <div>
-            <strong className="text-gray-300">🦠 Pokérus:</strong> 2× todos os
-            EVs ganhos
+            <strong className="text-gray-300">{t("evTracker.pokerus")}</strong>{" "}
+            {t("evTracker.pokerusDesc")}
           </div>
           <div>
-            <strong className="text-gray-300">💪 Macho Brace:</strong> 2× EVs
-            (stacks com Pokérus = 4×)
+            <strong className="text-gray-300">{t("evTracker.machoBrace")}</strong>{" "}
+            {t("evTracker.machoBraceDesc")}
           </div>
           <div>
-            <strong className="text-gray-300">⚡ Power Item:</strong> +8 EV no
-            stat correspondente por KO
+            <strong className="text-gray-300">{t("evTracker.powerItem")}</strong>{" "}
+            {t("evTracker.powerItemDesc")}
           </div>
           <div>
-            <strong className="text-gray-300">💊 Vitamina (+10):</strong>{" "}
-            Protein, Iron, Calcium, Zinc, Carbos, HP Up
+            <strong className="text-gray-300">{t("evTracker.vitamin")}</strong>{" "}
+            {t("evTracker.vitaminDesc")}
           </div>
           <div>
-            <strong className="text-gray-300">📋 Templates:</strong> Distribuições
-            populares pré-definidas
+            <strong className="text-gray-300">{t("evTracker.templates")}</strong>{" "}
+            {t("evTracker.templatesDesc")}
           </div>
           <div>
-            <strong className="text-gray-300">Limites:</strong> 252/stat, 510
-            total
+            <strong className="text-gray-300">{t("evTracker.limits")}</strong>{" "}
+            {t("evTracker.limitsDesc")}
           </div>
         </div>
       </div>
