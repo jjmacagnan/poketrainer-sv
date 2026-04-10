@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`${outfit.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-gray-950 font-[family-name:var(--font-outfit)] text-gray-100">
         <Providers>
           <Navbar />

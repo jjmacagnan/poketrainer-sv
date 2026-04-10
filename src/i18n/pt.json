@@ -138,7 +138,7 @@
     "selectPokemon": "Selecione um Pokémon",
     "searchItem": "Buscar item...",
     "teraType": "Tera Type",
-    "heldItem": "Item Seguro",
+    "heldItem": "Item Equipado",
     "moves": "Movimentos",
     "evsAndStats": "EVs e Stats",
     "evsCount": "EVs: {count}/510",

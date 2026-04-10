@@ -93,11 +93,11 @@ export function BuildExport({
                 {pokemon.name}
               </div>
               <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
-                {pokemon.types.map((t) => (
+                {pokemon.types.map((type) => (
                   <span
-                    key={t}
+                    key={type}
                     style={{
-                      background: TYPE_COLORS[t as PokemonType] || "#888",
+                      background: TYPE_COLORS[type as PokemonType] || "#888",
                       color: "#fff",
                       padding: "2px 10px",
                       borderRadius: 999,
@@ -105,7 +105,7 @@ export function BuildExport({
                       fontWeight: 700,
                     }}
                   >
-                    {t}
+                    {type}
                   </span>
                 ))}
               </div>
