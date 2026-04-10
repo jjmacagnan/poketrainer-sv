@@ -739,7 +739,8 @@ export function RaidBuildMaker() {
                     l: build.level,
                     o: build.notes,
                   };
-                  const hash = btoa(JSON.stringify(data));
+                  const jsonString = JSON.stringify(data);
+                  const hash = btoa(unescape(encodeURIComponent(jsonString)));
                   const url = `${window.location.origin}/raid-builder?b=${hash}`;
                   navigator.clipboard.writeText(url);
                 }}
