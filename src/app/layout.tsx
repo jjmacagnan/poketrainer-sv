@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { Navbar } from "@/components/ui/Navbar";
 import { Providers } from "@/components/Providers";
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -25,6 +26,18 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
   },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "PokéTrainer SV",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    apple: "/icons/icon-192.png",
+  },
 };
 
 export default function RootLayout({
@@ -33,8 +46,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${outfit.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`${outfit.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="flex min-h-full flex-col bg-gray-950 font-[family-name:var(--font-outfit)] text-gray-100">
+        <ServiceWorkerRegistration />
         <Providers>
           <div className="flex flex-1 flex-col">
             <Navbar />
