@@ -22,21 +22,20 @@ const I18nContext = createContext<I18nContextType>({
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(() => {
+    if (typeof window === "undefined") return "pt";
     try {
       const saved = localStorage.getItem("poketrainer-locale") as Locale | null;
       if (saved && (saved === "pt" || saved === "en")) {
-        document.documentElement.lang = saved === "pt" ? "pt-BR" : "en";
         return saved;
       }
     } catch {
       // localStorage unavailable (private mode, quota exceeded, etc.)
     }
-    document.documentElement.lang = "pt-BR";
     return "pt";
   });
 
   useEffect(() => {
-    // Update lang attribute when locale changes (e.g., via setLocale)
+    // Initialize and update lang attribute
     document.documentElement.lang = locale === "pt" ? "pt-BR" : "en";
   }, [locale]);
 
