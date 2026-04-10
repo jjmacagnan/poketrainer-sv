@@ -15,7 +15,9 @@ import { clampEVs } from "@/lib/ev-calculator";
 import { exportShowdown, parseShowdown } from "@/lib/showdown-parser";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { TypeBadge } from "@/components/ui/TypeBadge";
+import { useI18n } from "@/i18n";
 import { BuildCard } from "./BuildCard";
+import { BuildExport } from "./BuildExport";
 
 interface Pokemon {
   nationalDex: number;
@@ -150,6 +152,7 @@ interface AIBossTarget {
 }
 
 export function RaidBuildMaker() {
+  const { t } = useI18n();
   const [build, setBuild] = useState<BuildState>(createEmptyBuild);
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState("");
@@ -280,8 +283,8 @@ export function RaidBuildMaker() {
     <div className="mx-auto max-w-4xl px-4 py-6">
       <PageHeader
         emoji="⚔️"
-        title="Tera Raid Build Maker"
-        subtitle="Monte e compartilhe builds otimizadas para Tera Raids 5★/6★/7★"
+        title={t("raid.title")}
+        subtitle={t("raid.subtitle")}
         gradient="linear-gradient(135deg, #8B5CF6, #6D28D9, #4C1D95)"
       />
 
@@ -293,7 +296,7 @@ export function RaidBuildMaker() {
             tab === "build" ? "bg-violet-500/15 text-white" : "text-gray-400"
           }`}
         >
-          🛠️ Build Maker
+          {t("raid.tabBuild")}
         </button>
         <button
           onClick={() => setTab("bosses")}
@@ -301,7 +304,7 @@ export function RaidBuildMaker() {
             tab === "bosses" ? "bg-violet-500/15 text-white" : "text-gray-400"
           }`}
         >
-          🤖 AI Raid Counter
+          {t("raid.tabAI")}
         </button>
       </div>
 
@@ -314,11 +317,11 @@ export function RaidBuildMaker() {
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
               <div>
                 <div className="text-sm font-bold text-violet-300">
-                  Gerando build com IA...
+                  {t("raid.aiGenerating")}
                 </div>
                 {aiTarget && (
                   <div className="text-xs text-gray-400">
-                    Analisando counter para {aiTarget.stars}★ {aiTarget.name} (Tera {aiTarget.teraType})
+                    {t("raid.aiAnalyzing", { stars: aiTarget.stars, name: aiTarget.name, teraType: aiTarget.teraType })}
                   </div>
                 )}
               </div>
@@ -336,7 +339,7 @@ export function RaidBuildMaker() {
             return (
               <div key={stars} className="mb-6">
                 <h3 className="mb-3 text-sm font-bold text-gray-300">
-                  {"★".repeat(stars)} {stars}-Star Raids
+                  {"★".repeat(stars)} {t("raid.starRaids", { stars })}
                 </h3>
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {bosses.map((boss) => (
@@ -363,10 +366,10 @@ export function RaidBuildMaker() {
             <div className="flex items-center gap-3 rounded-xl border border-violet-500/30 bg-violet-500/10 p-4">
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
               <div>
-                <div className="text-sm font-bold text-violet-300">Gerando build com IA...</div>
+                <div className="text-sm font-bold text-violet-300">{t("raid.aiGenerating")}</div>
                 {aiTarget && (
                   <div className="text-xs text-gray-400">
-                    Counter para {aiTarget.stars}★ {aiTarget.name} (Tera {aiTarget.teraType})
+                    {t("raid.aiAnalyzing", { stars: aiTarget.stars, name: aiTarget.name, teraType: aiTarget.teraType })}
                   </div>
                 )}
               </div>
@@ -384,28 +387,28 @@ export function RaidBuildMaker() {
               onClick={() => setShowImport(!showImport)}
               className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-400 hover:text-white"
             >
-              📥 Import Showdown
+              {t("raid.importShowdown")}
             </button>
             <button
               onClick={() => setShowExport(!showExport)}
               className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-400 hover:text-white"
               disabled={!build.pokemon}
             >
-              📤 Export Showdown
+              {t("raid.exportShowdown")}
             </button>
             {aiTarget && !aiLoading && (
               <button
                 onClick={() => generateAIBuild(aiTarget)}
                 className="rounded-lg border border-violet-500/30 bg-violet-500/15 px-3 py-1.5 text-xs font-semibold text-violet-300 hover:bg-violet-500/25"
               >
-                🤖 Regenerar Build IA
+                {t("raid.aiRegenerate")}
               </button>
             )}
             <button
               onClick={() => setBuild(createEmptyBuild())}
               className="ml-auto rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20"
             >
-              Reset
+              {t("common.reset")}
             </button>
           </div>
 
@@ -413,7 +416,7 @@ export function RaidBuildMaker() {
           {showImport && (
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
               <div className="mb-2 text-sm font-bold text-gray-300">
-                Colar set do Pokémon Showdown:
+                {t("raid.pasteShowdown")}
               </div>
               <textarea
                 value={importText}
@@ -425,7 +428,7 @@ export function RaidBuildMaker() {
                 onClick={handleImport}
                 className="rounded-lg bg-violet-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-violet-500"
               >
-                Importar
+                {t("raid.import")}
               </button>
             </div>
           )}
@@ -434,7 +437,7 @@ export function RaidBuildMaker() {
           {showExport && build.pokemon && (
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
               <div className="mb-2 text-sm font-bold text-gray-300">
-                Formato Showdown:
+                {t("raid.showdownFormat")}
               </div>
               <textarea
                 readOnly
@@ -445,7 +448,7 @@ export function RaidBuildMaker() {
                 onClick={() => { navigator.clipboard.writeText(exportText); }}
                 className="rounded-lg bg-violet-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-violet-500"
               >
-                📋 Copiar
+                {t("common.copy")}
               </button>
             </div>
           )}
@@ -453,7 +456,7 @@ export function RaidBuildMaker() {
           {/* Pokémon + Tera Type */}
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">Pokémon</div>
+              <div className="mb-2 text-xs font-bold text-gray-400">{t("common.pokemon")}</div>
               <SearchDropdown
                 items={allPokemon}
                 value={build.pokemon?.name || ""}
@@ -471,7 +474,7 @@ export function RaidBuildMaker() {
                   </>
                 )}
                 getLabel={(p) => p.name}
-                placeholder="Buscar Pokémon..."
+                placeholder={t("raid.searchPokemon")}
                 filterFn={pokemonFilter}
               />
               {build.pokemon && (
@@ -479,8 +482,8 @@ export function RaidBuildMaker() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={build.pokemon.sprite} alt={build.pokemon.name} width={40} height={40} className="pixelated" />
                   <div className="flex gap-1">
-                    {build.pokemon.types.map((t) => (
-                      <TypeBadge key={t} type={t as PokemonType} small />
+                    {build.pokemon.types.map((tp) => (
+                      <TypeBadge key={tp} type={tp as PokemonType} small />
                     ))}
                   </div>
                 </div>
@@ -488,7 +491,7 @@ export function RaidBuildMaker() {
             </div>
 
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">Tera Type</div>
+              <div className="mb-2 text-xs font-bold text-gray-400">{t("raid.teraType")}</div>
               <div className="flex flex-wrap gap-1">
                 {TYPES.map((t) => (
                   <button
@@ -511,7 +514,7 @@ export function RaidBuildMaker() {
           {/* Nature + Ability + Item */}
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">Nature</div>
+              <div className="mb-2 text-xs font-bold text-gray-400">{t("common.nature")}</div>
               <select
                 value={build.nature.name}
                 onChange={(e) => {
@@ -529,7 +532,7 @@ export function RaidBuildMaker() {
             </div>
 
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">Ability</div>
+              <div className="mb-2 text-xs font-bold text-gray-400">{t("common.ability")}</div>
               {build.pokemon ? (
                 <select
                   value={build.ability}
@@ -544,13 +547,13 @@ export function RaidBuildMaker() {
                 </select>
               ) : (
                 <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-500">
-                  Selecione um Pokémon
+                  {t("raid.selectPokemon")}
                 </div>
               )}
             </div>
 
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">Held Item</div>
+              <div className="mb-2 text-xs font-bold text-gray-400">{t("raid.heldItem")}</div>
               <SearchDropdown
                 items={HELD_ITEMS}
                 value={build.item}
@@ -562,7 +565,7 @@ export function RaidBuildMaker() {
                   </div>
                 )}
                 getLabel={(i) => i.name}
-                placeholder="Buscar item..."
+                placeholder={t("raid.searchItem")}
                 filterFn={itemFilter}
               />
             </div>
@@ -570,7 +573,7 @@ export function RaidBuildMaker() {
 
           {/* Moves */}
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <div className="mb-3 text-xs font-bold text-gray-400">Moves</div>
+            <div className="mb-3 text-xs font-bold text-gray-400">{t("raid.moves")}</div>
             <div className="grid gap-2 sm:grid-cols-2">
               {build.moves.map((move, i) => (
                 <div key={i} className="flex items-center gap-2">
@@ -623,9 +626,9 @@ export function RaidBuildMaker() {
           {/* EVs + IVs + Stats */}
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <div className="mb-1 flex items-center justify-between">
-              <div className="text-xs font-bold text-gray-400">EVs & Stats</div>
+              <div className="text-xs font-bold text-gray-400">{t("raid.evsAndStats")}</div>
               <div className="text-xs text-gray-500">
-                EVs: {totalEvs}/510
+                {t("raid.evsCount", { count: totalEvs })}
               </div>
             </div>
 
@@ -709,19 +712,19 @@ export function RaidBuildMaker() {
           {/* Notes */}
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <div className="mb-2 text-xs font-bold text-gray-400">
-              Notas / Estratégia
+              {t("raid.notes")}
             </div>
             <textarea
               value={build.notes}
               onChange={(e) => setBuild((prev) => ({ ...prev, notes: e.target.value }))}
-              placeholder="Descreva a estratégia, turn order, dicas..."
+              placeholder={t("raid.notesPlaceholder")}
               className="h-24 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 outline-none"
             />
           </div>
 
-          {/* Share Link */}
-          {build.pokemon && (
-            <div className="flex gap-2">
+          {/* Share Link + Export PNG */}
+          {build.pokemon && calcStats && (
+            <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => {
                   const data = {
@@ -736,14 +739,26 @@ export function RaidBuildMaker() {
                     l: build.level,
                     o: build.notes,
                   };
-                  const hash = btoa(JSON.stringify(data));
+                  const jsonString = JSON.stringify(data);
+                  const hash = btoa(unescape(encodeURIComponent(jsonString)));
                   const url = `${window.location.origin}/raid-builder?b=${hash}`;
                   navigator.clipboard.writeText(url);
                 }}
                 className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500"
               >
-                🔗 Copiar Link da Build
+                {t("raid.copyLink")}
               </button>
+              <BuildExport
+                pokemon={build.pokemon}
+                teraType={build.teraType}
+                nature={build.nature.name}
+                ability={build.ability}
+                item={build.item}
+                moves={build.moves}
+                evs={build.evs}
+                stats={calcStats}
+                notes={build.notes}
+              />
             </div>
           )}
         </div>

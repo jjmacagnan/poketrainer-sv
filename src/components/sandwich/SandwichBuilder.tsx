@@ -10,12 +10,14 @@ import {
   MEAL_POWERS,
 } from "@/data/sandwich-recipes";
 import type { SandwichRecipe } from "@/data/sandwich-recipes";
+import { useI18n } from "@/i18n";
 import { RecipeCard } from "./RecipeCard";
 import { RecipeDetail } from "./RecipeDetail";
 
 type Tab = "shiny" | "encounter" | "search";
 
 export function SandwichBuilder() {
+  const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("shiny");
   const [selectedType, setSelectedType] = useState<PokemonType | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<SandwichRecipe | null>(
@@ -59,9 +61,9 @@ export function SandwichBuilder() {
   }
 
   const tabs: { id: Tab; label: string; desc: string }[] = [
-    { id: "shiny", label: "✨ Shiny Hunt", desc: "Sparkling Lv.3" },
-    { id: "encounter", label: "🔍 Encounter", desc: "Encounter Power" },
-    { id: "search", label: "🔎 Buscar", desc: "Busca reversa" },
+    { id: "shiny", label: t("sandwich.tabShiny"), desc: t("sandwich.tabShinyDesc") },
+    { id: "encounter", label: t("sandwich.tabEncounter"), desc: t("sandwich.tabEncounterDesc") },
+    { id: "search", label: t("sandwich.tabSearch"), desc: t("sandwich.tabSearchDesc") },
   ];
 
   return (
@@ -77,30 +79,30 @@ export function SandwichBuilder() {
             WebkitTextFillColor: "transparent",
           }}
         >
-          Sandwich Builder
+          {t("sandwich.title")}
         </h1>
         <p className="text-sm text-gray-400">
-          Pokémon Scarlet & Violet — Receitas para Shiny Hunt, Encounter & mais
+          {t("sandwich.subtitle")}
         </p>
       </div>
 
       {/* Tabs */}
       <div className="mb-5 flex gap-1 rounded-xl bg-white/5 p-1">
-        {tabs.map((t) => (
+        {tabs.map((tb) => (
           <button
-            key={t.id}
+            key={tb.id}
             onClick={() => {
-              setTab(t.id);
+              setTab(tb.id);
               setSelectedType(null);
             }}
             className={`flex-1 rounded-lg px-2 py-2.5 text-center text-sm font-bold transition-all ${
-              tab === t.id
+              tab === tb.id
                 ? "border-b-2 border-violet-500 bg-violet-500/15 text-white"
                 : "border-b-2 border-transparent text-gray-400"
             }`}
           >
-            <div>{t.label}</div>
-            <div className="text-[10px] font-normal opacity-70">{t.desc}</div>
+            <div>{tb.label}</div>
+            <div className="text-[10px] font-normal opacity-70">{tb.desc}</div>
           </button>
         ))}
       </div>
@@ -116,28 +118,28 @@ export function SandwichBuilder() {
                 : "border-white/10 bg-white/5 text-gray-400"
             }`}
           >
-            Todos
+            {t("sandwich.allTypes")}
           </button>
-          {TYPES.map((t) => (
+          {TYPES.map((tp) => (
             <button
-              key={t}
+              key={tp}
               onClick={() =>
-                setSelectedType(selectedType === t ? null : t)
+                setSelectedType(selectedType === tp ? null : tp)
               }
               className="rounded-full border px-3 py-1 text-[11px] font-bold text-white transition-all"
               style={{
                 background:
-                  selectedType === t
-                    ? TYPE_COLORS[t]
+                  selectedType === tp
+                    ? TYPE_COLORS[tp]
                     : "rgba(255,255,255,0.05)",
                 borderColor:
-                  selectedType === t
-                    ? TYPE_COLORS[t]
+                  selectedType === tp
+                    ? TYPE_COLORS[tp]
                     : "rgba(255,255,255,0.1)",
-                opacity: selectedType === t ? 1 : 0.6,
+                opacity: selectedType === tp ? 1 : 0.6,
               }}
             >
-              {t}
+              {tp}
             </button>
           ))}
         </div>
@@ -148,7 +150,7 @@ export function SandwichBuilder() {
         <div className="mb-5">
           <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4">
             <div className="mb-3 text-sm font-bold text-gray-100">
-              🔎 Busca Reversa — &quot;Quero tal poder, qual receita?&quot;
+              {t("sandwich.reverseSearch")}
             </div>
             <div className="flex flex-wrap gap-2">
               <select
@@ -156,10 +158,10 @@ export function SandwichBuilder() {
                 onChange={(e) => setSearchPower(e.target.value)}
                 className="min-w-[180px] flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
               >
-                <option value="">Qualquer Power...</option>
+                <option value="">{t("sandwich.anyPower")}</option>
                 {MEAL_POWERS.map((p) => (
                   <option key={p} value={p}>
-                    {p} Power
+                    {p} {t("sandwich.power")}
                   </option>
                 ))}
               </select>
@@ -168,10 +170,10 @@ export function SandwichBuilder() {
                 onChange={(e) => setSearchType(e.target.value)}
                 className="min-w-[140px] flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
               >
-                <option value="">Qualquer Tipo...</option>
-                {TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
+                <option value="">{t("sandwich.anyType")}</option>
+                {TYPES.map((tp) => (
+                  <option key={tp} value={tp}>
+                    {tp}
                   </option>
                 ))}
               </select>
@@ -186,7 +188,7 @@ export function SandwichBuilder() {
             </div>
           ) : searchPower || searchType ? (
             <div className="py-10 text-center text-gray-500">
-              Nenhuma receita encontrada com esses filtros 😅
+              {t("sandwich.noRecipes")}
             </div>
           ) : null}
         </div>
@@ -203,10 +205,8 @@ export function SandwichBuilder() {
               border: "1px solid rgba(255,215,0,0.2)",
             }}
           >
-            <strong className="text-yellow-400">✨ Shiny Hunt Recipes</strong>{" "}
-            — Todas dão <strong>Sparkling Power Lv.3</strong> +{" "}
-            <strong>Encounter Power Lv.3</strong>. Precisam de{" "}
-            <strong>2x Herba Mystica</strong> do mesmo tipo.
+            <strong className="text-yellow-400">{t("sandwich.shinyTitle")}</strong>{" "}
+            — {t("sandwich.shinyInfo")}
           </div>
           <div className="grid gap-2.5 sm:grid-cols-2">
             {filteredShiny.map((r, i) => (
@@ -227,8 +227,8 @@ export function SandwichBuilder() {
               border: "1px solid rgba(78,205,196,0.2)",
             }}
           >
-            <strong className="text-teal-400">🔍 Encounter Recipes</strong> —
-            Sem Herba Mystica. Boas pra farm de EVs e completar Pokédex.
+            <strong className="text-teal-400">{t("sandwich.encounterTitle")}</strong> —{" "}
+            {t("sandwich.encounterInfo")}
           </div>
           <div className="grid gap-2.5 sm:grid-cols-2">
             {filteredEncounter.map((r, i) => (
@@ -237,7 +237,7 @@ export function SandwichBuilder() {
           </div>
           {filteredEncounter.length === 0 && (
             <div className="py-10 text-center text-gray-500">
-              Nenhuma receita de Encounter pra esse tipo ainda 🔧
+              {t("sandwich.noEncounter")}
             </div>
           )}
         </div>
@@ -245,9 +245,9 @@ export function SandwichBuilder() {
 
       {/* Footer */}
       <div className="mt-8 border-t border-white/10 pt-4 text-center text-xs text-gray-500">
-        PokéTrainer SV Tools — Sandwich Builder v1.0
+        {t("sandwich.footer")}
         <br />
-        Dados baseados em receitas verificadas pela comunidade
+        {t("sandwich.footerNote")}
       </div>
     </div>
   );

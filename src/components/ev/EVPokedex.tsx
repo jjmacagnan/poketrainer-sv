@@ -7,6 +7,7 @@ import type { PokemonType } from "@/data/types";
 import { STAT_NAMES, STAT_LABELS } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { usePokemonSearch } from "@/hooks/usePokemonSearch";
+import { useI18n } from "@/i18n";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { FilterBar } from "@/components/shared/FilterBar";
@@ -55,6 +56,7 @@ for (const stat of STAT_NAMES) {
 type ViewMode = "card" | "table";
 
 export function EVPokedex() {
+  const { t } = useI18n();
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedStat, setSelectedStat] = useState<StatName | null>(null);
@@ -117,8 +119,8 @@ export function EVPokedex() {
     <div className="mx-auto max-w-4xl px-4 py-6">
       <PageHeader
         emoji="📖"
-        title="EV Yield Pokédex"
-        subtitle="Todos os Pokémon de Paldea + DLC com EV yields ao derrotar"
+        title={t("evPokedex.title")}
+        subtitle={t("evPokedex.subtitle")}
         gradient="linear-gradient(135deg, #6390F0, #4ECDC4, #7AC74C)"
       />
 
@@ -127,14 +129,14 @@ export function EVPokedex() {
         <SearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Buscar Pokémon por nome..."
+          placeholder={t("evPokedex.searchPlaceholder")}
         />
       </div>
 
       {/* Stat Filter */}
       <div className="mb-3">
         <div className="mb-1.5 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
-          Filtrar por Stat
+          {t("evPokedex.filterByStat")}
         </div>
         <div className="flex flex-wrap justify-center gap-1.5">
           <button
@@ -148,7 +150,7 @@ export function EVPokedex() {
                 : "border-white/10 bg-white/5 text-gray-400"
             }`}
           >
-            Todos Stats
+            {t("evPokedex.allStats")}
           </button>
           {STAT_NAMES.map((stat) => (
             <button
@@ -195,7 +197,7 @@ export function EVPokedex() {
                 : "border-white/10 bg-white/5 text-gray-400 opacity-70"
             }`}
           >
-            ⭐ Best Spot
+            {t("evPokedex.bestSpot")}
           </button>
         )}
       </div>
@@ -206,14 +208,14 @@ export function EVPokedex() {
           options={typeFilterOptions}
           selected={selectedType}
           onSelect={setSelectedType}
-          allLabel="Todos os Tipos"
+          allLabel={t("evPokedex.allTypes")}
         />
       </div>
 
       {/* View Toggle + Count */}
       <div className="mb-4 flex items-center justify-between">
         <span className="text-sm text-gray-400">
-          {sorted.length} Pokémon encontrados
+          {t("evPokedex.pokemonFound", { count: sorted.length })}
         </span>
         <div className="flex gap-1 rounded-lg bg-white/5 p-0.5">
           <button
@@ -224,7 +226,7 @@ export function EVPokedex() {
                 : "text-gray-400"
             }`}
           >
-            Cards
+            {t("evPokedex.cards")}
           </button>
           <button
             onClick={() => setViewMode("table")}
@@ -234,7 +236,7 @@ export function EVPokedex() {
                 : "text-gray-400"
             }`}
           >
-            Tabela
+            {t("evPokedex.table")}
           </button>
         </div>
       </div>
@@ -242,7 +244,7 @@ export function EVPokedex() {
       {/* Results */}
       {sorted.length === 0 ? (
         <div className="py-16 text-center text-gray-500">
-          Nenhum Pokémon encontrado com esses filtros 😅
+          {t("evPokedex.noResults")}
         </div>
       ) : viewMode === "card" ? (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
