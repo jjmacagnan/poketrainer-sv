@@ -24,8 +24,10 @@ export default function RootLayout({
     <html lang="pt-BR" className={`${outfit.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-gray-950 font-[family-name:var(--font-outfit)] text-gray-100">
         <Providers>
-          <Navbar />
-          <main className="flex-1">{children}</main>
+          <div className="flex flex-1 flex-col">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+          </div>
         </Providers>
       </body>
     </html>

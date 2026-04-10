@@ -2,7 +2,7 @@
   "common": {
     "brand": "PokéTrainer SV",
     "search": "Buscar...",
-    "reset": "Reset",
+    "reset": "Resetar",
     "back": "← Voltar",
     "copy": "📋 Copiar",
     "noResults": "Nenhum resultado",
@@ -10,7 +10,7 @@
     "all": "Todos",
     "pokemon": "Pokémon",
     "type": "Tipo",
-    "level": "Level",
+    "level": "Nível",
     "nature": "Natureza",
     "ability": "Habilidade",
     "stats": "Stats",

@@ -51,11 +51,11 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
     const [section, ...rest] = key.split(".");
     const field = rest.join(".");
-    let value = messages[locale]?.[section]?.[field] || messages.pt[section]?.[field] || key;
+    let value = messages[locale]?.[section]?.[field] || key;
 
     if (params) {
       for (const [k, v] of Object.entries(params)) {
-        value = value.replace(`{${k}}`, String(v));
+        value = value.replaceAll(`{${k}}`, String(v));
       }
     }
 
