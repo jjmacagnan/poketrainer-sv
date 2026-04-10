@@ -268,6 +268,7 @@ function PokemonCard({
   pokemon: Pokemon;
   selectedStat: StatName | null;
 }) {
+  const { t } = useI18n();
   const isBest =
     selectedStat &&
     bestSpots[selectedStat]?.some((p) => p.nationalDex === pokemon.nationalDex);
@@ -278,7 +279,7 @@ function PokemonCard({
     >
       {isBest && (
         <div className="absolute right-2 top-2 rounded-full bg-yellow-500/20 px-2 py-0.5 text-[10px] font-bold text-yellow-300">
-          ⭐ Best
+          {t("evPokedex.best")}
         </div>
       )}
 
@@ -309,7 +310,7 @@ function PokemonCard({
 
       {/* EV Yield */}
       <div className="mb-3 flex items-center gap-2">
-        <span className="text-xs font-semibold text-gray-500">EV Yield:</span>
+        <span className="text-xs font-semibold text-gray-500">{t("evPokedex.evYield")}</span>
         <div className="flex gap-1.5">
           {pokemon.evYield.map((ev) => (
             <span

@@ -6,7 +6,7 @@ import naturesData from "@/data/generated/natures.json";
 import movesData from "@/data/generated/moves.json";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
-import { HELD_ITEMS, ITEM_CATEGORIES } from "@/data/items";
+import { HELD_ITEMS } from "@/data/items";
 import { RAID_BOSSES } from "@/data/raid-bosses";
 import { STAT_NAMES, STAT_LABELS, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
@@ -102,6 +102,7 @@ function SearchDropdown<T>({
   placeholder: string;
   filterFn: (item: T, query: string) => boolean;
 }) {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -134,7 +135,7 @@ function SearchDropdown<T>({
               </button>
             ))}
             {filtered.length === 0 && (
-              <div className="px-3 py-2 text-xs text-gray-500">Nenhum resultado</div>
+              <div className="px-3 py-2 text-xs text-gray-500">{t("common.noResults")}</div>
             )}
           </div>
         </>

@@ -2,6 +2,7 @@
 
 import type { PokemonType } from "@/data/types";
 import { TYPE_COLORS } from "@/data/types";
+import { useI18n } from "@/i18n";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import type { RaidBoss } from "@/data/raid-bosses";
 
@@ -11,6 +12,7 @@ interface BuildCardProps {
 }
 
 export function BuildCard({ boss, onClick }: BuildCardProps) {
+  const { t } = useI18n();
   const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${boss.nationalDex}.png`;
 
   return (
@@ -37,7 +39,7 @@ export function BuildCard({ boss, onClick }: BuildCardProps) {
           </span>
         </div>
         <div className="mt-1 flex items-center gap-1.5">
-          <span className="text-[10px] font-semibold text-gray-500">TERA</span>
+          <span className="text-[10px] font-semibold text-gray-500">{t("raid.teraType").toUpperCase()}</span>
           <TypeBadge type={boss.teraType as PokemonType} small />
         </div>
         {boss.notes && (
