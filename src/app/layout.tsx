@@ -10,9 +10,21 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "PokéTrainer SV Tools",
+  metadataBase: new URL("https://poketrainer.jbit.app.br"),
+  title: {
+    default: "PokéTrainer SV Tools",
+    template: "%s",
+  },
   description:
-    "Ferramentas práticas para jogadores de Pokémon Scarlet & Violet — Sandwich Builder, EV Pokédex, Raid Builder & mais",
+    "Ferramentas práticas para jogadores de Pokémon Scarlet & Violet — Sandwich Builder, EV Pokédex, EV Tracker, Raid Builder & Nature Calculator.",
+  openGraph: {
+    siteName: "PokéTrainer SV",
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+  },
 };
 
 export default function RootLayout({
