@@ -127,6 +127,7 @@
     "subtitle": "Monte e compartilhe builds otimizadas para Tera Raids 5★/6★/7★",
     "tabBuild": "🛠️ Build Maker",
     "tabAI": "🤖 AI Raid Counter",
+    "aiProvider": "Modelo de IA",
     "aiGenerating": "Gerando build com IA...",
     "aiAnalyzing": "Analisando counter para {stars}★ {name} (Tera {teraType})",
     "aiRegenerate": "🤖 Regenerar Build IA",

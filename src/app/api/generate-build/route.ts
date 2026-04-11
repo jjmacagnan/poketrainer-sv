@@ -1,7 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
-
-const client = new Anthropic();
 
 const SYSTEM_PROMPT = `You are a competitive Pokémon Scarlet & Violet Tera Raid expert. You generate optimal counter builds for Tera Raid battles.
 
@@ -30,65 +29,76 @@ You MUST respond with ONLY a valid JSON object in this exact format (no markdown
   "strategy": "string (2-4 sentences in Portuguese explaining the strategy)"
 }`;
 
-export async function POST(request: NextRequest) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: "ANTHROPIC_API_KEY não configurada no servidor" },
-      { status: 500 }
-    );
-  }
-
-  try {
-    const body = await request.json();
-    const { bossName, bossStars, bossTeraType } = body;
-
-    if (!bossName || !bossStars || !bossTeraType) {
-      return NextResponse.json(
-        { error: "Dados do boss incompletos" },
-        { status: 400 }
-      );
-    }
-
-    const userPrompt = `Generate the best counter build for this Tera Raid boss:
+function buildUserPrompt(bossName: string, bossStars: number, bossTeraType: string) {
+  return `Generate the best counter build for this Tera Raid boss:
 
 Boss: ${bossName}
 Star Rating: ${bossStars}★
 Tera Type: ${bossTeraType}
 
 Consider type effectiveness against ${bossTeraType} Tera Type. The counter Pokémon should be able to survive the boss's attacks and deal super effective damage. For ${bossStars}★ raids, ${bossStars >= 7 ? "the boss has massively boosted stats and a shield — prioritize sustained damage and survivability over speed" : bossStars >= 6 ? "the boss is strong — balance offense and defense" : "a standard strong counter works well"}.`;
+}
 
-    const message = await client.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userPrompt }],
-    });
+function parseJsonResponse(raw: string): unknown {
+  let text = raw.trim();
+  if (text.startsWith("```")) {
+    text = text.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "");
+  }
+  return JSON.parse(text);
+}
 
-    const textBlock = message.content.find((block) => block.type === "text");
-    if (!textBlock || textBlock.type !== "text") {
-      return NextResponse.json(
-        { error: "Resposta inesperada da IA" },
-        { status: 500 }
-      );
+async function generateWithAnthropic(bossName: string, bossStars: number, bossTeraType: string) {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error("ANTHROPIC_API_KEY não configurada no servidor");
+
+  const client = new Anthropic({ apiKey });
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 1024,
+    system: SYSTEM_PROMPT,
+    messages: [{ role: "user", content: buildUserPrompt(bossName, bossStars, bossTeraType) }],
+  });
+
+  const textBlock = message.content.find((block) => block.type === "text");
+  if (!textBlock || textBlock.type !== "text") throw new Error("Resposta inesperada da IA");
+  return parseJsonResponse(textBlock.text);
+}
+
+async function generateWithGemini(bossName: string, bossStars: number, bossTeraType: string) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY não configurada no servidor");
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.0-flash",
+    systemInstruction: SYSTEM_PROMPT,
+  });
+
+  const result = await model.generateContent(buildUserPrompt(bossName, bossStars, bossTeraType));
+  return parseJsonResponse(result.response.text());
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { bossName, bossStars, bossTeraType, provider = "anthropic" } = body;
+
+    if (!bossName || !bossStars || !bossTeraType) {
+      return NextResponse.json({ error: "Dados do boss incompletos" }, { status: 400 });
     }
 
-    // Strip markdown code fences if present
-    let jsonText = textBlock.text.trim();
-    if (jsonText.startsWith("```")) {
-      jsonText = jsonText.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "");
+    let build: unknown;
+    if (provider === "gemini") {
+      build = await generateWithGemini(bossName, bossStars, bossTeraType);
+    } else {
+      build = await generateWithAnthropic(bossName, bossStars, bossTeraType);
     }
-
-    const build = JSON.parse(jsonText);
 
     // Validate required fields
     const required = ["pokemonName", "teraType", "nature", "ability", "item", "moves", "evs", "strategy"];
     for (const field of required) {
-      if (!(field in build)) {
-        return NextResponse.json(
-          { error: `Campo obrigatório ausente: ${field}` },
-          { status: 500 }
-        );
+      if (!(field in (build as Record<string, unknown>))) {
+        return NextResponse.json({ error: `Campo obrigatório ausente: ${field}` }, { status: 500 });
       }
     }
 
@@ -96,9 +106,6 @@ Consider type effectiveness against ${bossTeraType} Tera Type. The counter Poké
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Erro desconhecido";
     console.error("AI build generation error:", message);
-    return NextResponse.json(
-      { error: `Erro ao gerar build: ${message}` },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: `Erro ao gerar build: ${message}` }, { status: 500 });
   }
 }

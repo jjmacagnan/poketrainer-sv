@@ -162,6 +162,7 @@ export function RaidBuildMaker() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
   const [aiTarget, setAiTarget] = useState<AIBossTarget | null>(null);
+  const [aiProvider, setAiProvider] = useState<"anthropic" | "gemini">("anthropic");
 
   const totalEvs = Object.values(build.evs).reduce((a, b) => a + b, 0);
 
@@ -239,6 +240,7 @@ export function RaidBuildMaker() {
           bossName: target.name,
           bossStars: target.stars,
           bossTeraType: target.teraType,
+          provider: aiProvider,
         }),
       });
       const data = await res.json();
@@ -312,6 +314,27 @@ export function RaidBuildMaker() {
       {/* Raid Bosses Tab */}
       {tab === "bosses" && (
         <div>
+          {/* Provider Selector */}
+          <div className="mb-4 flex items-center gap-3">
+            <span className="text-xs font-semibold text-gray-500">{t("raid.aiProvider")}</span>
+            <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 p-0.5">
+              {(["anthropic", "gemini"] as const).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setAiProvider(p)}
+                  disabled={aiLoading}
+                  className={`rounded-md px-3 py-1 text-xs font-bold transition-all disabled:opacity-50 ${
+                    aiProvider === p
+                      ? "bg-violet-500/20 text-white"
+                      : "text-gray-500 hover:text-gray-300"
+                  }`}
+                >
+                  {p === "anthropic" ? "Claude" : "Gemini"}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* AI Loading Overlay */}
           {aiLoading && (
             <div className="mb-4 flex items-center gap-3 rounded-xl border border-violet-500/30 bg-violet-500/10 p-4">
