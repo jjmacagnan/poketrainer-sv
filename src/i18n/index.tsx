@@ -21,21 +21,22 @@ const I18nContext = createContext<I18nContextType>({
 });
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => {
-    if (typeof window === "undefined") return "pt";
+  // Always start with "pt" so server and client render the same HTML.
+  // After mount, read localStorage and switch if needed.
+  const [locale, setLocaleState] = useState<Locale>("pt");
+
+  useEffect(() => {
     try {
       const saved = localStorage.getItem("poketrainer-locale") as Locale | null;
-      if (saved && (saved === "pt" || saved === "en")) {
-        return saved;
+      if (saved === "pt" || saved === "en") {
+        setLocaleState(saved);
       }
     } catch {
       // localStorage unavailable (private mode, quota exceeded, etc.)
     }
-    return "pt";
-  });
+  }, []);
 
   useEffect(() => {
-    // Initialize and update lang attribute
     document.documentElement.lang = locale === "pt" ? "pt-BR" : "en";
   }, [locale]);
 
