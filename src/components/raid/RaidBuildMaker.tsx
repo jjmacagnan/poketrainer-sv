@@ -760,7 +760,7 @@ export function RaidBuildMaker() {
           {/* Share Link + Export PNG */}
           {build.pokemon && calcStats && (
             <div className="flex flex-wrap gap-2">
-              <button
+              {/* <button
                 onClick={() => {
                   const data = {
                     p: build.pokemon!.nationalDex,
@@ -782,7 +782,7 @@ export function RaidBuildMaker() {
                 className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500"
               >
                 {t("raid.copyLink")}
-              </button>
+              </button> */}
               <BuildExport
                 pokemon={build.pokemon}
                 teraType={build.teraType}
