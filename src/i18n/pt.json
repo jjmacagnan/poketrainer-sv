@@ -148,5 +148,12 @@
     "exportPng": "📸 Exportar PNG",
     "exportError": "Erro ao exportar imagem",
     "starRaids": "{stars}-Star Raids"
+  },
+  "footer": {
+    "tagline": "Ferramentas para jogadores de Pokémon Scarlet & Violet.",
+    "tools": "Ferramentas",
+    "about": "Sobre",
+    "disclaimer": "Fan site não oficial. Pokémon é marca registrada da Nintendo / Game Freak.",
+    "trademark": "Pokémon © Nintendo · Game Freak · Creatures"
   }
 }
