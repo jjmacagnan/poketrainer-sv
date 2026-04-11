@@ -1,26 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import { useI18n } from "@/i18n";
-
-function JbitLogo() {
-  return (
-    <svg
-      width="64"
-      height="64"
-      viewBox="0 0 400 400"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="Jbit"
-    >
-      <rect width="400" height="400" rx="60" fill="#0A0F2C" />
-      <rect x="60" y="180" width="80" height="80" fill="white" />
-      <rect x="60" y="260" width="160" height="60" fill="white" />
-      <rect x="260" y="180" width="80" height="80" fill="white" />
-      <rect x="180" y="260" width="160" height="60" fill="white" />
-      <rect x="260" y="80" width="80" height="80" fill="#22D3EE" />
-    </svg>
-  );
-}
 
 function YouTubeIcon() {
   return (
@@ -61,8 +42,14 @@ export default function ComunidadePage() {
       {/* Canal YouTube */}
       <div className="mb-6 rounded-2xl border border-white/10 bg-gradient-to-br from-red-500/10 to-orange-500/10 p-6">
         <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-          <div className="shrink-0 rounded-2xl bg-gray-900 p-1">
-            <JbitLogo />
+          <div className="shrink-0 overflow-hidden rounded-2xl">
+            <Image
+              src="/images/JJ_Bit_logo.jpg"
+              alt="JJ Bit"
+              width={96}
+              height={96}
+              className="rounded-2xl"
+            />
           </div>
           <div className="flex-1">
             <p className="mb-0.5 text-xs font-semibold uppercase tracking-widest text-red-400">
