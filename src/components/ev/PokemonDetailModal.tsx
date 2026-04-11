@@ -30,6 +30,8 @@ interface SpeciesData {
   gender_rate: number;
   is_legendary: boolean;
   is_mythical: boolean;
+  color: { name: string };
+  generation: { name: string };
   flavor_text_entries: {
     flavor_text: string;
     language: { name: string };
@@ -37,6 +39,10 @@ interface SpeciesData {
   }[];
   evolution_chain: { url: string };
   varieties: { is_default: boolean; pokemon: { name: string; url: string } }[];
+}
+
+interface PokemonApiData {
+  game_indices: { game_index: number; version: { name: string } }[];
 }
 
 interface EvoNode {
@@ -133,6 +139,46 @@ function genderLabel(rate: number): string {
   return `${100 - female}% ♂ · ${female}% ♀`;
 }
 
+// ── Game availability map ──────────────────────────────────────────────────────
+
+const GAME_META: Record<string, { label: string; color: string }> = {
+  "red":                { label: "RD",  color: "#CC0000" },
+  "blue":               { label: "BL",  color: "#0000AA" },
+  "yellow":             { label: "YW",  color: "#FFD700" },
+  "gold":               { label: "GD",  color: "#B8860B" },
+  "silver":             { label: "SV",  color: "#C0C0C0" },
+  "crystal":            { label: "CY",  color: "#4FC3F7" },
+  "ruby":               { label: "RB",  color: "#B22222" },
+  "sapphire":           { label: "SP",  color: "#1565C0" },
+  "emerald":            { label: "EM",  color: "#2E7D32" },
+  "firered":            { label: "FR",  color: "#FF6F00" },
+  "leafgreen":          { label: "LG",  color: "#388E3C" },
+  "diamond":            { label: "DM",  color: "#5C6BC0" },
+  "pearl":              { label: "PL",  color: "#EC407A" },
+  "platinum":           { label: "PT",  color: "#78909C" },
+  "heartgold":          { label: "HG",  color: "#FFB300" },
+  "soulsilver":         { label: "SS",  color: "#90A4AE" },
+  "black":              { label: "BK",  color: "#212121" },
+  "white":              { label: "WT",  color: "#EEEEEE" },
+  "black-2":            { label: "B2",  color: "#37474F" },
+  "white-2":            { label: "W2",  color: "#CFD8DC" },
+  "x":                  { label: "X",   color: "#1565C0" },
+  "y":                  { label: "Y",   color: "#C62828" },
+  "omega-ruby":         { label: "OR",  color: "#B71C1C" },
+  "alpha-sapphire":     { label: "AS",  color: "#1A237E" },
+  "sun":                { label: "SN",  color: "#FF8F00" },
+  "moon":               { label: "MN",  color: "#283593" },
+  "ultra-sun":          { label: "US",  color: "#E65100" },
+  "ultra-moon":         { label: "UM",  color: "#1A237E" },
+  "sword":              { label: "SW",  color: "#1E88E5" },
+  "shield":             { label: "SH",  color: "#E53935" },
+  "brilliant-diamond":  { label: "BD",  color: "#5E35B1" },
+  "shining-pearl":      { label: "SP2", color: "#F06292" },
+  "legends-arceus":     { label: "LA",  color: "#6D4C41" },
+  "scarlet":            { label: "SC",  color: "#E53935" },
+  "violet":             { label: "VT",  color: "#7B1FA2" },
+};
+
 function spriteUrl(id: number) {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
 }
@@ -155,6 +201,15 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <span className="text-gray-500">{label} · </span>
+      <span className="font-semibold text-gray-200">{value}</span>
+    </div>
+  );
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export function PokemonDetailModal({
@@ -166,16 +221,19 @@ export function PokemonDetailModal({
 }) {
   const [species, setSpecies] = useState<SpeciesData | null>(null);
   const [evoSteps, setEvoSteps] = useState<EvoStep[]>([]);
+  const [gameVersions, setGameVersions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [shiny, setShiny] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const sp: SpeciesData = await fetch(
-        `https://pokeapi.co/api/v2/pokemon-species/${pokemon.nationalDex}/`
-      ).then((r) => r.json());
+      const [sp, pkm] = await Promise.all([
+        fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.nationalDex}/`).then((r) => r.json()) as Promise<SpeciesData>,
+        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.nationalDex}/`).then((r) => r.json()) as Promise<PokemonApiData>,
+      ]);
       setSpecies(sp);
+      setGameVersions(pkm.game_indices.map((g) => g.version.name));
 
       const chain: EvoChain = await fetch(sp.evolution_chain.url).then((r) => r.json());
       setEvoSteps(flattenChain(chain.chain));
@@ -283,33 +341,82 @@ export function PokemonDetailModal({
               ))}
             </div>
 
-            {/* Physical */}
-            <div className="mb-3 flex flex-wrap gap-3 text-sm text-gray-400">
-              {pokemon.height !== undefined && (
-                <span>↕ {(pokemon.height / 10).toFixed(1)}m</span>
-              )}
-              {pokemon.weight !== undefined && (
-                <span>⚖ {(pokemon.weight / 10).toFixed(1)}kg</span>
-              )}
-              {species && (
-                <span>⚥ {genderLabel(species.gender_rate)}</span>
-              )}
-              {species?.habitat && (
-                <span>🌍 {capitalize(species.habitat.name)}</span>
-              )}
-            </div>
-
             {/* Pokédex entry */}
             {flavorText && (
-              <p className="text-sm italic leading-relaxed text-gray-400">
+              <p className="mb-3 text-sm italic leading-relaxed text-gray-400">
                 "{flavorText}"
               </p>
             )}
+
+            {/* General Info grid */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              {pokemon.height !== undefined && (
+                <InfoRow label="Height" value={`${(pokemon.height / 10).toFixed(2)} m`} />
+              )}
+              {pokemon.weight !== undefined && (
+                <InfoRow label="Weight" value={`${(pokemon.weight / 10).toFixed(2)} kg`} />
+              )}
+              {species?.color && (
+                <InfoRow label="Color" value={capitalize(species.color.name)} />
+              )}
+              {species && (
+                <InfoRow label="Gender" value={genderLabel(species.gender_rate)} />
+              )}
+              {species?.habitat && (
+                <InfoRow label="Habitat" value={capitalize(species.habitat.name)} />
+              )}
+              {species?.generation && (
+                <InfoRow
+                  label="Generation"
+                  value={species.generation.name
+                    .replace("generation-", "Gen ")
+                    .toUpperCase()
+                    .replace("GEN ", "Gen ")}
+                />
+              )}
+              <InfoRow label="Region" value={capitalize(pokemon.pokedex)} />
+              {pokemon.abilities.length > 0 && (
+                <div className="col-span-2">
+                  <span className="text-gray-500">Abilities · </span>
+                  <span className="text-gray-200">
+                    {pokemon.abilities
+                      .map((a) => a.isHidden ? `${a.name} (Hidden)` : a.name)
+                      .join(", ")}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Body */}
         <div className="space-y-6 border-t border-white/10 p-6">
+
+          {/* Game Availability */}
+          <Section title="Game Availability">
+            {loading ? (
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
+            ) : gameVersions.length === 0 ? (
+              <p className="text-sm text-gray-500">No data</p>
+            ) : (
+              <div className="flex flex-wrap gap-1.5">
+                {gameVersions.map((version) => {
+                  const meta = GAME_META[version];
+                  if (!meta) return null;
+                  return (
+                    <span
+                      key={version}
+                      title={version.split("-").map(capitalize).join(" ")}
+                      className="inline-flex h-7 w-9 items-center justify-center rounded-md text-[10px] font-black text-white"
+                      style={{ backgroundColor: meta.color + "CC", border: `1px solid ${meta.color}` }}
+                    >
+                      {meta.label}
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+          </Section>
 
           {/* Abilities */}
           <Section title="Abilities">
