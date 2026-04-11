@@ -456,15 +456,9 @@ export function PokemonDetailModal({
               <p className="text-sm text-gray-500">No data</p>
             ) : (
               <div className="flex flex-wrap gap-2">
-                {gameVersions.map((version) => {
-                  const meta = GAME_META[version];
-                  if (!meta) return null;
-                  return (
-                    <div key={version} title={meta.label} className="cursor-default">
-                      <CartridgeIcon version={version} />
-                    </div>
-                  );
-                })}
+                {gameVersions.map((version) => (
+                  <CartridgeIcon key={version} version={version} />
+                ))}
               </div>
             )}
           </Section>
