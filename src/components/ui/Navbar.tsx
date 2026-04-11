@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: "/ev-tracker", key: "evTracker" },
   { href: "/raid-builder", key: "raidBuilder" },
   { href: "/nature-calc", key: "natureCalc" },
+  { href: "/comunidade", key: "comunidade" },
 ];
 
 export function Navbar() {

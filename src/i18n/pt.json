@@ -23,7 +23,8 @@
     "evPokedex": "EV Pokédex",
     "evTracker": "EV Tracker",
     "raidBuilder": "Raid Builder",
-    "natureCalc": "Nature Calc"
+    "natureCalc": "Nature Calc",
+    "comunidade": "Comunidade"
   },
   "home": {
     "tagline": "Ferramentas práticas para Pokémon Scarlet & Violet",
@@ -148,6 +149,17 @@
     "exportPng": "📸 Exportar PNG",
     "exportError": "Erro ao exportar imagem",
     "starRaids": "{stars}-Star Raids"
+  },
+  "comunidade": {
+    "title": "Comunidade",
+    "subtitle": "Canal, Discord e conteúdo sobre Pokémon SV",
+    "youtubeDesc": "Vídeos sobre Pokémon Scarlet & Violet, guias, builds e muito mais.",
+    "youtubeBtn": "Inscrever-se no Canal",
+    "discordTitle": "Servidor Discord",
+    "discordDesc": "Entre no servidor para trocar dicas, builds e tirar dúvidas com a comunidade.",
+    "discordBtn": "Entrar no Discord",
+    "videosTitle": "Vídeos em destaque",
+    "videoPlaceholder": "Em breve"
   },
   "footer": {
     "tagline": "Ferramentas para jogadores de Pokémon Scarlet & Violet.",

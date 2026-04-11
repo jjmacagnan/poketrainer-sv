@@ -23,7 +23,8 @@
     "evPokedex": "EV Pokédex",
     "evTracker": "EV Tracker",
     "raidBuilder": "Raid Builder",
-    "natureCalc": "Nature Calc"
+    "natureCalc": "Nature Calc",
+    "comunidade": "Community"
   },
   "home": {
     "tagline": "Practical tools for Pokémon Scarlet & Violet",
@@ -148,6 +149,17 @@
     "exportPng": "📸 Export PNG",
     "exportError": "Error exporting image",
     "starRaids": "{stars}-Star Raids"
+  },
+  "comunidade": {
+    "title": "Community",
+    "subtitle": "Channel, Discord and Pokémon SV content",
+    "youtubeDesc": "Videos about Pokémon Scarlet & Violet, guides, builds and more.",
+    "youtubeBtn": "Subscribe to Channel",
+    "discordTitle": "Discord Server",
+    "discordDesc": "Join the server to share tips, builds and chat with the community.",
+    "discordBtn": "Join Discord",
+    "videosTitle": "Featured videos",
+    "videoPlaceholder": "Coming soon"
   },
   "footer": {
     "tagline": "Tools for Pokémon Scarlet & Violet players.",
