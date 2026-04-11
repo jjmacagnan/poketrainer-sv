@@ -141,43 +141,99 @@ function genderLabel(rate: number): string {
 
 // ── Game availability map ──────────────────────────────────────────────────────
 
-const GAME_META: Record<string, { label: string; color: string }> = {
-  "red":                { label: "RD",  color: "#CC0000" },
-  "blue":               { label: "BL",  color: "#0000AA" },
-  "yellow":             { label: "YW",  color: "#FFD700" },
-  "gold":               { label: "GD",  color: "#B8860B" },
-  "silver":             { label: "SV",  color: "#C0C0C0" },
-  "crystal":            { label: "CY",  color: "#4FC3F7" },
-  "ruby":               { label: "RB",  color: "#B22222" },
-  "sapphire":           { label: "SP",  color: "#1565C0" },
-  "emerald":            { label: "EM",  color: "#2E7D32" },
-  "firered":            { label: "FR",  color: "#FF6F00" },
-  "leafgreen":          { label: "LG",  color: "#388E3C" },
-  "diamond":            { label: "DM",  color: "#5C6BC0" },
-  "pearl":              { label: "PL",  color: "#EC407A" },
-  "platinum":           { label: "PT",  color: "#78909C" },
-  "heartgold":          { label: "HG",  color: "#FFB300" },
-  "soulsilver":         { label: "SS",  color: "#90A4AE" },
-  "black":              { label: "BK",  color: "#212121" },
-  "white":              { label: "WT",  color: "#EEEEEE" },
-  "black-2":            { label: "B2",  color: "#37474F" },
-  "white-2":            { label: "W2",  color: "#CFD8DC" },
-  "x":                  { label: "X",   color: "#1565C0" },
-  "y":                  { label: "Y",   color: "#C62828" },
-  "omega-ruby":         { label: "OR",  color: "#B71C1C" },
-  "alpha-sapphire":     { label: "AS",  color: "#1A237E" },
-  "sun":                { label: "SN",  color: "#FF8F00" },
-  "moon":               { label: "MN",  color: "#283593" },
-  "ultra-sun":          { label: "US",  color: "#E65100" },
-  "ultra-moon":         { label: "UM",  color: "#1A237E" },
-  "sword":              { label: "SW",  color: "#1E88E5" },
-  "shield":             { label: "SH",  color: "#E53935" },
-  "brilliant-diamond":  { label: "BD",  color: "#5E35B1" },
-  "shining-pearl":      { label: "SP2", color: "#F06292" },
-  "legends-arceus":     { label: "LA",  color: "#6D4C41" },
-  "scarlet":            { label: "SC",  color: "#E53935" },
-  "violet":             { label: "VT",  color: "#7B1FA2" },
+interface GameMeta {
+  label: string;
+  top: string;    // gradient top color
+  bottom: string; // gradient bottom color
+  text: string;   // label text color
+  symbol: string; // single-char symbol shown inside cartridge
+}
+
+const GAME_META: Record<string, GameMeta> = {
+  "red":               { label: "Red",             top: "#DC2626", bottom: "#991B1B", text: "#FCA5A5", symbol: "R" },
+  "blue":              { label: "Blue",            top: "#2563EB", bottom: "#1E40AF", text: "#BFDBFE", symbol: "B" },
+  "yellow":            { label: "Yellow",          top: "#EAB308", bottom: "#A16207", text: "#FEF08A", symbol: "Y" },
+  "gold":              { label: "Gold",            top: "#D97706", bottom: "#92400E", text: "#FDE68A", symbol: "G" },
+  "silver":            { label: "Silver",          top: "#94A3B8", bottom: "#475569", text: "#F1F5F9", symbol: "S" },
+  "crystal":           { label: "Crystal",         top: "#06B6D4", bottom: "#0E7490", text: "#A5F3FC", symbol: "C" },
+  "ruby":              { label: "Ruby",            top: "#BE123C", bottom: "#881337", text: "#FDA4AF", symbol: "R" },
+  "sapphire":          { label: "Sapphire",        top: "#1D4ED8", bottom: "#1E3A8A", text: "#BFDBFE", symbol: "S" },
+  "emerald":           { label: "Emerald",         top: "#059669", bottom: "#065F46", text: "#A7F3D0", symbol: "E" },
+  "firered":           { label: "FireRed",         top: "#EA580C", bottom: "#9A3412", text: "#FED7AA", symbol: "F" },
+  "leafgreen":         { label: "LeafGreen",       top: "#16A34A", bottom: "#14532D", text: "#BBF7D0", symbol: "L" },
+  "diamond":           { label: "Diamond",         top: "#818CF8", bottom: "#4338CA", text: "#E0E7FF", symbol: "D" },
+  "pearl":             { label: "Pearl",           top: "#F472B6", bottom: "#BE185D", text: "#FCE7F3", symbol: "P" },
+  "platinum":          { label: "Platinum",        top: "#64748B", bottom: "#334155", text: "#CBD5E1", symbol: "Pt" },
+  "heartgold":         { label: "HeartGold",       top: "#F59E0B", bottom: "#B45309", text: "#FEF3C7", symbol: "HG" },
+  "soulsilver":        { label: "SoulSilver",      top: "#CBD5E1", bottom: "#64748B", text: "#F8FAFC", symbol: "SS" },
+  "black":             { label: "Black",           top: "#1C1917", bottom: "#0C0A09", text: "#D6D3D1", symbol: "B" },
+  "white":             { label: "White",           top: "#E7E5E4", bottom: "#A8A29E", text: "#1C1917", symbol: "W" },
+  "black-2":           { label: "Black 2",         top: "#292524", bottom: "#1C1917", text: "#E7E5E4", symbol: "B2" },
+  "white-2":           { label: "White 2",         top: "#F5F5F4", bottom: "#D6D3D1", text: "#292524", symbol: "W2" },
+  "x":                 { label: "X",               top: "#1D4ED8", bottom: "#1E3A8A", text: "#DBEAFE", symbol: "X" },
+  "y":                 { label: "Y",               top: "#C026D3", bottom: "#86198F", text: "#F5D0FE", symbol: "Y" },
+  "omega-ruby":        { label: "Omega Ruby",      top: "#DC2626", bottom: "#7F1D1D", text: "#FCA5A5", symbol: "α" },
+  "alpha-sapphire":    { label: "Alpha Sapphire",  top: "#2563EB", bottom: "#1E3A8A", text: "#BFDBFE", symbol: "α" },
+  "sun":               { label: "Sun",             top: "#F97316", bottom: "#C2410C", text: "#FED7AA", symbol: "☀" },
+  "moon":              { label: "Moon",            top: "#4338CA", bottom: "#312E81", text: "#C7D2FE", symbol: "☾" },
+  "ultra-sun":         { label: "Ultra Sun",       top: "#FB923C", bottom: "#EA580C", text: "#FFEDD5", symbol: "☀" },
+  "ultra-moon":        { label: "Ultra Moon",      top: "#6D28D9", bottom: "#4C1D95", text: "#EDE9FE", symbol: "☾" },
+  "sword":             { label: "Sword",           top: "#3B82F6", bottom: "#1D4ED8", text: "#DBEAFE", symbol: "⚔" },
+  "shield":            { label: "Shield",          top: "#EC4899", bottom: "#BE185D", text: "#FCE7F3", symbol: "🛡" },
+  "brilliant-diamond": { label: "Brilliant Diamond", top: "#A78BFA", bottom: "#6D28D9", text: "#EDE9FE", symbol: "◆" },
+  "shining-pearl":     { label: "Shining Pearl",  top: "#FB7185", bottom: "#E11D48", text: "#FFE4E6", symbol: "◆" },
+  "legends-arceus":    { label: "Legends: Arceus", top: "#78716C", bottom: "#44403C", text: "#F5F5F4", symbol: "A" },
+  "scarlet":           { label: "Scarlet",         top: "#EF4444", bottom: "#B91C1C", text: "#FEE2E2", symbol: "S" },
+  "violet":            { label: "Violet",          top: "#8B5CF6", bottom: "#6D28D9", text: "#EDE9FE", symbol: "V" },
 };
+
+// SVG Nintendo Switch cartridge icon
+function CartridgeIcon({ version }: { version: string }) {
+  const meta = GAME_META[version];
+  if (!meta) return null;
+  const gradId = `g-${version}`;
+  const small = meta.symbol.length > 1;
+  return (
+    <svg
+      width="36"
+      height="44"
+      viewBox="0 0 36 44"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label={meta.label}
+      title={meta.label}
+    >
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={meta.top} />
+          <stop offset="100%" stopColor={meta.bottom} />
+        </linearGradient>
+      </defs>
+      {/* Cartridge body with notch at top-center */}
+      <path
+        d={`M5,6 L13,6 Q14,6 14,5 A4,4 0 0,1 22,5 Q22,6 23,6 L31,6 Q35,6 35,10 L35,39 Q35,43 31,43 L5,43 Q1,43 1,39 L1,10 Q1,6 5,6 Z`}
+        fill={`url(#${gradId})`}
+      />
+      {/* Connector pins at bottom */}
+      <rect x="6"  y="37" width="4" height="5" rx="1" fill="rgba(0,0,0,0.25)" />
+      <rect x="12" y="37" width="4" height="5" rx="1" fill="rgba(0,0,0,0.25)" />
+      <rect x="18" y="37" width="4" height="5" rx="1" fill="rgba(0,0,0,0.25)" />
+      <rect x="24" y="37" width="4" height="5" rx="1" fill="rgba(0,0,0,0.25)" />
+      {/* Label text */}
+      <text
+        x="18"
+        y={small ? "26" : "27"}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fill={meta.text}
+        fontSize={small ? "9" : "13"}
+        fontWeight="900"
+        fontFamily="system-ui, sans-serif"
+      >
+        {meta.symbol}
+      </text>
+    </svg>
+  );
+}
 
 function spriteUrl(id: number) {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
@@ -399,21 +455,10 @@ export function PokemonDetailModal({
             ) : gameVersions.length === 0 ? (
               <p className="text-sm text-gray-500">No data</p>
             ) : (
-              <div className="flex flex-wrap gap-1.5">
-                {gameVersions.map((version) => {
-                  const meta = GAME_META[version];
-                  if (!meta) return null;
-                  return (
-                    <span
-                      key={version}
-                      title={version.split("-").map(capitalize).join(" ")}
-                      className="inline-flex h-7 w-9 items-center justify-center rounded-md text-[10px] font-black text-white"
-                      style={{ backgroundColor: meta.color + "CC", border: `1px solid ${meta.color}` }}
-                    >
-                      {meta.label}
-                    </span>
-                  );
-                })}
+              <div className="flex flex-wrap gap-2">
+                {gameVersions.map((version) => (
+                  <CartridgeIcon key={version} version={version} />
+                ))}
               </div>
             )}
           </Section>
