@@ -7,8 +7,8 @@ import movesData from "@/data/generated/moves.json";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
 import { HELD_ITEMS } from "@/data/items";
-import { RAID_BOSSES } from "@/data/raid-bosses";
-import { STAT_NAMES, STAT_LABELS, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
+import { RAID_TIER_LIST, TIER_COLORS, TIER_DESCRIPTIONS, type TierRank, type RaidRole, type RaidTierEntry } from "@/data/raid-tier-list";
+import { STAT_NAMES, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
 import { clampEVs } from "@/lib/ev-calculator";
@@ -16,7 +16,6 @@ import { exportShowdown, parseShowdown } from "@/lib/showdown-parser";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { useI18n } from "@/i18n";
-import { BuildCard } from "./BuildCard";
 import { BuildExport } from "./BuildExport";
 
 interface Pokemon {
@@ -144,25 +143,28 @@ function SearchDropdown<T>({
   );
 }
 
+// ── Tier List Helpers ────────────────────────────────────────────────────────
+
+const TIERS: TierRank[] = ["SS", "S", "A", "B", "C"];
+const ROLES: RaidRole[] = ["physical", "special", "support"];
+
+const ROLE_LABELS: Record<RaidRole, { pt: string; en: string; emoji: string }> = {
+  physical: { pt: "Atacante Físico", en: "Physical Attacker", emoji: "⚔️" },
+  special:  { pt: "Atacante Especial", en: "Special Attacker", emoji: "🔮" },
+  support:  { pt: "Suporte", en: "Support", emoji: "🛡️" },
+};
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
-interface AIBossTarget {
-  name: string;
-  stars: number;
-  teraType: string;
-}
-
 export function RaidBuildMaker() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [build, setBuild] = useState<BuildState>(createEmptyBuild);
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState("");
   const [showExport, setShowExport] = useState(false);
-  const [tab, setTab] = useState<"build" | "bosses">("build");
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError] = useState("");
-  const [aiTarget, setAiTarget] = useState<AIBossTarget | null>(null);
-  const [aiProvider, setAiProvider] = useState<"anthropic" | "gemini">("anthropic");
+  const [tab, setTab] = useState<"build" | "tierlist">("build");
+  const [tierFilter, setTierFilter] = useState<TierRank | "all">("all");
+  const [roleFilter, setRoleFilter] = useState<RaidRole | "all">("all");
 
   const totalEvs = Object.values(build.evs).reduce((a, b) => a + b, 0);
 
@@ -228,55 +230,36 @@ export function RaidBuildMaker() {
     });
   }, [build]);
 
-  const generateAIBuild = useCallback(async (target: AIBossTarget) => {
-    setAiLoading(true);
-    setAiError("");
-    setAiTarget(target);
-    try {
-      const res = await fetch("/api/generate-build", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bossName: target.name,
-          bossStars: target.stars,
-          bossTeraType: target.teraType,
-          provider: aiProvider,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Erro ao gerar build");
+  const loadTierBuild = useCallback((entry: RaidTierEntry) => {
+    const pokemon = allPokemon.find(
+      (p) => p.name.toLowerCase() === entry.name.toLowerCase()
+    );
+    const nature = natures.find(
+      (n) => n.name.toLowerCase() === entry.nature.toLowerCase()
+    ) || natures[0];
 
-      const ai = data.build;
-      const pokemon = allPokemon.find(
-        (p) => p.name.toLowerCase() === ai.pokemonName.toLowerCase()
-      );
-      const nature = natures.find(
-        (n) => n.name.toLowerCase() === ai.nature.toLowerCase()
-      ) || natures[0];
+    setBuild({
+      pokemon: pokemon || null,
+      teraType: entry.teraType,
+      nature,
+      ability: entry.ability,
+      item: entry.item,
+      moves: [entry.moves[0], entry.moves[1], entry.moves[2], entry.moves[3]],
+      evs: entry.evs,
+      ivs: Object.fromEntries(STAT_NAMES.map((s) => [s, 31])) as Record<StatName, number>,
+      level: 100,
+      notes: entry.strategy,
+    });
+    setTab("build");
+  }, []);
 
-      setBuild({
-        pokemon: pokemon || null,
-        teraType: ai.teraType as PokemonType,
-        nature,
-        ability: ai.ability,
-        item: ai.item,
-        moves: [
-          ai.moves[0] || null, ai.moves[1] || null,
-          ai.moves[2] || null, ai.moves[3] || null,
-        ],
-        evs: ai.evs,
-        ivs: Object.fromEntries(STAT_NAMES.map((s) => [s, 31])) as Record<StatName, number>,
-        level: 100,
-        notes: `🤖 AI Build — Counter para ${target.stars}★ ${target.name} (Tera ${target.teraType})\n\n${ai.strategy}`,
-      });
-      setTab("build");
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Erro desconhecido";
-      setAiError(msg);
-    } finally {
-      setAiLoading(false);
-    }
-  }, [aiProvider]);
+  const filteredTierList = useMemo(() => {
+    return RAID_TIER_LIST.filter((entry) => {
+      if (tierFilter !== "all" && entry.tier !== tierFilter) return false;
+      if (roleFilter !== "all" && entry.role !== roleFilter) return false;
+      return true;
+    });
+  }, [tierFilter, roleFilter]);
 
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
@@ -302,109 +285,145 @@ export function RaidBuildMaker() {
           {t("raid.tabBuild")}
         </button>
         <button
-          onClick={() => setTab("bosses")}
+          onClick={() => setTab("tierlist")}
           className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-bold transition-all ${
-            tab === "bosses" ? "bg-violet-500/15 text-white" : "text-gray-400"
+            tab === "tierlist" ? "bg-violet-500/15 text-white" : "text-gray-400"
           }`}
         >
-          {t("raid.tabAI")}
+          {t("raid.tabTierList")}
         </button>
       </div>
 
-      {/* Raid Bosses Tab */}
-      {tab === "bosses" && (
+      {/* Tier List Tab */}
+      {tab === "tierlist" && (
         <div>
-          {/* Provider Selector */}
-          <div className="mb-4 flex items-center gap-3">
-            <span className="text-xs font-semibold text-gray-500">{t("raid.aiProvider")}</span>
-            <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 p-0.5">
-              {(["anthropic", "gemini"] as const).map((p) => (
+          {/* Filters */}
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            {/* Tier filter */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-semibold text-gray-500">Tier</span>
+              <div className="flex gap-0.5 rounded-lg border border-white/10 bg-white/5 p-0.5">
                 <button
-                  key={p}
-                  onClick={() => setAiProvider(p)}
-                  disabled={aiLoading}
-                  className={`rounded-md px-3 py-1 text-xs font-bold transition-all disabled:opacity-50 ${
-                    aiProvider === p
-                      ? "bg-violet-500/20 text-white"
-                      : "text-gray-500 hover:text-gray-300"
+                  onClick={() => setTierFilter("all")}
+                  className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
+                    tierFilter === "all" ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
                   }`}
                 >
-                  {p === "anthropic" ? "Claude" : "Gemini"}
+                  {t("common.all")}
                 </button>
-              ))}
+                {TIERS.map((tier) => (
+                  <button
+                    key={tier}
+                    onClick={() => setTierFilter(tierFilter === tier ? "all" : tier)}
+                    className={`rounded-md px-2.5 py-1 text-xs font-black transition-all ${
+                      tierFilter === tier ? "text-white" : "text-gray-500 hover:text-gray-300"
+                    }`}
+                    style={tierFilter === tier ? { background: TIER_COLORS[tier] + "33" } : undefined}
+                  >
+                    {tier}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Role filter */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-semibold text-gray-500">Role</span>
+              <div className="flex gap-0.5 rounded-lg border border-white/10 bg-white/5 p-0.5">
+                <button
+                  onClick={() => setRoleFilter("all")}
+                  className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
+                    roleFilter === "all" ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
+                  }`}
+                >
+                  {t("common.all")}
+                </button>
+                {ROLES.map((role) => (
+                  <button
+                    key={role}
+                    onClick={() => setRoleFilter(roleFilter === role ? "all" : role)}
+                    className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
+                      roleFilter === role ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
+                    }`}
+                  >
+                    {ROLE_LABELS[role].emoji} {locale === "pt" ? ROLE_LABELS[role].pt : ROLE_LABELS[role].en}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* AI Loading Overlay */}
-          {aiLoading && (
-            <div className="mb-4 flex items-center gap-3 rounded-xl border border-violet-500/30 bg-violet-500/10 p-4">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
-              <div>
-                <div className="text-sm font-bold text-violet-300">
-                  {t("raid.aiGenerating")}
-                </div>
-                {aiTarget && (
-                  <div className="text-xs text-gray-400">
-                    {t("raid.aiAnalyzing", { stars: aiTarget.stars, name: aiTarget.name, teraType: aiTarget.teraType })}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-          {aiError && (
-            <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-              {aiError}
-            </div>
-          )}
+          {/* Tier groups */}
+          {TIERS.map((tier) => {
+            const entriesInTier = filteredTierList.filter((e) => e.tier === tier);
+            if (entriesInTier.length === 0) return null;
 
-          {[7, 6, 5].map((stars) => {
-            const bosses = RAID_BOSSES.filter((b) => b.stars === stars);
-            if (bosses.length === 0) return null;
             return (
-              <div key={stars} className="mb-6">
-                <h3 className="mb-3 text-sm font-bold text-gray-300">
-                  {"★".repeat(stars)} {t("raid.starRaids", { stars })}
-                </h3>
+              <div key={tier} className="mb-6">
+                <div className="mb-3 flex items-center gap-2">
+                  <span
+                    className="rounded-lg px-3 py-1 text-sm font-black text-white"
+                    style={{ background: TIER_COLORS[tier] }}
+                  >
+                    {tier}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {locale === "pt" ? TIER_DESCRIPTIONS[tier].pt : TIER_DESCRIPTIONS[tier].en}
+                  </span>
+                </div>
+
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {bosses.map((boss) => (
-                    <BuildCard key={`${boss.name}-${boss.teraType}`} boss={boss} onClick={() => {
-                      generateAIBuild({
-                        name: boss.name,
-                        stars: boss.stars,
-                        teraType: boss.teraType,
-                      });
-                    }} />
-                  ))}
+                  {entriesInTier.map((entry) => {
+                    const spriteNum = entry.spriteId ?? entry.nationalDex;
+                    const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
+                    return (
+                      <button
+                        key={`${entry.name}-${entry.role}`}
+                        onClick={() => loadTierBuild(entry)}
+                        className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 text-left transition-all hover:-translate-y-0.5 hover:border-white/20 hover:shadow-lg"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-gray-100">{entry.name}</span>
+                            <span
+                              className="rounded px-1.5 py-0.5 text-[10px] font-black text-white"
+                              style={{ background: TIER_COLORS[entry.tier] + "AA" }}
+                            >
+                              {entry.tier}
+                            </span>
+                          </div>
+                          <div className="mt-1 flex items-center gap-1.5">
+                            <span className="text-[10px] text-gray-500">
+                              {ROLE_LABELS[entry.role].emoji} {locale === "pt" ? ROLE_LABELS[entry.role].pt : ROLE_LABELS[entry.role].en}
+                            </span>
+                            <span className="text-gray-700">·</span>
+                            <TypeBadge type={entry.teraType as PokemonType} small />
+                          </div>
+                          <div className="mt-1 text-[10px] text-gray-600">
+                            {entry.item} · {entry.nature}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             );
           })}
+
+          {filteredTierList.length === 0 && (
+            <div className="py-8 text-center text-sm text-gray-500">
+              {t("common.noResults")}
+            </div>
+          )}
         </div>
       )}
 
       {/* Build Maker Tab */}
       {tab === "build" && (
         <div className="space-y-4">
-          {/* AI Generate Banner */}
-          {aiLoading && (
-            <div className="flex items-center gap-3 rounded-xl border border-violet-500/30 bg-violet-500/10 p-4">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-400 border-t-transparent" />
-              <div>
-                <div className="text-sm font-bold text-violet-300">{t("raid.aiGenerating")}</div>
-                {aiTarget && (
-                  <div className="text-xs text-gray-400">
-                    {t("raid.aiAnalyzing", { stars: aiTarget.stars, name: aiTarget.name, teraType: aiTarget.teraType })}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-          {aiError && (
-            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
-              {aiError}
-            </div>
-          )}
-
           {/* Import/Export Bar */}
           <div className="flex flex-wrap gap-2">
             <button
@@ -420,14 +439,6 @@ export function RaidBuildMaker() {
             >
               {t("raid.exportShowdown")}
             </button>
-            {aiTarget && !aiLoading && (
-              <button
-                onClick={() => generateAIBuild(aiTarget)}
-                className="rounded-lg border border-violet-500/30 bg-violet-500/15 px-3 py-1.5 text-xs font-semibold text-violet-300 hover:bg-violet-500/25"
-              >
-                {t("raid.aiRegenerate")}
-              </button>
-            )}
             <button
               onClick={() => setBuild(createEmptyBuild())}
               className="ml-auto rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20"
