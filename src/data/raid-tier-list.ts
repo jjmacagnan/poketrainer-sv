@@ -224,7 +224,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     strategy: "Technician Bullet Punch com prioridade STAB é consistente. Swords Dance para escalar. Bug Bite consome berry do boss. Funciona bem contra Fairy, Ice e Rock.",
   },
   {
-    name: "Calyrex-Ice",
+    name: "Calyrex (Ice Rider)",
     nationalDex: 898,
     spriteId: 10193,
     tier: "A",
@@ -318,7 +318,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     strategy: "Quark Drive + Booster Energy ativa boost de Atk. Swords Dance para escalar. Stone Edge e Earthquake para coverage ampla. Thunder Punch para Water/Flying.",
   },
   {
-    name: "Samurott-Hisui",
+    name: "Hisuian Samurott",
     nationalDex: 503,
     spriteId: 10091,
     tier: "B",
@@ -334,7 +334,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
 
   // ── C ──
   {
-    name: "Zapdos-Galar",
+    name: "Galarian Zapdos",
     nationalDex: 145,
     spriteId: 10169,
     tier: "C",
@@ -500,7 +500,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     strategy: "Toxic Chain aplica Toxic com 30% em qualquer hit — chip damage constante no boss. Nasty Plot para setup. Sludge Bomb e Psychic para STAB dual. Draining Kiss para healing.",
   },
   {
-    name: "Hoopa-Unbound",
+    name: "Hoopa Unbound",
     nationalDex: 720,
     spriteId: 10086,
     tier: "S",
@@ -674,7 +674,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     strategy: "Armor Cannon é forte mas baixa Def/SpD — use após Calm Mind compensar. Flash Fire absorve Fire e boostra. Acid Spray para baixar SpD do boss.",
   },
   {
-    name: "Moltres-Galar",
+    name: "Galarian Moltres",
     nationalDex: 146,
     spriteId: 10170,
     tier: "B",
@@ -742,7 +742,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     strategy: "Drought ativa Sun automaticamente — boostra Fire moves de todo o time. Yawn para sleep no boss. Flamethrower para STAB Fire boosted. Earth Power para coverage.",
   },
   {
-    name: "Typhlosion-Hisui",
+    name: "Hisuian Typhlosion",
     nationalDex: 157,
     spriteId: 10093,
     tier: "C",
@@ -939,7 +939,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     strategy: "Sunny Day setter para times Fire e Chlorophyll users. Helping Hand para buffar carry. Flamethrower boosted por Sun. Giga Drain para sustain. Suporte de weather.",
   },
   {
-    name: "Ninetales-Alola",
+    name: "Alolan Ninetales",
     nationalDex: 38,
     spriteId: 10103,
     tier: "C",
