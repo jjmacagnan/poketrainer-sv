@@ -141,42 +141,42 @@ function genderLabel(rate: number): string {
 
 // ── Game availability map ──────────────────────────────────────────────────────
 
-const GAME_META: Record<string, { label: string; color: string }> = {
-  "red":                { label: "RD",  color: "#CC0000" },
-  "blue":               { label: "BL",  color: "#0000AA" },
-  "yellow":             { label: "YW",  color: "#FFD700" },
-  "gold":               { label: "GD",  color: "#B8860B" },
-  "silver":             { label: "SV",  color: "#C0C0C0" },
-  "crystal":            { label: "CY",  color: "#4FC3F7" },
-  "ruby":               { label: "RB",  color: "#B22222" },
-  "sapphire":           { label: "SP",  color: "#1565C0" },
-  "emerald":            { label: "EM",  color: "#2E7D32" },
-  "firered":            { label: "FR",  color: "#FF6F00" },
-  "leafgreen":          { label: "LG",  color: "#388E3C" },
-  "diamond":            { label: "DM",  color: "#5C6BC0" },
-  "pearl":              { label: "PL",  color: "#EC407A" },
-  "platinum":           { label: "PT",  color: "#78909C" },
-  "heartgold":          { label: "HG",  color: "#FFB300" },
-  "soulsilver":         { label: "SS",  color: "#90A4AE" },
-  "black":              { label: "BK",  color: "#212121" },
-  "white":              { label: "WT",  color: "#EEEEEE" },
-  "black-2":            { label: "B2",  color: "#37474F" },
-  "white-2":            { label: "W2",  color: "#CFD8DC" },
-  "x":                  { label: "X",   color: "#1565C0" },
-  "y":                  { label: "Y",   color: "#C62828" },
-  "omega-ruby":         { label: "OR",  color: "#B71C1C" },
-  "alpha-sapphire":     { label: "AS",  color: "#1A237E" },
-  "sun":                { label: "SN",  color: "#FF8F00" },
-  "moon":               { label: "MN",  color: "#283593" },
-  "ultra-sun":          { label: "US",  color: "#E65100" },
-  "ultra-moon":         { label: "UM",  color: "#1A237E" },
-  "sword":              { label: "SW",  color: "#1E88E5" },
-  "shield":             { label: "SH",  color: "#E53935" },
-  "brilliant-diamond":  { label: "BD",  color: "#5E35B1" },
-  "shining-pearl":      { label: "SP2", color: "#F06292" },
-  "legends-arceus":     { label: "LA",  color: "#6D4C41" },
-  "scarlet":            { label: "SC",  color: "#E53935" },
-  "violet":             { label: "VT",  color: "#7B1FA2" },
+const GAME_META: Record<string, { label: string; name: string; color: string }> = {
+  "red":                { label: "RD",  name: "Pokémon Red",             color: "#CC0000" },
+  "blue":               { label: "BL",  name: "Pokémon Blue",            color: "#0000AA" },
+  "yellow":             { label: "YW",  name: "Pokémon Yellow",          color: "#FFD700" },
+  "gold":               { label: "GD",  name: "Pokémon Gold",            color: "#B8860B" },
+  "silver":             { label: "SV",  name: "Pokémon Silver",          color: "#C0C0C0" },
+  "crystal":            { label: "CY",  name: "Pokémon Crystal",         color: "#4FC3F7" },
+  "ruby":               { label: "RB",  name: "Pokémon Ruby",            color: "#B22222" },
+  "sapphire":           { label: "SP",  name: "Pokémon Sapphire",        color: "#1565C0" },
+  "emerald":            { label: "EM",  name: "Pokémon Emerald",         color: "#2E7D32" },
+  "firered":            { label: "FR",  name: "Pokémon FireRed",         color: "#FF6F00" },
+  "leafgreen":          { label: "LG",  name: "Pokémon LeafGreen",       color: "#388E3C" },
+  "diamond":            { label: "DM",  name: "Pokémon Diamond",         color: "#5C6BC0" },
+  "pearl":              { label: "PL",  name: "Pokémon Pearl",           color: "#EC407A" },
+  "platinum":           { label: "PT",  name: "Pokémon Platinum",        color: "#78909C" },
+  "heartgold":          { label: "HG",  name: "Pokémon HeartGold",       color: "#FFB300" },
+  "soulsilver":         { label: "SS",  name: "Pokémon SoulSilver",      color: "#90A4AE" },
+  "black":              { label: "BK",  name: "Pokémon Black",           color: "#212121" },
+  "white":              { label: "WT",  name: "Pokémon White",           color: "#EEEEEE" },
+  "black-2":            { label: "B2",  name: "Pokémon Black 2",         color: "#37474F" },
+  "white-2":            { label: "W2",  name: "Pokémon White 2",         color: "#CFD8DC" },
+  "x":                  { label: "X",   name: "Pokémon X",               color: "#1565C0" },
+  "y":                  { label: "Y",   name: "Pokémon Y",               color: "#C62828" },
+  "omega-ruby":         { label: "OR",  name: "Pokémon Omega Ruby",      color: "#B71C1C" },
+  "alpha-sapphire":     { label: "AS",  name: "Pokémon Alpha Sapphire",  color: "#1A237E" },
+  "sun":                { label: "SN",  name: "Pokémon Sun",             color: "#FF8F00" },
+  "moon":               { label: "MN",  name: "Pokémon Moon",            color: "#283593" },
+  "ultra-sun":          { label: "US",  name: "Pokémon Ultra Sun",       color: "#E65100" },
+  "ultra-moon":         { label: "UM",  name: "Pokémon Ultra Moon",      color: "#1A237E" },
+  "sword":              { label: "SW",  name: "Pokémon Sword",           color: "#1E88E5" },
+  "shield":             { label: "SH",  name: "Pokémon Shield",          color: "#E53935" },
+  "brilliant-diamond":  { label: "BD",  name: "Brilliant Diamond",       color: "#5E35B1" },
+  "shining-pearl":      { label: "SP2", name: "Shining Pearl",           color: "#F06292" },
+  "legends-arceus":     { label: "LA",  name: "Legends: Arceus",         color: "#6D4C41" },
+  "scarlet":            { label: "SC",  name: "Pokémon Scarlet",         color: "#E53935" },
+  "violet":             { label: "VT",  name: "Pokémon Violet",          color: "#7B1FA2" },
 };
 
 function spriteUrl(id: number) {
@@ -404,14 +404,19 @@ export function PokemonDetailModal({
                   const meta = GAME_META[version];
                   if (!meta) return null;
                   return (
-                    <span
-                      key={version}
-                      title={version.split("-").map(capitalize).join(" ")}
-                      className="inline-flex h-7 w-9 items-center justify-center rounded-md text-[10px] font-black text-white"
-                      style={{ backgroundColor: meta.color + "CC", border: `1px solid ${meta.color}` }}
-                    >
-                      {meta.label}
-                    </span>
+                    <div key={version} className="group relative">
+                      <span
+                        className="inline-flex h-7 w-9 cursor-default items-center justify-center rounded-md text-[10px] font-black text-white"
+                        style={{ backgroundColor: meta.color + "CC", border: `1px solid ${meta.color}` }}
+                      >
+                        {meta.label}
+                      </span>
+                      {/* Custom tooltip */}
+                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-800 px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl ring-1 ring-white/10 transition-opacity duration-150 group-hover:opacity-100">
+                        {meta.name}
+                        <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
+                      </div>
+                    </div>
                   );
                 })}
               </div>
