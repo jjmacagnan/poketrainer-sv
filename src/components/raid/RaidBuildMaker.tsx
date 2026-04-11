@@ -276,7 +276,7 @@ export function RaidBuildMaker() {
     } finally {
       setAiLoading(false);
     }
-  }, []);
+  }, [aiProvider]);
 
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);

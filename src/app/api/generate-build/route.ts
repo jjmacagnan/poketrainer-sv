@@ -47,6 +47,55 @@ function parseJsonResponse(raw: string): unknown {
   return JSON.parse(text);
 }
 
+function extractRetryDelaySeconds(message: string) {
+  const retryMatch = message.match(/Please retry in ([0-9.]+)s/i);
+  if (!retryMatch) return null;
+
+  const seconds = Number.parseFloat(retryMatch[1]);
+  return Number.isFinite(seconds) ? Math.ceil(seconds) : null;
+}
+
+function mapGenerationError(error: unknown, provider: "anthropic" | "gemini") {
+  const rawMessage = error instanceof Error ? error.message : "Erro desconhecido";
+
+  if (provider === "gemini") {
+    const isQuotaError =
+      rawMessage.includes("[429 Too Many Requests]") ||
+      /quota exceeded/i.test(rawMessage);
+
+    if (isQuotaError) {
+      const retryAfterSeconds = extractRetryDelaySeconds(rawMessage);
+      const retryHint = retryAfterSeconds
+        ? ` Tente novamente em cerca de ${retryAfterSeconds}s.`
+        : "";
+
+      return {
+        status: 429,
+        message: `Gemini indisponivel para esta chave no momento por limite de cota ou billing nao habilitado.${retryHint} Se precisar, selecione Claude para continuar.`,
+      };
+    }
+
+    if (rawMessage.includes("GEMINI_API_KEY")) {
+      return {
+        status: 503,
+        message: "Gemini nao esta configurado no servidor.",
+      };
+    }
+  }
+
+  if (provider === "anthropic" && rawMessage.includes("ANTHROPIC_API_KEY")) {
+    return {
+      status: 503,
+      message: "Claude nao esta configurado no servidor.",
+    };
+  }
+
+  return {
+    status: 500,
+    message: `Erro ao gerar build com ${provider === "gemini" ? "Gemini" : "Claude"}: ${rawMessage}`,
+  };
+}
+
 async function generateWithAnthropic(bossName: string, bossStars: number, bossTeraType: string) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error("ANTHROPIC_API_KEY não configurada no servidor");
@@ -90,9 +139,17 @@ async function generateWithGemini(bossName: string, bossStars: number, bossTeraT
 }
 
 export async function POST(request: NextRequest) {
+  let provider: "anthropic" | "gemini" = "anthropic";
+
   try {
     const body = await request.json();
-    const { bossName, bossStars, bossTeraType, provider = "anthropic" } = body;
+    const {
+      bossName,
+      bossStars,
+      bossTeraType,
+      provider: requestedProvider = "anthropic",
+    } = body;
+    provider = requestedProvider === "gemini" ? "gemini" : "anthropic";
 
     if (!bossName || !bossStars || !bossTeraType) {
       return NextResponse.json({ error: "Dados do boss incompletos" }, { status: 400 });
@@ -117,8 +174,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ build });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Erro desconhecido";
-    console.error("AI build generation error:", message);
-    return NextResponse.json({ error: `Erro ao gerar build: ${message}` }, { status: 500 });
+    const mapped = mapGenerationError(error, provider);
+
+    console.error("AI build generation error:", error);
+    return NextResponse.json({ error: mapped.message }, { status: mapped.status });
   }
 }
