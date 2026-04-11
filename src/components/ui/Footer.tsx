@@ -109,12 +109,9 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-8 flex flex-col items-start justify-between gap-2 border-t border-white/10 pt-6 sm:flex-row sm:items-center">
+        <div className="mt-8 border-t border-white/10 pt-6">
           <p className="text-xs text-gray-600">
             © {year} Jbit · PokéTrainer SV
-          </p>
-          <p className="text-xs text-gray-700">
-            {t("footer.trademark")}
           </p>
         </div>
       </div>
