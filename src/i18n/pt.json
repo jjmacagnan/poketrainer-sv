@@ -23,7 +23,8 @@
     "evPokedex": "EV Pokédex",
     "evTracker": "EV Tracker",
     "raidBuilder": "Raid Builder",
-    "natureCalc": "Nature Calc"
+    "natureCalc": "Nature Calc",
+    "comunidade": "Comunidade"
   },
   "home": {
     "tagline": "Ferramentas práticas para Pokémon Scarlet & Violet",
@@ -69,7 +70,19 @@
     "table": "Tabela",
     "noResults": "Nenhum Pokémon encontrado com esses filtros 😅",
     "evYield": "EV Yield:",
-    "best": "⭐ Best"
+    "best": "⭐ Best",
+    "baseExp": "EXP Base",
+    "catchRate": "Taxa de Captura",
+    "growthRate": "Crescimento",
+    "encounterLocations": "Locais de Encontro (Scarlet / Violet)",
+    "noEncounterData": "Sem dados de encontro para Scarlet/Violet",
+    "movepool": "Movepool — Scarlet / Violet",
+    "noMoveData": "Sem dados de movimentos para Scarlet/Violet",
+    "levelUp": "Subir de Nível",
+    "eggMoves": "Egg",
+    "tutorMoves": "Tutor",
+    "showAll": "Mostrar todos os {count} movimentos",
+    "showLess": "Mostrar menos"
   },
   "evTracker": {
     "title": "EV Training Tracker",
@@ -125,10 +138,7 @@
     "title": "Tera Raid Build Maker",
     "subtitle": "Monte e compartilhe builds otimizadas para Tera Raids 5★/6★/7★",
     "tabBuild": "🛠️ Build Maker",
-    "tabAI": "🤖 AI Raid Counter",
-    "aiGenerating": "Gerando build com IA...",
-    "aiAnalyzing": "Analisando counter para {stars}★ {name} (Tera {teraType})",
-    "aiRegenerate": "🤖 Regenerar Build IA",
+    "tabTierList": "🏆 Tier List",
     "importShowdown": "📥 Import Showdown",
     "exportShowdown": "📤 Export Showdown",
     "pasteShowdown": "Colar set do Pokémon Showdown:",
@@ -148,5 +158,22 @@
     "exportPng": "📸 Exportar PNG",
     "exportError": "Erro ao exportar imagem",
     "starRaids": "{stars}-Star Raids"
+  },
+  "comunidade": {
+    "title": "Comunidade",
+    "subtitle": "Canal, Discord e conteúdo sobre Pokémon SV",
+    "youtubeDesc": "Vídeos sobre Pokémon Scarlet & Violet, guias, builds e muito mais.",
+    "youtubeBtn": "Inscrever-se no Canal",
+    "discordTitle": "Servidor Discord",
+    "discordDesc": "Entre no servidor para trocar dicas, builds e tirar dúvidas com a comunidade.",
+    "discordBtn": "Entrar no Discord",
+    "videosTitle": "Vídeos em destaque",
+    "videoPlaceholder": "Em breve"
+  },
+  "footer": {
+    "tagline": "Ferramentas para jogadores de Pokémon Scarlet & Violet.",
+    "tools": "Ferramentas",
+    "about": "Sobre",
+    "disclaimer": "Fan site não oficial. Pokémon é marca registrada da Nintendo / Game Freak."
   }
 }
