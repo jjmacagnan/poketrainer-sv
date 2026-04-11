@@ -32,6 +32,8 @@ interface SpeciesData {
   is_mythical: boolean;
   color: { name: string };
   generation: { name: string };
+  capture_rate: number;
+  growth_rate: { name: string };
   flavor_text_entries: {
     flavor_text: string;
     language: { name: string };
@@ -42,7 +44,35 @@ interface SpeciesData {
 }
 
 interface PokemonApiData {
+  base_experience: number | null;
   game_indices: { game_index: number; version: { name: string } }[];
+  moves: {
+    move: { name: string; url: string };
+    version_group_details: {
+      level_learned_at: number;
+      move_learn_method: { name: string };
+      version_group: { name: string };
+    }[];
+  }[];
+}
+
+interface EncounterData {
+  location_area: { name: string; url: string };
+  version_details: {
+    version: { name: string };
+    max_chance: number;
+    encounter_details: {
+      min_level: number;
+      max_level: number;
+      method: { name: string };
+    }[];
+  }[];
+}
+
+interface SVMove {
+  name: string;
+  level: number;
+  method: string;
 }
 
 interface EvoNode {
@@ -129,6 +159,22 @@ function flattenChain(node: EvoNode): EvoStep[] {
   }
   walk(node);
   return steps;
+}
+
+function formatLocationName(name: string): string {
+  return name
+    .replace(/-area$/, "")
+    .split("-")
+    .map(capitalize)
+    .join(" ");
+}
+
+function formatMethodName(name: string): string {
+  return name.split("-").map(capitalize).join(" ");
+}
+
+function formatGrowthRate(name: string): string {
+  return name.split("-").map(capitalize).join(" ");
 }
 
 function genderLabel(rate: number): string {
@@ -222,18 +268,70 @@ export function PokemonDetailModal({
   const [species, setSpecies] = useState<SpeciesData | null>(null);
   const [evoSteps, setEvoSteps] = useState<EvoStep[]>([]);
   const [gameVersions, setGameVersions] = useState<string[]>([]);
+  const [baseExperience, setBaseExperience] = useState<number | null>(null);
+  const [svMoves, setSvMoves] = useState<SVMove[]>([]);
+  const [encounters, setEncounters] = useState<{ location: string; versions: string[]; levels: string; method: string }[]>([]);
+  const [showAllMoves, setShowAllMoves] = useState(false);
   const [loading, setLoading] = useState(true);
   const [shiny, setShiny] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [sp, pkm] = await Promise.all([
+      const [sp, pkm, enc] = await Promise.all([
         fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.nationalDex}/`).then((r) => r.json()) as Promise<SpeciesData>,
         fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.nationalDex}/`).then((r) => r.json()) as Promise<PokemonApiData>,
+        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.nationalDex}/encounters`).then((r) => r.json()).catch(() => []) as Promise<EncounterData[]>,
       ]);
       setSpecies(sp);
+      setBaseExperience(pkm.base_experience);
       setGameVersions(pkm.game_indices.map((g) => g.version.name));
+
+      // Filter moves for Scarlet/Violet
+      const moves: SVMove[] = [];
+      for (const m of pkm.moves) {
+        for (const vgd of m.version_group_details) {
+          if (vgd.version_group.name === "scarlet-violet") {
+            moves.push({
+              name: m.move.name,
+              level: vgd.level_learned_at,
+              method: vgd.move_learn_method.name,
+            });
+          }
+        }
+      }
+      moves.sort((a, b) => {
+        const methodOrder: Record<string, number> = { "level-up": 0, "machine": 1, "egg": 2, "tutor": 3 };
+        const ma = methodOrder[a.method] ?? 4;
+        const mb = methodOrder[b.method] ?? 4;
+        if (ma !== mb) return ma - mb;
+        if (a.method === "level-up") return a.level - b.level;
+        return a.name.localeCompare(b.name);
+      });
+      setSvMoves(moves);
+
+      // Filter encounters for SV
+      const svEncounters: typeof encounters = [];
+      for (const e of enc) {
+        const svVersions = e.version_details.filter(
+          (vd) => vd.version.name === "scarlet" || vd.version.name === "violet"
+        );
+        if (svVersions.length > 0) {
+          const details = svVersions[0].encounter_details[0];
+          const levelRange = details
+            ? details.min_level === details.max_level
+              ? `Lv. ${details.min_level}`
+              : `Lv. ${details.min_level}–${details.max_level}`
+            : "";
+          svEncounters.push({
+            location: formatLocationName(e.location_area.name),
+            versions: svVersions.map((v) => capitalize(v.version.name)),
+            levels: levelRange,
+            method: details ? formatMethodName(details.method.name) : "",
+          });
+        }
+      }
+      setEncounters(svEncounters);
 
       const chain: EvoChain = await fetch(sp.evolution_chain.url).then((r) => r.json());
       setEvoSteps(flattenChain(chain.chain));
@@ -375,6 +473,15 @@ export function PokemonDetailModal({
                 />
               )}
               <InfoRow label="Region" value={capitalize(pokemon.pokedex)} />
+              {baseExperience !== null && (
+                <InfoRow label="Base EXP" value={String(baseExperience)} />
+              )}
+              {species?.capture_rate !== undefined && (
+                <InfoRow label="Catch Rate" value={String(species.capture_rate)} />
+              )}
+              {species?.growth_rate && (
+                <InfoRow label="Growth" value={formatGrowthRate(species.growth_rate.name)} />
+              )}
               {pokemon.abilities.length > 0 && (
                 <div className="col-span-2">
                   <span className="text-gray-500">Abilities · </span>
@@ -419,6 +526,37 @@ export function PokemonDetailModal({
                     </div>
                   );
                 })}
+              </div>
+            )}
+          </Section>
+
+          {/* Encounter Locations (SV) */}
+          <Section title="Encounter Locations (Scarlet / Violet)">
+            {loading ? (
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
+            ) : encounters.length === 0 ? (
+              <p className="text-sm text-gray-500">No wild encounter data for Scarlet/Violet</p>
+            ) : (
+              <div className="space-y-1.5">
+                {encounters.map((enc, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+                  >
+                    <span className="font-semibold text-gray-200">{enc.location}</span>
+                    {enc.levels && (
+                      <span className="text-xs text-gray-500">{enc.levels}</span>
+                    )}
+                    {enc.method && (
+                      <span className="rounded bg-violet-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-violet-300">
+                        {enc.method}
+                      </span>
+                    )}
+                    <span className="ml-auto text-[10px] text-gray-600">
+                      {enc.versions.join(" / ")}
+                    </span>
+                  </div>
+                ))}
               </div>
             )}
           </Section>
@@ -469,6 +607,112 @@ export function PokemonDetailModal({
                 />
               ))}
             </div>
+          </Section>
+
+          {/* Movepool (SV) */}
+          <Section title={`Movepool — Scarlet / Violet${svMoves.length > 0 ? ` (${svMoves.length})` : ""}`}>
+            {loading ? (
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
+            ) : svMoves.length === 0 ? (
+              <p className="text-sm text-gray-500">No move data for Scarlet/Violet</p>
+            ) : (() => {
+              const levelUp = svMoves.filter((m) => m.method === "level-up");
+              const tm = svMoves.filter((m) => m.method === "machine");
+              const egg = svMoves.filter((m) => m.method === "egg");
+              const tutor = svMoves.filter((m) => m.method === "tutor");
+              const visibleLimit = showAllMoves ? Infinity : 12;
+
+              return (
+                <div className="space-y-3">
+                  {/* Level-up moves */}
+                  {levelUp.length > 0 && (
+                    <div>
+                      <p className="mb-1.5 text-xs font-semibold text-emerald-400">Level Up ({levelUp.length})</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {levelUp.slice(0, visibleLimit).map((m) => (
+                          <span
+                            key={`lu-${m.name}`}
+                            className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                          >
+                            <span className="font-mono text-[10px] text-emerald-400/70">
+                              {m.level > 0 ? m.level : "—"}
+                            </span>
+                            {formatItemName(m.name)}
+                          </span>
+                        ))}
+                        {!showAllMoves && levelUp.length > visibleLimit && (
+                          <span className="text-xs text-gray-600">+{levelUp.length - visibleLimit} more</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TM moves */}
+                  {tm.length > 0 && (
+                    <div>
+                      <p className="mb-1.5 text-xs font-semibold text-blue-400">TM ({tm.length})</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {tm.slice(0, visibleLimit).map((m) => (
+                          <span
+                            key={`tm-${m.name}`}
+                            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                          >
+                            {formatItemName(m.name)}
+                          </span>
+                        ))}
+                        {!showAllMoves && tm.length > visibleLimit && (
+                          <span className="text-xs text-gray-600">+{tm.length - visibleLimit} more</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Egg moves */}
+                  {egg.length > 0 && (
+                    <div>
+                      <p className="mb-1.5 text-xs font-semibold text-pink-400">Egg ({egg.length})</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {egg.map((m) => (
+                          <span
+                            key={`egg-${m.name}`}
+                            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                          >
+                            {formatItemName(m.name)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tutor moves */}
+                  {tutor.length > 0 && (
+                    <div>
+                      <p className="mb-1.5 text-xs font-semibold text-amber-400">Tutor ({tutor.length})</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {tutor.map((m) => (
+                          <span
+                            key={`tut-${m.name}`}
+                            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                          >
+                            {formatItemName(m.name)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Show all toggle */}
+                  {(showAllMoves || svMoves.length > 12) && (
+                    <button
+                      onClick={() => setShowAllMoves(!showAllMoves)}
+                      className="text-xs font-semibold text-violet-400 hover:text-violet-300"
+                    >
+                      {showAllMoves ? "Show less" : `Show all ${svMoves.length} moves`}
+                    </button>
+                  )}
+                </div>
+              );
+            })()}
           </Section>
 
           {/* Egg Groups */}

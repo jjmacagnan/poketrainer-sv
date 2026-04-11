@@ -70,7 +70,19 @@
     "table": "Tabela",
     "noResults": "Nenhum Pokémon encontrado com esses filtros 😅",
     "evYield": "EV Yield:",
-    "best": "⭐ Best"
+    "best": "⭐ Best",
+    "baseExp": "EXP Base",
+    "catchRate": "Taxa de Captura",
+    "growthRate": "Crescimento",
+    "encounterLocations": "Locais de Encontro (Scarlet / Violet)",
+    "noEncounterData": "Sem dados de encontro para Scarlet/Violet",
+    "movepool": "Movepool — Scarlet / Violet",
+    "noMoveData": "Sem dados de movimentos para Scarlet/Violet",
+    "levelUp": "Subir de Nível",
+    "eggMoves": "Egg",
+    "tutorMoves": "Tutor",
+    "showAll": "Mostrar todos os {count} movimentos",
+    "showLess": "Mostrar menos"
   },
   "evTracker": {
     "title": "EV Training Tracker",
