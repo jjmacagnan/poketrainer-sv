@@ -51,6 +51,9 @@ async function generateWithAnthropic(bossName: string, bossStars: number, bossTe
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error("ANTHROPIC_API_KEY não configurada no servidor");
 
+  console.log(`[AI] provider=anthropic model=claude-sonnet-4-6 boss="${bossName}" stars=${bossStars} tera=${bossTeraType}`);
+  const t0 = Date.now();
+
   const client = new Anthropic({ apiKey });
   const message = await client.messages.create({
     model: "claude-sonnet-4-6",
@@ -58,6 +61,8 @@ async function generateWithAnthropic(bossName: string, bossStars: number, bossTe
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: buildUserPrompt(bossName, bossStars, bossTeraType) }],
   });
+
+  console.log(`[AI] anthropic OK — ${Date.now() - t0}ms | input_tokens=${message.usage.input_tokens} output_tokens=${message.usage.output_tokens}`);
 
   const textBlock = message.content.find((block) => block.type === "text");
   if (!textBlock || textBlock.type !== "text") throw new Error("Resposta inesperada da IA");
@@ -68,6 +73,9 @@ async function generateWithGemini(bossName: string, bossStars: number, bossTeraT
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY não configurada no servidor");
 
+  console.log(`[AI] provider=gemini model=gemini-2.0-flash boss="${bossName}" stars=${bossStars} tera=${bossTeraType}`);
+  const t0 = Date.now();
+
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
     model: "gemini-2.0-flash",
@@ -75,6 +83,9 @@ async function generateWithGemini(bossName: string, bossStars: number, bossTeraT
   });
 
   const result = await model.generateContent(buildUserPrompt(bossName, bossStars, bossTeraType));
+  const usage = result.response.usageMetadata;
+  console.log(`[AI] gemini OK — ${Date.now() - t0}ms | prompt_tokens=${usage?.promptTokenCount} output_tokens=${usage?.candidatesTokenCount}`);
+
   return parseJsonResponse(result.response.text());
 }
 
@@ -88,6 +99,8 @@ export async function POST(request: NextRequest) {
     }
 
     let build: unknown;
+    console.log(`[AI] request received — provider=${provider} boss="${bossName}" ${bossStars}★ tera=${bossTeraType}`);
+
     if (provider === "gemini") {
       build = await generateWithGemini(bossName, bossStars, bossTeraType);
     } else {
