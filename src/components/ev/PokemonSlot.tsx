@@ -4,6 +4,7 @@ import { useState } from "react";
 import { STAT_NAMES, STAT_LABELS, MAX_EV_PER_STAT, MAX_EV_TOTAL } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { clampEVs, VITAMIN_AMOUNT } from "@/lib/ev-calculator";
+import { useI18n } from "@/i18n";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import type { PokemonType } from "@/data/types";
 
@@ -62,6 +63,7 @@ export function PokemonSlot({
   onSelectPokemon,
   templateOptions,
 }: PokemonSlotProps) {
+  const { t } = useI18n();
   const [showModifiers, setShowModifiers] = useState(false);
 
   const totalEVs = Object.values(data.evs).reduce((a, b) => a + b, 0);
@@ -121,7 +123,7 @@ export function PokemonSlot({
               onClick={onSelectPokemon}
               className="text-sm font-semibold text-gray-400 hover:text-white"
             >
-              Selecionar Pokémon...
+              {t("pokemonSlot.selectPokemon")}
             </button>
           )}
         </div>
@@ -136,7 +138,7 @@ export function PokemonSlot({
               remaining === 0 ? "text-emerald-400" : "text-gray-500"
             }`}
           >
-            {remaining} restante
+            {t("pokemonSlot.remaining", { count: remaining })}
           </div>
         </div>
       </div>
@@ -198,7 +200,7 @@ export function PokemonSlot({
                 <button
                   onClick={() => updateEV(stat, VITAMIN_AMOUNT)}
                   className="rounded bg-violet-500/15 px-1.5 py-0.5 text-[10px] font-bold text-violet-300 transition-colors hover:bg-violet-500/25"
-                  title="Vitamina (+10)"
+                  title={t("pokemonSlot.vitaminTitle")}
                 >
                   +10
                 </button>
@@ -223,7 +225,7 @@ export function PokemonSlot({
             onClick={() => setShowModifiers(!showModifiers)}
             className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-gray-400 transition-colors hover:text-white"
           >
-            ⚙ Modificadores {showModifiers ? "▲" : "▼"}
+            {t("pokemonSlot.modifiers")} {showModifiers ? "▲" : "▼"}
           </button>
 
           {/* Template Dropdown */}
@@ -238,7 +240,7 @@ export function PokemonSlot({
             defaultValue=""
             className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-gray-400"
           >
-            <option value="">📋 Templates...</option>
+            <option value="">{t("pokemonSlot.templatesDrop")}</option>
             {templateOptions.map((tpl, i) => (
               <option key={i} value={i}>
                 {tpl.label}
@@ -250,7 +252,7 @@ export function PokemonSlot({
             onClick={resetEVs}
             className="ml-auto rounded-lg border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-400 transition-colors hover:bg-red-500/20"
           >
-            Reset
+            {t("common.reset")}
           </button>
         </div>
 
@@ -265,7 +267,7 @@ export function PokemonSlot({
                   : "border-white/10 bg-white/5 text-gray-400"
               }`}
             >
-              🦠 Pokérus {data.pokerus ? "(2×)" : ""}
+              {t("pokemonSlot.pokerus")} {data.pokerus ? "(2×)" : ""}
             </button>
 
             <button
@@ -282,7 +284,7 @@ export function PokemonSlot({
                   : "border-white/10 bg-white/5 text-gray-400"
               }`}
             >
-              💪 Macho Brace {data.machoBrace ? "(2×)" : ""}
+              {t("pokemonSlot.machoBrace")} {data.machoBrace ? "(2×)" : ""}
             </button>
 
             <select
@@ -296,7 +298,7 @@ export function PokemonSlot({
               }
               className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-bold text-gray-400"
             >
-              <option value="">⚡ Power Item...</option>
+              <option value="">{t("pokemonSlot.powerItemDrop")}</option>
               {POWER_ITEMS.map((pi) => (
                 <option key={pi.stat} value={pi.stat}>
                   {pi.name} (+8 {pi.stat})

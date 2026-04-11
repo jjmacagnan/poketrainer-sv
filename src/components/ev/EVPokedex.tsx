@@ -13,6 +13,7 @@ import { SearchInput } from "@/components/shared/SearchInput";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { StatBar } from "@/components/ui/StatBar";
+import { PokemonDetailModal } from "./PokemonDetailModal";
 
 interface Pokemon {
   dexNumber: number;
@@ -25,6 +26,9 @@ interface Pokemon {
   sprite: string;
   artwork: string;
   pokedex: string;
+  height?: number;
+  weight?: number;
+  heldItems?: string[];
 }
 
 const allPokemon = pokemonData as Pokemon[];
@@ -63,6 +67,7 @@ export function EVPokedex() {
   const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("card");
   const [showBestOnly, setShowBestOnly] = useState(false);
+  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
 
   // Filter pipeline
   const filtered = useMemo(() => {
@@ -249,11 +254,24 @@ export function EVPokedex() {
       ) : viewMode === "card" ? (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {sorted.map((pokemon) => (
-            <PokemonCard key={pokemon.nationalDex} pokemon={pokemon} selectedStat={selectedStat} />
+            <PokemonCard
+              key={pokemon.nationalDex}
+              pokemon={pokemon}
+              selectedStat={selectedStat}
+              onClick={() => setSelectedPokemon(pokemon)}
+            />
           ))}
         </div>
       ) : (
-        <PokemonTable pokemon={sorted} selectedStat={selectedStat} />
+        <PokemonTable pokemon={sorted} selectedStat={selectedStat} onSelect={setSelectedPokemon} />
+      )}
+
+      {/* Detail Modal */}
+      {selectedPokemon && (
+        <PokemonDetailModal
+          pokemon={selectedPokemon}
+          onClose={() => setSelectedPokemon(null)}
+        />
       )}
     </div>
   );
@@ -264,21 +282,25 @@ export function EVPokedex() {
 function PokemonCard({
   pokemon,
   selectedStat,
+  onClick,
 }: {
   pokemon: Pokemon;
   selectedStat: StatName | null;
+  onClick: () => void;
 }) {
+  const { t } = useI18n();
   const isBest =
     selectedStat &&
     bestSpots[selectedStat]?.some((p) => p.nationalDex === pokemon.nationalDex);
 
   return (
     <div
-      className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:border-white/20"
+      onClick={onClick}
+      className="relative cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:border-violet-500/40 hover:bg-white/8"
     >
       {isBest && (
         <div className="absolute right-2 top-2 rounded-full bg-yellow-500/20 px-2 py-0.5 text-[10px] font-bold text-yellow-300">
-          ⭐ Best
+          {t("evPokedex.best")}
         </div>
       )}
 
@@ -309,7 +331,7 @@ function PokemonCard({
 
       {/* EV Yield */}
       <div className="mb-3 flex items-center gap-2">
-        <span className="text-xs font-semibold text-gray-500">EV Yield:</span>
+        <span className="text-xs font-semibold text-gray-500">{t("evPokedex.evYield")}</span>
         <div className="flex gap-1.5">
           {pokemon.evYield.map((ev) => (
             <span
@@ -345,9 +367,11 @@ function PokemonCard({
 function PokemonTable({
   pokemon,
   selectedStat,
+  onSelect,
 }: {
   pokemon: Pokemon[];
   selectedStat: StatName | null;
+  onSelect: (p: Pokemon) => void;
 }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-white/10">
@@ -380,7 +404,8 @@ function PokemonTable({
           {pokemon.map((p) => (
             <tr
               key={p.nationalDex}
-              className="border-b border-white/5 transition-colors hover:bg-white/5"
+              onClick={() => onSelect(p)}
+              className="cursor-pointer border-b border-white/5 transition-colors hover:bg-violet-500/5"
             >
               <td className="px-3 py-2 font-mono text-xs text-gray-500">
                 {p.nationalDex}

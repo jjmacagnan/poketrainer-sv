@@ -2,7 +2,8 @@
  * Fetches all Pokémon from Paldea + DLC pokédexes via PokéAPI.
  * Outputs: src/data/generated/pokemon.json
  *
- * Data per Pokémon: dexNumber, nationalDex, name, types, baseStats, evYield, abilities, sprite
+ * Data per Pokémon: dexNumber, nationalDex, name, types, baseStats, evYield,
+ *   abilities, sprite, artwork, pokedex, height, weight, heldItems
  */
 
 import { fetchApi, fetchBatch, writeJsonFile } from "./api-helper";
@@ -30,9 +31,12 @@ interface SpeciesResponse {
 interface PokemonResponse {
   id: number;
   name: string;
+  height: number;
+  weight: number;
   types: { slot: number; type: { name: string } }[];
   stats: { base_stat: number; effort: number; stat: { name: string } }[];
   abilities: { ability: { name: string }; is_hidden: boolean; slot: number }[];
+  held_items: { item: { name: string } }[];
   sprites: {
     front_default: string | null;
     other: {
@@ -61,6 +65,9 @@ interface OutputPokemon {
   sprite: string;
   artwork: string;
   pokedex: string;
+  height: number;
+  weight: number;
+  heldItems: string[];
 }
 
 async function fetchPokedex(id: number): Promise<PokedexResponse> {
@@ -73,7 +80,6 @@ async function fetchPokemonData(
   pokedex: string
 ): Promise<OutputPokemon | null> {
   try {
-    // Get species to find default variety
     const species = await fetchApi<SpeciesResponse>(
       `/pokemon-species/${speciesName}/`
     );
@@ -110,6 +116,9 @@ async function fetchPokemonData(
       sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
       artwork: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
       pokedex,
+      height: pokemon.height,
+      weight: pokemon.weight,
+      heldItems: pokemon.held_items.map((h) => formatName(h.item.name)),
     };
   } catch (err) {
     console.error(`\n  ⚠ Failed to fetch ${speciesName}: ${err}`);
@@ -139,7 +148,6 @@ async function main() {
     const dex = await fetchPokedex(id);
     console.log(`  Found ${dex.pokemon_entries.length} entries`);
 
-    // Prepare fetch items (skip already-seen species to avoid duplicates across dexes)
     const toFetch = dex.pokemon_entries.filter(
       (e) => !seen.has(e.pokemon_species.name)
     );
@@ -155,7 +163,6 @@ async function main() {
     allPokemon.push(...(results.filter(Boolean) as OutputPokemon[]));
   }
 
-  // Sort by national dex number
   allPokemon.sort((a, b) => a.nationalDex - b.nationalDex);
 
   const outPath = path.join(__dirname, "../src/data/generated/pokemon.json");
