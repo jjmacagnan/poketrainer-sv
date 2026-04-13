@@ -86,7 +86,7 @@ export function Footer() {
                 </p>
               </div>
               <p className="text-sm leading-relaxed text-gray-500">
-                Ferramentas para jogadores de Pokémon Scarlet & Violet.
+                {t("footer.tagline")}
               </p>
             </div>
 
