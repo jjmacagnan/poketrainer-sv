@@ -7,7 +7,7 @@ import movesData from "@/data/generated/moves.json";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
 import { HELD_ITEMS } from "@/data/items";
-import { RAID_TIER_LIST, TIER_COLORS, TIER_DESCRIPTIONS, type TierRank, type RaidRole, type RaidTierEntry } from "@/data/raid-tier-list";
+import { RAID_TIER_LIST, TIER_COLORS, TIER_DESCRIPTIONS, type TierRank, type RaidRole, type RaidTierEntry, type RaidBuild } from "@/data/raid-tier-list";
 import { STAT_NAMES, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
@@ -165,6 +165,7 @@ export function RaidBuildMaker() {
   const [tab, setTab] = useState<"build" | "tierlist">("build");
   const [tierFilter, setTierFilter] = useState<TierRank | "all">("all");
   const [roleFilter, setRoleFilter] = useState<RaidRole | "all">("all");
+  const [selectedEntry, setSelectedEntry] = useState<RaidTierEntry | null>(null);
 
   const totalEvs = Object.values(build.evs).reduce((a, b) => a + b, 0);
 
@@ -230,26 +231,27 @@ export function RaidBuildMaker() {
     });
   }, [build]);
 
-  const loadTierBuild = useCallback((entry: RaidTierEntry) => {
+  const loadTierBuild = useCallback((entry: RaidTierEntry, buildData: RaidBuild) => {
     const pokemon = allPokemon.find(
       (p) => p.name.toLowerCase() === entry.name.toLowerCase()
     );
     const nature = natures.find(
-      (n) => n.name.toLowerCase() === entry.nature.toLowerCase()
+      (n) => n.name.toLowerCase() === buildData.nature.toLowerCase()
     ) || natures[0];
 
     setBuild({
       pokemon: pokemon || null,
-      teraType: entry.teraType,
+      teraType: buildData.teraType,
       nature,
-      ability: entry.ability,
-      item: entry.item,
-      moves: [entry.moves[0], entry.moves[1], entry.moves[2], entry.moves[3]],
-      evs: entry.evs,
+      ability: buildData.ability,
+      item: buildData.item,
+      moves: [buildData.moves[0], buildData.moves[1], buildData.moves[2], buildData.moves[3]],
+      evs: buildData.evs,
       ivs: Object.fromEntries(STAT_NAMES.map((s) => [s, 31])) as Record<StatName, number>,
       level: 100,
-      notes: entry.strategy,
+      notes: buildData.strategy,
     });
+    setSelectedEntry(null);
     setTab("build");
   }, []);
 
@@ -376,36 +378,71 @@ export function RaidBuildMaker() {
                   {entriesInTier.map((entry) => {
                     const spriteNum = entry.spriteId ?? entry.nationalDex;
                     const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
+                    const primaryBuild = entry.builds[0];
+                    const isSelected = selectedEntry?.name === entry.name && selectedEntry?.role === entry.role;
                     return (
-                      <button
-                        key={`${entry.name}-${entry.role}`}
-                        onClick={() => loadTierBuild(entry)}
-                        className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 text-left transition-all hover:-translate-y-0.5 hover:border-white/20 hover:shadow-lg"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-gray-100">{entry.name}</span>
-                            <span
-                              className="rounded px-1.5 py-0.5 text-[10px] font-black text-white"
-                              style={{ background: TIER_COLORS[entry.tier] + "AA" }}
-                            >
-                              {entry.tier}
-                            </span>
+                      <div key={`${entry.name}-${entry.role}`} className="flex flex-col gap-1">
+                        <button
+                          onClick={() => setSelectedEntry(isSelected ? null : entry)}
+                          className={`group flex items-center gap-3 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+                            isSelected
+                              ? "border-violet-500/50 bg-violet-500/10"
+                              : "border-white/10 bg-white/5 hover:border-white/20"
+                          }`}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-gray-100">{entry.name}</span>
+                              <span
+                                className="rounded px-1.5 py-0.5 text-[10px] font-black text-white"
+                                style={{ background: TIER_COLORS[entry.tier] + "AA" }}
+                              >
+                                {entry.tier}
+                              </span>
+                            </div>
+                            <div className="mt-1 flex items-center gap-1.5">
+                              <span className="text-[10px] text-gray-500">
+                                {ROLE_LABELS[entry.role].emoji} {locale === "pt" ? ROLE_LABELS[entry.role].pt : ROLE_LABELS[entry.role].en}
+                              </span>
+                              <span className="text-gray-700">·</span>
+                              <TypeBadge type={primaryBuild.teraType as PokemonType} small />
+                            </div>
+                            <div className="mt-1 flex items-center justify-between text-[10px] text-gray-600">
+                              <span>{primaryBuild.item}</span>
+                              <span className="text-violet-400">{entry.builds.length} build{entry.builds.length > 1 ? "s" : ""} →</span>
+                            </div>
                           </div>
-                          <div className="mt-1 flex items-center gap-1.5">
-                            <span className="text-[10px] text-gray-500">
-                              {ROLE_LABELS[entry.role].emoji} {locale === "pt" ? ROLE_LABELS[entry.role].pt : ROLE_LABELS[entry.role].en}
-                            </span>
-                            <span className="text-gray-700">·</span>
-                            <TypeBadge type={entry.teraType as PokemonType} small />
+                        </button>
+
+                        {/* Build picker — expands below the card */}
+                        {isSelected && (
+                          <div className="col-span-full rounded-xl border border-violet-500/30 bg-gray-900/80 p-2">
+                            <div className="mb-1.5 px-1 text-[10px] font-semibold text-gray-500">
+                              {locale === "pt" ? "Selecione uma build:" : "Select a build:"}
+                            </div>
+                            {entry.builds.map((buildOption, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => loadTierBuild(entry, buildOption)}
+                                className="mb-1 w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-left transition-all hover:border-violet-500/30 hover:bg-violet-500/10 last:mb-0"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-semibold text-gray-200">{buildOption.name}</span>
+                                  <TypeBadge type={buildOption.teraType as PokemonType} small />
+                                </div>
+                                <div className="mt-0.5 text-[10px] text-gray-500">
+                                  {buildOption.nature} · {buildOption.ability} · {buildOption.item}
+                                </div>
+                                <div className="mt-0.5 text-[10px] text-gray-600">
+                                  {buildOption.moves.join(" · ")}
+                                </div>
+                              </button>
+                            ))}
                           </div>
-                          <div className="mt-1 text-[10px] text-gray-600">
-                            {entry.item} · {entry.nature}
-                          </div>
-                        </div>
-                      </button>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
