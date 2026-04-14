@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import pokemonData from "@/data/generated/pokemon.json";
+import { wildPokemonData } from "@/data/pokemon-utils";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
 import { STAT_NAMES, STAT_LABELS } from "@/lib/constants";
@@ -31,8 +31,7 @@ interface Pokemon {
   heldItems?: string[];
 }
 
-// Exclude Pokémon added only for raid builds — they can't be found in the wild for EV training
-const allPokemon = (pokemonData as Pokemon[]).filter((p) => p.pokedex !== "raid-extra");
+const allPokemon = wildPokemonData as unknown as Pokemon[];
 
 const typeFilterOptions = TYPES.map((t) => ({
   value: t,

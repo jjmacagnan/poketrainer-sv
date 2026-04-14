@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import pokemonData from "@/data/generated/pokemon.json";
+import { wildPokemonData } from "@/data/pokemon-utils";
 import { STAT_NAMES } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -19,7 +19,7 @@ interface Pokemon {
   pokedex: string;
 }
 
-const allPokemon = (pokemonData as Pokemon[]).filter((p) => p.pokedex !== "raid-extra");
+const allPokemon = wildPokemonData as unknown as Pokemon[];
 
 const EV_TEMPLATES: { label: string; evs: Record<StatName, number> }[] = [
   {
