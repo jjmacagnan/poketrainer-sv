@@ -31,7 +31,8 @@ interface Pokemon {
   heldItems?: string[];
 }
 
-const allPokemon = pokemonData as Pokemon[];
+// Exclude Pokémon added only for raid builds — they can't be found in the wild for EV training
+const allPokemon = (pokemonData as Pokemon[]).filter((p) => p.pokedex !== "raid-extra");
 
 const typeFilterOptions = TYPES.map((t) => ({
   value: t,

@@ -54,8 +54,16 @@ const STAT_COLORS: Record<StatName, string> = {
 
 // ── Build State ───────────────────────────────────────────────────────────────
 
+interface PokemonFallback {
+  name: string;
+  sprite: string;
+  nationalDex: number;
+}
+
 interface BuildState {
   pokemon: Pokemon | null;
+  /** Used when a tier list entry Pokémon is not in pokemon.json */
+  pokemonFallback: PokemonFallback | null;
   teraType: PokemonType | null;
   nature: Nature;
   ability: string;
@@ -70,6 +78,7 @@ interface BuildState {
 function createEmptyBuild(): BuildState {
   return {
     pokemon: null,
+    pokemonFallback: null,
     teraType: null,
     nature: natures.find((n) => n.name === "Adamant") || natures[0],
     ability: "",
@@ -199,6 +208,7 @@ export function RaidBuildMaker() {
     ) || natures[0];
     setBuild({
       pokemon: pokemon || null,
+      pokemonFallback: null,
       teraType: (parsed.teraType as PokemonType) || null,
       nature,
       ability: parsed.ability,
@@ -216,10 +226,12 @@ export function RaidBuildMaker() {
     setImportText("");
   }, [importText]);
 
+  const pokemonName = build.pokemon?.name ?? build.pokemonFallback?.name ?? "";
+
   const exportText = useMemo(() => {
-    if (!build.pokemon) return "";
+    if (!pokemonName) return "";
     return exportShowdown({
-      name: build.pokemon.name,
+      name: pokemonName,
       item: build.item,
       ability: build.ability,
       teraType: build.teraType || "",
@@ -229,18 +241,36 @@ export function RaidBuildMaker() {
       moves: build.moves.filter(Boolean) as string[],
       level: build.level,
     });
-  }, [build]);
+  }, [build, pokemonName]);
 
   const loadTierBuild = useCallback((entry: RaidTierEntry, buildData: RaidBuild) => {
-    const pokemon = allPokemon.find(
+    // Alternate forms (have spriteId) share nationalDex with their base form,
+    // so name-first avoids hitting the wrong variant (e.g. Calyrex-Shadow vs Ice Rider).
+    // Standard Pokémon use nationalDex-first to handle name mismatches
+    // (e.g. "Mimikyu" → "Mimikyu Disguised" in the JSON).
+    const byName = allPokemon.find(
       (p) => p.name.toLowerCase() === entry.name.toLowerCase()
     );
+    const byDex = allPokemon.find((p) => p.nationalDex === entry.nationalDex);
+    const pokemon = entry.spriteId
+      ? (byName ?? byDex)   // form: name is the unique key
+      : (byDex ?? byName);  // standard: dex is more reliable
+
     const nature = natures.find(
       (n) => n.name.toLowerCase() === buildData.nature.toLowerCase()
     ) || natures[0];
 
+    // Build a fallback for Pokémon not present in pokemon.json
+    const spriteNum = entry.spriteId ?? entry.nationalDex;
+    const fallback: PokemonFallback | null = pokemon ? null : {
+      name: entry.name,
+      sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`,
+      nationalDex: entry.nationalDex,
+    };
+
     setBuild({
       pokemon: pokemon || null,
+      pokemonFallback: fallback,
       teraType: buildData.teraType,
       nature,
       ability: buildData.ability,
@@ -472,7 +502,7 @@ export function RaidBuildMaker() {
             <button
               onClick={() => setShowExport(!showExport)}
               className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-400 hover:text-white"
-              disabled={!build.pokemon}
+              disabled={!build.pokemon && !build.pokemonFallback}
             >
               {t("raid.exportShowdown")}
             </button>
@@ -506,7 +536,7 @@ export function RaidBuildMaker() {
           )}
 
           {/* Export Modal */}
-          {showExport && build.pokemon && (
+          {showExport && (build.pokemon || build.pokemonFallback) && (
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
               <div className="mb-2 text-sm font-bold text-gray-300">
                 {t("raid.showdownFormat")}
@@ -557,6 +587,16 @@ export function RaidBuildMaker() {
                     {build.pokemon.types.map((tp) => (
                       <TypeBadge key={tp} type={tp as PokemonType} small />
                     ))}
+                  </div>
+                </div>
+              )}
+              {!build.pokemon && build.pokemonFallback && (
+                <div className="mt-2 flex items-center gap-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={build.pokemonFallback.sprite} alt={build.pokemonFallback.name} width={40} height={40} className="pixelated" />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-gray-200">{build.pokemonFallback.name}</span>
+                    <span className="text-[10px] text-amber-500/80">#{build.pokemonFallback.nationalDex} · stats indisponíveis</span>
                   </div>
                 </div>
               )}
@@ -617,6 +657,13 @@ export function RaidBuildMaker() {
                     </option>
                   ))}
                 </select>
+              ) : build.ability ? (
+                <input
+                  type="text"
+                  value={build.ability}
+                  onChange={(e) => setBuild((prev) => ({ ...prev, ability: e.target.value }))}
+                  className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                />
               ) : (
                 <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-500">
                   {t("raid.selectPokemon")}
