@@ -16,9 +16,10 @@ interface Pokemon {
   name: string;
   types: string[];
   sprite: string;
+  pokedex: string;
 }
 
-const allPokemon = pokemonData as Pokemon[];
+const allPokemon = (pokemonData as Pokemon[]).filter((p) => p.pokedex !== "raid-extra");
 
 const EV_TEMPLATES: { label: string; evs: Record<StatName, number> }[] = [
   {

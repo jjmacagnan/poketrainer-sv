@@ -23,10 +23,11 @@ interface Pokemon {
   types: string[];
   baseStats: Record<string, number>;
   sprite: string;
+  pokedex: string;
 }
 
 const natures = naturesData as Nature[];
-const allPokemon = pokemonData as Pokemon[];
+const allPokemon = (pokemonData as Pokemon[]).filter((p) => p.pokedex !== "raid-extra");
 
 const ROLE_SUGGESTIONS: { role: string; nature: string; desc: string }[] = [
   { role: "Physical Attacker", nature: "Adamant", desc: "+Atk / -SpA" },
