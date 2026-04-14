@@ -22,7 +22,8 @@ export interface RaidTierEntry {
   spriteId?: number;
   tier: TierRank;
   role: RaidRole;
-  builds: RaidBuild[];
+  /** At least one build is required — index 0 is always the primary/recommended build. */
+  builds: [RaidBuild, ...RaidBuild[]];
 }
 
 export const TIER_COLORS: Record<TierRank, string> = {
@@ -1361,7 +1362,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     role: "special",
     builds: [
       {
-        name: "Stellar Tera Calm Mind Build",
+        name: "Tera Starstorm Calm Mind Build",
         teraType: "Normal",
         nature: "Modest",
         ability: "Tera Shell",

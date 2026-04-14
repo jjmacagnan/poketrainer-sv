@@ -157,7 +157,8 @@
     "copyLink": "🔗 Copiar Link da Build",
     "exportPng": "📸 Exportar PNG",
     "exportError": "Erro ao exportar imagem",
-    "starRaids": "{stars}-Star Raids"
+    "starRaids": "{stars}-Star Raids",
+    "statsUnavailable": "stats indisponíveis"
   },
   "comunidade": {
     "title": "Comunidade",

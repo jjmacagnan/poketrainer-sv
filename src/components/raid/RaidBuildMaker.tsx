@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import pokemonData from "@/data/generated/pokemon.json";
 import naturesData from "@/data/generated/natures.json";
 import movesData from "@/data/generated/moves.json";
@@ -167,7 +168,7 @@ const ROLE_LABELS: Record<RaidRole, { pt: string; en: string; emoji: string }> =
 
 export function RaidBuildMaker() {
   const { t, locale } = useI18n();
-  const [build, setBuild] = useState<BuildState>(createEmptyBuild);
+  const [build, setBuild] = useLocalStorage<BuildState>("raid-builder-build", createEmptyBuild());
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState("");
   const [showExport, setShowExport] = useState(false);
@@ -596,7 +597,7 @@ export function RaidBuildMaker() {
                   <img src={build.pokemonFallback.sprite} alt={build.pokemonFallback.name} width={40} height={40} className="pixelated" />
                   <div className="flex flex-col">
                     <span className="text-sm font-bold text-gray-200">{build.pokemonFallback.name}</span>
-                    <span className="text-[10px] text-amber-500/80">#{build.pokemonFallback.nationalDex} · stats indisponíveis</span>
+                    <span className="text-[10px] text-amber-500/80">#{build.pokemonFallback.nationalDex} · {t("raid.statsUnavailable")}</span>
                   </div>
                 </div>
               )}
