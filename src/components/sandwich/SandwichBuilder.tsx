@@ -9,18 +9,20 @@ import {
   SHINY_GUIDE,
   ENCOUNTER_GUIDE,
   RAID_GUIDE,
+  BREEDING_RECIPES,
 } from "@/data/sandwich-guide";
 import type { SandwichGuideEntry } from "@/data/sandwich-guide";
 import { useI18n } from "@/i18n";
 import { RecipeCard } from "./RecipeCard";
 import { RecipeDetail } from "./RecipeDetail";
 
-type Tab = "shiny" | "encounter" | "raid" | "search";
+type Tab = "shiny" | "encounter" | "raid" | "breeding" | "search";
 
 const GUIDE_DATA: Record<Tab, SandwichGuideEntry[]> = {
   shiny: SHINY_GUIDE,
   encounter: ENCOUNTER_GUIDE,
   raid: RAID_GUIDE,
+  breeding: [],
   search: [],
 };
 
@@ -198,6 +200,7 @@ export function SandwichBuilder() {
     { id: "shiny", label: t("sandwich.tabShiny"), desc: t("sandwich.tabShinyDesc"), color: "#FFD700" },
     { id: "encounter", label: t("sandwich.tabEncounter"), desc: t("sandwich.tabEncounterDesc"), color: "#4ECDC4" },
     { id: "raid", label: "⚔️ Raid Power", desc: "Boost raid type", color: "#E040FB" },
+    { id: "breeding", label: "🥚 Breeding", desc: "Egg Power", color: "#F9A825" },
     { id: "search", label: t("sandwich.tabSearch"), desc: t("sandwich.tabSearchDesc"), color: "#90CAF9" },
   ];
 
@@ -222,6 +225,13 @@ export function SandwichBuilder() {
       gradient: "linear-gradient(135deg, rgba(224,64,251,0.07), rgba(103,58,183,0.07))",
       border: "1px solid rgba(224,64,251,0.2)",
       titleColor: "text-purple-400",
+    },
+    breeding: {
+      title: "🥚 Breeding Sandwiches",
+      info: "Egg Power reduces hatch steps. Lv.2 (no Herba) is the go-to for extended sessions; Lv.3 (Sweet Herba x2) is fastest but costs Herba Mystica.",
+      gradient: "linear-gradient(135deg, rgba(249,168,37,0.07), rgba(251,192,45,0.07))",
+      border: "1px solid rgba(249,168,37,0.2)",
+      titleColor: "text-yellow-500",
     },
     search: { title: "", info: "", gradient: "", border: "", titleColor: "" },
   };
@@ -273,8 +283,8 @@ export function SandwichBuilder() {
         ))}
       </div>
 
-      {/* Type Filter */}
-      {tab !== "search" && (
+      {/* Type Filter — only for tabs that group by Pokémon type */}
+      {tab !== "search" && tab !== "breeding" && (
         <div className="mb-5 flex flex-wrap justify-center gap-1.5">
           <button
             onClick={() => { setSelectedType(null); setSelectedEntry(null); }}
@@ -355,8 +365,59 @@ export function SandwichBuilder() {
         </div>
       )}
 
+      {/* Breeding tab */}
+      {tab === "breeding" && (
+        <div>
+          <div
+            className="mb-4 rounded-xl p-3.5 text-sm text-gray-400"
+            style={{ background: banner.gradient, border: banner.border }}
+          >
+            <strong className={banner.titleColor}>{banner.title}</strong> —{" "}
+            {banner.info}
+          </div>
+
+          {/* Egg Power level sections */}
+          {([3, 2, 1] as const).map((level) => {
+            const recipes = BREEDING_RECIPES.filter((r) =>
+              r.powers[0].includes(`Lv.${level}`)
+            );
+            if (recipes.length === 0) return null;
+            return (
+              <div key={level} className="mb-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <span
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                      level === 3
+                        ? "bg-yellow-500/20 text-yellow-400"
+                        : level === 2
+                          ? "bg-orange-500/20 text-orange-400"
+                          : "bg-white/10 text-gray-400"
+                    }`}
+                  >
+                    Egg Power Lv.{level}
+                    {level === 3 && " ★ Fastest"}
+                    {level === 2 && " — Recommended"}
+                    {level === 1 && " — Budget"}
+                  </span>
+                  {level === 3 && (
+                    <span className="text-[10px] text-gray-500">
+                      Requires Herba Mystica
+                    </span>
+                  )}
+                </div>
+                <div className="grid gap-2">
+                  {recipes.map((r, i) => (
+                    <RecipeCard key={i} recipe={r} onSelect={setSelectedRecipe} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* Guide tabs (shiny / encounter / raid) */}
-      {tab !== "search" && (
+      {tab !== "search" && tab !== "breeding" && (
         <div>
           {/* Info banner */}
           {banner.title && (

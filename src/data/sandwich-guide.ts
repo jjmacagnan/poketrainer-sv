@@ -838,3 +838,86 @@ export const RAID_GUIDE: SandwichGuideEntry[] = [
     ],
   },
 ];
+
+// ─── Breeding (Egg Power) ──────────────────────────────────────────────────────
+// Sandwiches that boost egg production at the Picnic basket.
+// Egg Power Lv.2 halves hatch steps; Lv.3 (Herba required) is the fastest.
+// Sorted best-first: Lv.3 → Lv.2 → Lv.1.
+
+export const BREEDING_RECIPES: SandwichRecipe[] = [
+  // ── Egg Power Lv.3 (requires Herba Mystica) ──
+  {
+    name: "Jam Sandwich — Egg Power Lv.3",
+    type: "Normal",
+    ingredients: ["Jam x1"],
+    condiments: ["Sweet Herba Mystica x2"],
+    powers: ["Egg Power Lv.3", "Raid Power: Normal Lv.2", "Catching Power: Fighting Lv.2"],
+    herba: ["Sweet", "Sweet"],
+  },
+  {
+    name: "Basil Sandwich — Egg Power Lv.3 (Fire Shiny combo)",
+    type: "Fire",
+    ingredients: ["Basil x1"],
+    condiments: ["Sweet Herba Mystica x2"],
+    powers: ["Egg Power Lv.3", "Sparkling Power: Fire Lv.3", "Encounter Power: Fire Lv.3"],
+    herba: ["Sweet", "Sweet"],
+  },
+  {
+    name: "Lettuce Sandwich — Egg Power Lv.3 (Grass Shiny combo)",
+    type: "Grass",
+    ingredients: ["Lettuce x1"],
+    condiments: ["Sweet Herba Mystica x2"],
+    powers: ["Egg Power Lv.3", "Sparkling Power: Grass Lv.3", "Encounter Power: Grass Lv.3"],
+    herba: ["Sweet", "Sweet"],
+  },
+  // ── Egg Power Lv.2 (no Herba needed) ──
+  {
+    name: "Great Peanut Butter Sandwich #17",
+    type: "Normal",
+    ingredients: ["Banana x1", "Butter x1"],
+    condiments: ["Peanut Butter x1"],
+    powers: ["Egg Power Lv.2", "Raid Power: Electric Lv.1", "Exp. Point Power: Normal Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Great Marmalade Sandwich #25",
+    type: "Normal",
+    ingredients: ["Cheese x1", "Butter x1"],
+    condiments: ["Marmalade x1"],
+    powers: ["Egg Power Lv.2", "Raid Power: Rock Lv.1", "Item Drop Power: Poison Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Ultra Peanut Butter Sandwich #18",
+    type: "Normal",
+    ingredients: ["Banana x1", "Butter x1", "Jam x1"],
+    condiments: ["Peanut Butter x1"],
+    powers: ["Egg Power Lv.2", "Raid Power: Normal Lv.2", "Item Drop Power: Bug Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Ultra Marmalade Sandwich #26",
+    type: "Normal",
+    ingredients: ["Cheese x1", "Butter x1", "Cream Cheese x1"],
+    condiments: ["Marmalade x1"],
+    powers: ["Egg Power Lv.2", "Raid Power: Fighting Lv.1", "Item Drop Power: Poison Lv.2"],
+    herba: [],
+  },
+  // ── Egg Power Lv.1 (budget options) ──
+  {
+    name: "Jam Sandwich #12",
+    type: "Normal",
+    ingredients: ["Jam x1", "Strawberry x1"],
+    condiments: [],
+    powers: ["Egg Power Lv.1", "Catching Power: Fighting Lv.1", "Item Drop Power: Psychic Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Peanut Butter Sandwich #16",
+    type: "Normal",
+    ingredients: ["Banana x1"],
+    condiments: ["Peanut Butter x1"],
+    powers: ["Egg Power Lv.1", "Raid Power: Bug Lv.1", "Item Drop Power: Electric Lv.1"],
+    herba: [],
+  },
+];
