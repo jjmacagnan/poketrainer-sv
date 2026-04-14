@@ -56,6 +56,7 @@ function TypeGuideCard({
   onToggle: () => void;
   onSelectRecipe: (r: SandwichRecipe) => void;
 }) {
+  const { t } = useI18n();
   const primary = entry.recipes[0];
   const hasAlts = entry.recipes.length > 1;
   const typeColor = TYPE_COLORS[entry.type] ?? "#666";
@@ -84,7 +85,7 @@ function TypeGuideCard({
             {primary.herba.length > 0 ? (
               primary.herba.map((h, i) => <HerbaBadge key={i} herba={h} />)
             ) : (
-              <span className="text-[10px] text-teal-400 font-semibold">No Herba</span>
+              <span className="text-[10px] font-semibold text-teal-400">{t("sandwich.noHerba")}</span>
             )}
           </div>
         </div>
@@ -93,7 +94,7 @@ function TypeGuideCard({
         <div className="flex shrink-0 items-center gap-1.5">
           {hasAlts && (
             <span className="rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold text-violet-300">
-              +{entry.recipes.length - 1} alt
+              {t("sandwich.altBadge", { count: entry.recipes.length - 1 })}
             </span>
           )}
           <span
@@ -108,7 +109,7 @@ function TypeGuideCard({
       {isSelected && (
         <div className="border-t border-white/10 bg-black/20 p-2">
           <div className="mb-1.5 px-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
-            Select a recipe
+            {t("sandwich.selectRecipe")}
           </div>
           <div className="grid gap-1.5">
             {entry.recipes.map((recipe, i) => (
@@ -122,7 +123,7 @@ function TypeGuideCard({
                     <div className="flex items-center gap-1.5">
                       {i === 0 && (
                         <span className="rounded bg-yellow-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase text-yellow-400">
-                          ★ Best
+                          {t("sandwich.bestBadge")}
                         </span>
                       )}
                       <span className="text-xs font-semibold text-gray-100">
@@ -134,7 +135,7 @@ function TypeGuideCard({
                         <HerbaBadge key={j} herba={h} />
                       ))}
                       {recipe.herba.length === 0 && (
-                        <span className="text-[10px] text-teal-400">No Herba Mystica</span>
+                        <span className="text-[10px] text-teal-400">{t("sandwich.noHerbaMystica")}</span>
                       )}
                     </div>
                     <div className="mt-1 text-[10px] text-gray-500">
@@ -199,8 +200,8 @@ export function SandwichBuilder() {
   const tabs: { id: Tab; label: string; desc: string; color: string }[] = [
     { id: "shiny", label: t("sandwich.tabShiny"), desc: t("sandwich.tabShinyDesc"), color: "#FFD700" },
     { id: "encounter", label: t("sandwich.tabEncounter"), desc: t("sandwich.tabEncounterDesc"), color: "#4ECDC4" },
-    { id: "raid", label: "⚔️ Raid Power", desc: "Boost raid type", color: "#E040FB" },
-    { id: "breeding", label: "🥚 Breeding", desc: "Egg Power", color: "#F9A825" },
+    { id: "raid", label: t("sandwich.tabRaid"), desc: t("sandwich.tabRaidDesc"), color: "#E040FB" },
+    { id: "breeding", label: t("sandwich.tabBreeding"), desc: t("sandwich.tabBreedingDesc"), color: "#F9A825" },
     { id: "search", label: t("sandwich.tabSearch"), desc: t("sandwich.tabSearchDesc"), color: "#90CAF9" },
   ];
 
@@ -220,15 +221,15 @@ export function SandwichBuilder() {
       titleColor: "text-teal-400",
     },
     raid: {
-      title: "⚔️ Raid Power Sandwiches",
-      info: "Boost the appearance rate of specific Tera Raid types. Great for farming 5★/6★/7★ raids of a chosen type.",
+      title: t("sandwich.raidTitle"),
+      info: t("sandwich.raidInfo"),
       gradient: "linear-gradient(135deg, rgba(224,64,251,0.07), rgba(103,58,183,0.07))",
       border: "1px solid rgba(224,64,251,0.2)",
       titleColor: "text-purple-400",
     },
     breeding: {
-      title: "🥚 Breeding Sandwiches",
-      info: "Egg Power reduces hatch steps. Lv.2 (no Herba) is the go-to for extended sessions; Lv.3 (Sweet Herba x2) is fastest but costs Herba Mystica.",
+      title: t("sandwich.breedingTitle"),
+      info: t("sandwich.breedingInfo"),
       gradient: "linear-gradient(135deg, rgba(249,168,37,0.07), rgba(251,192,45,0.07))",
       border: "1px solid rgba(249,168,37,0.2)",
       titleColor: "text-yellow-500",
@@ -394,14 +395,14 @@ export function SandwichBuilder() {
                           : "bg-white/10 text-gray-400"
                     }`}
                   >
-                    Egg Power Lv.{level}
-                    {level === 3 && " ★ Fastest"}
-                    {level === 2 && " — Recommended"}
-                    {level === 1 && " — Budget"}
+                    {t("sandwich.eggPowerLevel", { level: String(level) })}
+                    {level === 3 && ` ${t("sandwich.eggFastest")}`}
+                    {level === 2 && ` ${t("sandwich.eggRecommended")}`}
+                    {level === 1 && ` ${t("sandwich.eggBudget")}`}
                   </span>
                   {level === 3 && (
                     <span className="text-[10px] text-gray-500">
-                      Requires Herba Mystica
+                      {t("sandwich.requiresHerba")}
                     </span>
                   )}
                 </div>
