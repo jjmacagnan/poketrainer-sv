@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import naturesData from "@/data/generated/natures.json";
-import pokemonData from "@/data/generated/pokemon.json";
+import { wildPokemonData } from "@/data/pokemon-utils";
 import { STAT_NAMES, STAT_LABELS, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
@@ -23,10 +23,11 @@ interface Pokemon {
   types: string[];
   baseStats: Record<string, number>;
   sprite: string;
+  pokedex: string;
 }
 
 const natures = naturesData as Nature[];
-const allPokemon = pokemonData as Pokemon[];
+const allPokemon = wildPokemonData as unknown as Pokemon[];
 
 const ROLE_SUGGESTIONS: { role: string; nature: string; desc: string }[] = [
   { role: "Physical Attacker", nature: "Adamant", desc: "+Atk / -SpA" },

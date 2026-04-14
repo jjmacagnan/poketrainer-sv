@@ -157,7 +157,8 @@
     "copyLink": "🔗 Copy Build Link",
     "exportPng": "📸 Export PNG",
     "exportError": "Error exporting image",
-    "starRaids": "{stars}-Star Raids"
+    "starRaids": "{stars}-Star Raids",
+    "statsUnavailable": "stats unavailable"
   },
   "comunidade": {
     "title": "Community",
@@ -174,6 +175,6 @@
     "tagline": "Tools for Pokémon Scarlet & Violet players.",
     "tools": "Tools",
     "about": "About",
-    "disclaimer": "Unofficial fan site. Pokémon is a trademark of Nintendo / Game Freak."
+    "disclaimer": "This project is an unofficial fan tool and is not affiliated with or endorsed by Nintendo, Game Freak, or The Pokémon Company."
   }
 }

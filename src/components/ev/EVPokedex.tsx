@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import pokemonData from "@/data/generated/pokemon.json";
+import { wildPokemonData } from "@/data/pokemon-utils";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
 import { STAT_NAMES, STAT_LABELS } from "@/lib/constants";
@@ -31,7 +31,7 @@ interface Pokemon {
   heldItems?: string[];
 }
 
-const allPokemon = pokemonData as Pokemon[];
+const allPokemon = wildPokemonData as unknown as Pokemon[];
 
 const typeFilterOptions = TYPES.map((t) => ({
   value: t,

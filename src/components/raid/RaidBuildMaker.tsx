@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import pokemonData from "@/data/generated/pokemon.json";
 import naturesData from "@/data/generated/natures.json";
 import movesData from "@/data/generated/moves.json";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
 import { HELD_ITEMS } from "@/data/items";
-import { RAID_TIER_LIST, TIER_COLORS, TIER_DESCRIPTIONS, type TierRank, type RaidRole, type RaidTierEntry } from "@/data/raid-tier-list";
+import { RAID_TIER_LIST, TIER_COLORS, TIER_DESCRIPTIONS, type TierRank, type RaidRole, type RaidTierEntry, type RaidBuild } from "@/data/raid-tier-list";
 import { STAT_NAMES, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
@@ -54,8 +55,16 @@ const STAT_COLORS: Record<StatName, string> = {
 
 // ── Build State ───────────────────────────────────────────────────────────────
 
+interface PokemonFallback {
+  name: string;
+  sprite: string;
+  nationalDex: number;
+}
+
 interface BuildState {
   pokemon: Pokemon | null;
+  /** Used when a tier list entry Pokémon is not in pokemon.json */
+  pokemonFallback: PokemonFallback | null;
   teraType: PokemonType | null;
   nature: Nature;
   ability: string;
@@ -70,6 +79,7 @@ interface BuildState {
 function createEmptyBuild(): BuildState {
   return {
     pokemon: null,
+    pokemonFallback: null,
     teraType: null,
     nature: natures.find((n) => n.name === "Adamant") || natures[0],
     ability: "",
@@ -158,13 +168,14 @@ const ROLE_LABELS: Record<RaidRole, { pt: string; en: string; emoji: string }> =
 
 export function RaidBuildMaker() {
   const { t, locale } = useI18n();
-  const [build, setBuild] = useState<BuildState>(createEmptyBuild);
+  const [build, setBuild] = useLocalStorage<BuildState>("raid-builder-build", createEmptyBuild());
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState("");
   const [showExport, setShowExport] = useState(false);
   const [tab, setTab] = useState<"build" | "tierlist">("build");
   const [tierFilter, setTierFilter] = useState<TierRank | "all">("all");
   const [roleFilter, setRoleFilter] = useState<RaidRole | "all">("all");
+  const [selectedEntry, setSelectedEntry] = useState<RaidTierEntry | null>(null);
 
   const totalEvs = Object.values(build.evs).reduce((a, b) => a + b, 0);
 
@@ -198,6 +209,7 @@ export function RaidBuildMaker() {
     ) || natures[0];
     setBuild({
       pokemon: pokemon || null,
+      pokemonFallback: null,
       teraType: (parsed.teraType as PokemonType) || null,
       nature,
       ability: parsed.ability,
@@ -215,10 +227,12 @@ export function RaidBuildMaker() {
     setImportText("");
   }, [importText]);
 
+  const pokemonName = build.pokemon?.name ?? build.pokemonFallback?.name ?? "";
+
   const exportText = useMemo(() => {
-    if (!build.pokemon) return "";
+    if (!pokemonName) return "";
     return exportShowdown({
-      name: build.pokemon.name,
+      name: pokemonName,
       item: build.item,
       ability: build.ability,
       teraType: build.teraType || "",
@@ -228,28 +242,47 @@ export function RaidBuildMaker() {
       moves: build.moves.filter(Boolean) as string[],
       level: build.level,
     });
-  }, [build]);
+  }, [build, pokemonName]);
 
-  const loadTierBuild = useCallback((entry: RaidTierEntry) => {
-    const pokemon = allPokemon.find(
+  const loadTierBuild = useCallback((entry: RaidTierEntry, buildData: RaidBuild) => {
+    // Alternate forms (have spriteId) share nationalDex with their base form,
+    // so name-first avoids hitting the wrong variant (e.g. Calyrex-Shadow vs Ice Rider).
+    // Standard Pokémon use nationalDex-first to handle name mismatches
+    // (e.g. "Mimikyu" → "Mimikyu Disguised" in the JSON).
+    const byName = allPokemon.find(
       (p) => p.name.toLowerCase() === entry.name.toLowerCase()
     );
+    const byDex = allPokemon.find((p) => p.nationalDex === entry.nationalDex);
+    const pokemon = entry.spriteId
+      ? (byName ?? byDex)   // form: name is the unique key
+      : (byDex ?? byName);  // standard: dex is more reliable
+
     const nature = natures.find(
-      (n) => n.name.toLowerCase() === entry.nature.toLowerCase()
+      (n) => n.name.toLowerCase() === buildData.nature.toLowerCase()
     ) || natures[0];
+
+    // Build a fallback for Pokémon not present in pokemon.json
+    const spriteNum = entry.spriteId ?? entry.nationalDex;
+    const fallback: PokemonFallback | null = pokemon ? null : {
+      name: entry.name,
+      sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`,
+      nationalDex: entry.nationalDex,
+    };
 
     setBuild({
       pokemon: pokemon || null,
-      teraType: entry.teraType,
+      pokemonFallback: fallback,
+      teraType: buildData.teraType,
       nature,
-      ability: entry.ability,
-      item: entry.item,
-      moves: [entry.moves[0], entry.moves[1], entry.moves[2], entry.moves[3]],
-      evs: entry.evs,
+      ability: buildData.ability,
+      item: buildData.item,
+      moves: [buildData.moves[0], buildData.moves[1], buildData.moves[2], buildData.moves[3]],
+      evs: buildData.evs,
       ivs: Object.fromEntries(STAT_NAMES.map((s) => [s, 31])) as Record<StatName, number>,
       level: 100,
-      notes: entry.strategy,
+      notes: buildData.strategy,
     });
+    setSelectedEntry(null);
     setTab("build");
   }, []);
 
@@ -376,36 +409,71 @@ export function RaidBuildMaker() {
                   {entriesInTier.map((entry) => {
                     const spriteNum = entry.spriteId ?? entry.nationalDex;
                     const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
+                    const primaryBuild = entry.builds[0];
+                    const isSelected = selectedEntry?.name === entry.name && selectedEntry?.role === entry.role;
                     return (
-                      <button
-                        key={`${entry.name}-${entry.role}`}
-                        onClick={() => loadTierBuild(entry)}
-                        className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 text-left transition-all hover:-translate-y-0.5 hover:border-white/20 hover:shadow-lg"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-gray-100">{entry.name}</span>
-                            <span
-                              className="rounded px-1.5 py-0.5 text-[10px] font-black text-white"
-                              style={{ background: TIER_COLORS[entry.tier] + "AA" }}
-                            >
-                              {entry.tier}
-                            </span>
+                      <div key={`${entry.name}-${entry.role}`} className="flex flex-col gap-1">
+                        <button
+                          onClick={() => setSelectedEntry(isSelected ? null : entry)}
+                          className={`group flex items-center gap-3 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+                            isSelected
+                              ? "border-violet-500/50 bg-violet-500/10"
+                              : "border-white/10 bg-white/5 hover:border-white/20"
+                          }`}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-gray-100">{entry.name}</span>
+                              <span
+                                className="rounded px-1.5 py-0.5 text-[10px] font-black text-white"
+                                style={{ background: TIER_COLORS[entry.tier] + "AA" }}
+                              >
+                                {entry.tier}
+                              </span>
+                            </div>
+                            <div className="mt-1 flex items-center gap-1.5">
+                              <span className="text-[10px] text-gray-500">
+                                {ROLE_LABELS[entry.role].emoji} {locale === "pt" ? ROLE_LABELS[entry.role].pt : ROLE_LABELS[entry.role].en}
+                              </span>
+                              <span className="text-gray-700">·</span>
+                              <TypeBadge type={primaryBuild.teraType as PokemonType} small />
+                            </div>
+                            <div className="mt-1 flex items-center justify-between text-[10px] text-gray-600">
+                              <span>{primaryBuild.item}</span>
+                              <span className="text-violet-400">{entry.builds.length} build{entry.builds.length > 1 ? "s" : ""} →</span>
+                            </div>
                           </div>
-                          <div className="mt-1 flex items-center gap-1.5">
-                            <span className="text-[10px] text-gray-500">
-                              {ROLE_LABELS[entry.role].emoji} {locale === "pt" ? ROLE_LABELS[entry.role].pt : ROLE_LABELS[entry.role].en}
-                            </span>
-                            <span className="text-gray-700">·</span>
-                            <TypeBadge type={entry.teraType as PokemonType} small />
+                        </button>
+
+                        {/* Build picker — expands below the card */}
+                        {isSelected && (
+                          <div className="col-span-full rounded-xl border border-violet-500/30 bg-gray-900/80 p-2">
+                            <div className="mb-1.5 px-1 text-[10px] font-semibold text-gray-500">
+                              {locale === "pt" ? "Selecione uma build:" : "Select a build:"}
+                            </div>
+                            {entry.builds.map((buildOption, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => loadTierBuild(entry, buildOption)}
+                                className="mb-1 w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-left transition-all hover:border-violet-500/30 hover:bg-violet-500/10 last:mb-0"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-semibold text-gray-200">{buildOption.name}</span>
+                                  <TypeBadge type={buildOption.teraType as PokemonType} small />
+                                </div>
+                                <div className="mt-0.5 text-[10px] text-gray-500">
+                                  {buildOption.nature} · {buildOption.ability} · {buildOption.item}
+                                </div>
+                                <div className="mt-0.5 text-[10px] text-gray-600">
+                                  {buildOption.moves.join(" · ")}
+                                </div>
+                              </button>
+                            ))}
                           </div>
-                          <div className="mt-1 text-[10px] text-gray-600">
-                            {entry.item} · {entry.nature}
-                          </div>
-                        </div>
-                      </button>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
@@ -435,7 +503,7 @@ export function RaidBuildMaker() {
             <button
               onClick={() => setShowExport(!showExport)}
               className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-400 hover:text-white"
-              disabled={!build.pokemon}
+              disabled={!build.pokemon && !build.pokemonFallback}
             >
               {t("raid.exportShowdown")}
             </button>
@@ -469,7 +537,7 @@ export function RaidBuildMaker() {
           )}
 
           {/* Export Modal */}
-          {showExport && build.pokemon && (
+          {showExport && (build.pokemon || build.pokemonFallback) && (
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
               <div className="mb-2 text-sm font-bold text-gray-300">
                 {t("raid.showdownFormat")}
@@ -520,6 +588,16 @@ export function RaidBuildMaker() {
                     {build.pokemon.types.map((tp) => (
                       <TypeBadge key={tp} type={tp as PokemonType} small />
                     ))}
+                  </div>
+                </div>
+              )}
+              {!build.pokemon && build.pokemonFallback && (
+                <div className="mt-2 flex items-center gap-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={build.pokemonFallback.sprite} alt={build.pokemonFallback.name} width={40} height={40} className="pixelated" />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-gray-200">{build.pokemonFallback.name}</span>
+                    <span className="text-[10px] text-amber-500/80">#{build.pokemonFallback.nationalDex} · {t("raid.statsUnavailable")}</span>
                   </div>
                 </div>
               )}
@@ -580,6 +658,13 @@ export function RaidBuildMaker() {
                     </option>
                   ))}
                 </select>
+              ) : build.ability ? (
+                <input
+                  type="text"
+                  value={build.ability}
+                  onChange={(e) => setBuild((prev) => ({ ...prev, ability: e.target.value }))}
+                  className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                />
               ) : (
                 <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-500">
                   {t("raid.selectPokemon")}

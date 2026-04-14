@@ -16,6 +16,41 @@ const POKEDEX_IDS = {
   blueberry: 33,
 };
 
+// Pokémon available in special Tera Raids but not in any Paldea Pokédex.
+// isForm=true → fetch /pokemon/{name} directly (regional/alternate forms).
+// isForm=false (default) → fetch /pokemon-species/{name} (uses default variety).
+const EXTRA_RAID_POKEMON: {
+  name: string;
+  displayName: string;
+  nationalDex: number;
+  isForm?: boolean;
+}[] = [
+  // Mythicals / legendaries via species
+  { name: "mewtwo",    displayName: "Mewtwo",    nationalDex: 150 },
+  { name: "mew",       displayName: "Mew",        nationalDex: 151 },
+  { name: "kyogre",    displayName: "Kyogre",     nationalDex: 382 },
+  { name: "manaphy",   displayName: "Manaphy",    nationalDex: 490 },
+  { name: "cresselia", displayName: "Cresselia",  nationalDex: 488 },
+  { name: "arceus",    displayName: "Arceus",     nationalDex: 493 },
+  { name: "hoopa",     displayName: "Hoopa",      nationalDex: 720 },
+  { name: "magearna",  displayName: "Magearna",   nationalDex: 801 },
+  { name: "zamazenta", displayName: "Zamazenta",  nationalDex: 889 },
+  { name: "urshifu",   displayName: "Urshifu",    nationalDex: 892 },
+  { name: "kommo-o",   displayName: "Kommo-o",    nationalDex: 784 },
+  { name: "sneasler",  displayName: "Sneasler",   nationalDex: 903 },
+  { name: "enamorus",  displayName: "Enamorus",   nationalDex: 905 },
+  { name: "perrserker",displayName: "Perrserker", nationalDex: 863 },
+  // Alternate / regional forms (fetched directly by form name)
+  { name: "samurott-hisui",  displayName: "Hisuian Samurott",    nationalDex: 503, isForm: true },
+  { name: "typhlosion-hisui",displayName: "Hisuian Typhlosion",  nationalDex: 157, isForm: true },
+  { name: "zapdos-galar",    displayName: "Galarian Zapdos",     nationalDex: 145, isForm: true },
+  { name: "moltres-galar",   displayName: "Galarian Moltres",    nationalDex: 146, isForm: true },
+  { name: "ninetales-alola", displayName: "Alolan Ninetales",    nationalDex: 38,  isForm: true },
+  { name: "calyrex-ice",     displayName: "Calyrex (Ice Rider)", nationalDex: 898, isForm: true },
+  { name: "calyrex-shadow",  displayName: "Calyrex-Shadow",      nationalDex: 898, isForm: true },
+  { name: "mimikyu",         displayName: "Mimikyu",             nationalDex: 778, isForm: false },
+];
+
 interface PokedexResponse {
   pokemon_entries: {
     entry_number: number;
@@ -72,6 +107,55 @@ interface OutputPokemon {
 
 async function fetchPokedex(id: number): Promise<PokedexResponse> {
   return fetchApi<PokedexResponse>(`/pokedex/${id}/`);
+}
+
+/** Fetch a Pokémon directly by its form/pokemon name (for regional variants). */
+async function fetchPokemonByForm(
+  formName: string,
+  displayName: string,
+  nationalDex: number,
+  pokedex: string
+): Promise<OutputPokemon | null> {
+  try {
+    const pokemon = await fetchApi<PokemonResponse>(`/pokemon/${formName}/`);
+
+    const baseStats: Record<string, number> = {};
+    const evYield: { stat: string; amount: number }[] = [];
+
+    for (const s of pokemon.stats) {
+      const statName = STAT_NAME_MAP[s.stat.name] || s.stat.name;
+      baseStats[statName] = s.base_stat;
+      if (s.effort > 0) {
+        evYield.push({ stat: statName, amount: s.effort });
+      }
+    }
+
+    return {
+      dexNumber: nationalDex,
+      nationalDex,
+      name: displayName,
+      types: pokemon.types
+        .sort((a, b) => a.slot - b.slot)
+        .map((t) => capitalize(t.type.name)),
+      baseStats,
+      evYield,
+      abilities: pokemon.abilities
+        .sort((a, b) => a.slot - b.slot)
+        .map((a) => ({
+          name: formatName(a.ability.name),
+          isHidden: a.is_hidden,
+        })),
+      sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`,
+      artwork: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
+      pokedex,
+      height: pokemon.height,
+      weight: pokemon.weight,
+      heldItems: pokemon.held_items.map((h) => formatName(h.item.name)),
+    };
+  } catch (err) {
+    console.error(`\n  ⚠ Failed to fetch form ${formName}: ${err}`);
+    return null;
+  }
 }
 
 async function fetchPokemonData(
@@ -161,6 +245,35 @@ async function main() {
     );
 
     allPokemon.push(...(results.filter(Boolean) as OutputPokemon[]));
+  }
+
+  // Fetch extra raid Pokémon not covered by Paldea Pokédexes
+  console.log(`\n📖 Fetching ${EXTRA_RAID_POKEMON.length} extra raid Pokémon...`);
+  for (const extra of EXTRA_RAID_POKEMON) {
+    if (seen.has(extra.name)) {
+      console.log(`  ↩ Skipping ${extra.displayName} (already fetched)`);
+      continue;
+    }
+    seen.add(extra.name);
+
+    let result: OutputPokemon | null;
+    if (extra.isForm) {
+      result = await fetchPokemonByForm(
+        extra.name,
+        extra.displayName,
+        extra.nationalDex,
+        "raid-extra"
+      );
+    } else {
+      result = await fetchPokemonData(extra.name, extra.nationalDex, "raid-extra");
+      // Override auto-generated name with the display name
+      if (result) result.name = extra.displayName;
+    }
+
+    if (result) {
+      allPokemon.push(result);
+      console.log(`  ✓ ${extra.displayName}`);
+    }
   }
 
   allPokemon.sort((a, b) => a.nationalDex - b.nationalDex);
