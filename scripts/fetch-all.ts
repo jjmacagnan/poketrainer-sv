@@ -6,12 +6,32 @@
  *   src/data/generated/pokemon.json
  *   src/data/generated/natures.json
  *   src/data/generated/moves.json
+ *   src/data/generated/abilities.json
+ *   src/data/generated/items.json
+ *   src/data/generated/types.json
+ *   src/data/generated/berries.json
+ *   src/data/generated/berry-flavors.json
+ *   src/data/generated/evolution-chains.json
+ *   src/data/generated/move-meta.json
+ *   src/data/generated/version-groups.json
  */
 
 import { execSync } from "child_process";
 import path from "path";
 
-const scripts = ["fetch-pokemon.ts", "fetch-natures.ts", "fetch-moves.ts"];
+const scripts = [
+  "fetch-pokemon.ts",
+  "fetch-natures.ts",
+  "fetch-moves.ts",
+  "fetch-abilities.ts",
+  "fetch-items.ts",
+  "fetch-types.ts",
+  "fetch-berries.ts",
+  "fetch-berry-flavors.ts",
+  "fetch-evolution-chains.ts",
+  "fetch-move-meta.ts",
+  "fetch-version-groups.ts",
+];
 
 async function main() {
   console.log("🚀 PokéTrainer SV — Fetching all data from PokéAPI\n");

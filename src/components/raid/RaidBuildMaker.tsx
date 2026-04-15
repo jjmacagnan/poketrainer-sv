@@ -5,6 +5,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import pokemonData from "@/data/generated/pokemon.json";
 import naturesData from "@/data/generated/natures.json";
 import movesData from "@/data/generated/moves.json";
+import moveMetaData from "@/data/generated/move-meta.json";
 import abilitiesData from "@/data/generated/abilities.json";
 import itemsData from "@/data/generated/items.json";
 import typesData from "@/data/generated/types.json";
@@ -47,9 +48,28 @@ interface Move {
   effect?: string;
 }
 
+interface MoveMeta {
+  id: number;
+  name: string;
+  meta: {
+    ailment: string;
+    category: string;
+    minHits: number | null;
+    maxHits: number | null;
+    drain: number;
+    healing: number;
+    critRate: number;
+    ailmentChance: number;
+    flinchChance: number;
+    statChance: number;
+  };
+  statChanges: { stat: string; change: number }[];
+}
+
 const allPokemon = pokemonData as Pokemon[];
 const natures = naturesData as Nature[];
 const allMoves = movesData as Move[];
+const allMoveMeta = moveMetaData as MoveMeta[];
 const abilities = abilitiesData as { name: string; effect: string; shortEffect: string; flavorText: string }[];
 const HELD_ITEMS = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
 const allTypesData = typesData as { name: string; weaknesses: string[]; resistances: string[]; immunities: string[] }[];
@@ -825,13 +845,52 @@ export function RaidBuildMaker() {
                     />
                     {move && (() => {
                       const selectedMove = allMoves.find((m) => m.name === move);
-                      if (!selectedMove || !selectedMove.effect) return null;
+                      const meta = allMoveMeta.find((m) => m.name === move);
+                      if (!selectedMove) return null;
                       return (
-                        <div className="mt-1.5 flex items-start gap-1.5 rounded bg-black/20 p-2">
-                          <span className="text-[10px] text-blue-400/80">ⓘ</span>
-                          <div className="flex-1 text-[10px] leading-relaxed text-blue-400/80">
-                            {selectedMove.effect}
-                          </div>
+                        <div className="mt-1.5 space-y-1.5">
+                          {selectedMove.effect && (
+                            <div className="flex items-start gap-1.5 rounded bg-black/20 p-2">
+                              <span className="text-[10px] text-blue-400/80">ⓘ</span>
+                              <div className="flex-1 text-[10px] leading-relaxed text-blue-400/80">
+                                {selectedMove.effect}
+                              </div>
+                            </div>
+                          )}
+                          {meta && (() => {
+                            const tags: { label: string; color: string }[] = [];
+                            if (meta.meta.drain > 0) tags.push({ label: `Drain ${meta.meta.drain}%`, color: "#10B981" });
+                            if (meta.meta.drain < 0) tags.push({ label: `Recoil ${Math.abs(meta.meta.drain)}%`, color: "#EF4444" });
+                            if (meta.meta.healing > 0) tags.push({ label: `Heal ${meta.meta.healing}%`, color: "#34D399" });
+                            if (meta.meta.critRate > 0) tags.push({ label: `Crit +${meta.meta.critRate}`, color: "#F59E0B" });
+                            if (meta.meta.flinchChance > 0) tags.push({ label: `Flinch ${meta.meta.flinchChance}%`, color: "#8B5CF6" });
+                            if (meta.meta.ailment !== "none" && meta.meta.ailmentChance > 0) tags.push({ label: `${meta.meta.ailment} ${meta.meta.ailmentChance}%`, color: "#EC4899" });
+                            if (meta.meta.ailment !== "none" && meta.meta.ailmentChance === 0 && meta.meta.category !== "damage") tags.push({ label: meta.meta.ailment, color: "#EC4899" });
+                            if (meta.meta.minHits && meta.meta.maxHits) {
+                              const hitsLabel = meta.meta.minHits === meta.meta.maxHits
+                                ? `${meta.meta.minHits} hits`
+                                : `${meta.meta.minHits}–${meta.meta.maxHits} hits`;
+                              tags.push({ label: hitsLabel, color: "#60A5FA" });
+                            }
+                            for (const sc of meta.statChanges) {
+                              const sign = sc.change > 0 ? "+" : "";
+                              tags.push({ label: `${sc.stat.toUpperCase()} ${sign}${sc.change}`, color: sc.change > 0 ? "#A3E635" : "#F87171" });
+                            }
+                            if (tags.length === 0) return null;
+                            return (
+                              <div className="flex flex-wrap gap-1">
+                                {tags.map((tag, ti) => (
+                                  <span
+                                    key={ti}
+                                    className="rounded px-1.5 py-0.5 text-[9px] font-bold text-white/90"
+                                    style={{ background: tag.color + "33", border: `1px solid ${tag.color}55`, color: tag.color }}
+                                  >
+                                    {tag.label}
+                                  </span>
+                                ))}
+                              </div>
+                            );
+                          })()}
                         </div>
                       );
                     })()}

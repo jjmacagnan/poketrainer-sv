@@ -5,14 +5,33 @@ import { TYPE_COLORS } from "@/data/types";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { PowerTag } from "@/components/ui/PowerTag";
 import { useI18n } from "@/i18n";
+import { getDominantFlavorOfIngredient, getIngredientFlavors } from "@/lib/ingredient-flavors";
+import { getBerriesByFlavor, getBerry } from "@/lib/berry-utils";
+import { useState } from "react";
 
 interface RecipeDetailProps {
   recipe: SandwichRecipe;
   onBack: () => void;
 }
 
+/** Parse "Ingredient x2" → { name: "Ingredient", qty: 2 } */
+function parseIngredient(ing: string): { name: string; qty: number } {
+  const match = ing.match(/^(.+?)\s*x(\d+)$/);
+  if (match) return { name: match[1], qty: parseInt(match[2]) };
+  return { name: ing, qty: 1 };
+}
+
+const FLAVOR_COLORS: Record<string, string> = {
+  spicy: "#FF6B35",
+  dry: "#6CB4E4",
+  sweet: "#FF9CC2",
+  bitter: "#9B59B6",
+  sour: "#8AC926",
+};
+
 export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
   const { t } = useI18n();
+  const [showFlavorDetails, setShowFlavorDetails] = useState(false);
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6">
@@ -35,22 +54,121 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
         <TypeBadge type={recipe.type} />
       </div>
 
-      {/* Ingredients */}
+      {/* Ingredients with Flavor Profiles */}
       <div className="mb-5">
-        <h3 className="mb-2.5 text-sm font-bold uppercase tracking-widest text-gray-400">
-          {t("sandwich.ingredients")}
-        </h3>
+        <div className="mb-2.5 flex items-center justify-between">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400">
+            {t("sandwich.ingredients")}
+          </h3>
+          <button
+            onClick={() => setShowFlavorDetails(!showFlavorDetails)}
+            className="rounded px-2 py-0.5 text-[10px] font-semibold text-violet-400 transition-colors hover:text-violet-300"
+          >
+            {showFlavorDetails ? t("sandwich.hideFlavors") : t("sandwich.showFlavors")}
+          </button>
+        </div>
         <div className="flex flex-col gap-1.5">
-          {recipe.ingredients.map((ing, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-2 rounded-lg bg-white/5 px-3.5 py-2.5 text-sm font-semibold text-gray-100"
-            >
-              <span className="text-lg">🥬</span> {ing}
-            </div>
-          ))}
+          {recipe.ingredients.map((ing, i) => {
+            const parsed = parseIngredient(ing);
+            const flavorInfo = getDominantFlavorOfIngredient(parsed.name);
+            const allFlavors = getIngredientFlavors(parsed.name);
+            const hasFlavors = Object.values(allFlavors).some(v => v > 0);
+
+            return (
+              <div
+                key={i}
+                className="flex flex-col rounded-lg bg-white/5 px-3.5 py-2.5"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🥬</span>
+                  <span className="text-sm font-semibold text-gray-100">
+                    {parsed.name}
+                  </span>
+                  {parsed.qty > 1 && (
+                    <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-gray-400">
+                      ×{parsed.qty}
+                    </span>
+                  )}
+                  {flavorInfo && (
+                    <span
+                      className="ml-auto rounded px-1.5 py-0.5 text-[10px] font-bold text-white"
+                      style={{ background: FLAVOR_COLORS[flavorInfo.flavor] ?? "#666" }}
+                    >
+                      {flavorInfo.flavor}
+                    </span>
+                  )}
+                </div>
+                {showFlavorDetails && hasFlavors && (
+                  <div className="mt-1.5 flex gap-1">
+                    {Object.entries(allFlavors)
+                      .filter(([, v]) => v > 0)
+                      .map(([flavor, potency]) => (
+                        <span
+                          key={flavor}
+                          className="rounded px-1.5 py-0.5 text-[9px] font-semibold text-white/80"
+                          style={{ background: (FLAVOR_COLORS[flavor] ?? "#666") + "99" }}
+                        >
+                          {flavor}: {potency}
+                        </span>
+                      ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
+
+      {/* Berry Alternatives */}
+      {showFlavorDetails && recipe.herba.length > 0 && (
+        <div className="mb-5">
+          <h3 className="mb-2.5 text-sm font-bold uppercase tracking-widest text-gray-400">
+            {t("sandwich.berryAlternatives")}
+          </h3>
+          <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+            <p className="mb-2 text-[11px] text-gray-500">
+              {t("sandwich.berryAltNote")}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {recipe.herba.map((herba, i) => {
+                // Map herba to flavor name
+                const herbaToFlavor: Record<string, string> = {
+                  "Sweet": "sweet",
+                  "Salty": "dry",
+                  "Sour": "sour",
+                  "Bitter": "bitter",
+                  "Spicy": "spicy",
+                };
+                const flavorName = herbaToFlavor[herba];
+                if (!flavorName) return null;
+                const topBerries = getBerriesByFlavor(flavorName, 15).slice(0, 4);
+                return (
+                  <div key={i} className="rounded-lg bg-white/5 px-2.5 py-1.5">
+                    <div className="text-[10px] font-bold text-gray-400">
+                      {herba} →
+                    </div>
+                    <div className="mt-0.5 flex gap-1">
+                      {topBerries.map((b) => {
+                        const berry = getBerry(b.berry.name);
+                        return (
+                          <span
+                            key={b.berry.name}
+                            className="rounded px-1 py-0.5 text-[9px] font-semibold text-white/80"
+                            style={{ background: FLAVOR_COLORS[flavorName] + "66" }}
+                            title={`Potency: ${b.potency}`}
+                          >
+                            {b.berry.name} ({b.potency})
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Condiments */}
       {recipe.condiments.length > 0 && (

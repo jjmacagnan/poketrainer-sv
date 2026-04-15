@@ -1,13 +1,23 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import naturesData from "@/data/generated/natures.json";
+import berryFlavorsData from "@/data/generated/berry-flavors.json";
 import { wildPokemonData } from "@/data/pokemon-utils";
 import { STAT_NAMES, STAT_LABELS, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
 import { useI18n } from "@/i18n";
 import { PageHeader } from "@/components/shared/PageHeader";
+import { getBerriesByFlavor, getBerry } from "@/lib/berry-utils";
+
+interface BerryFlavor {
+  id: number;
+  name: string;
+  contestType: string;
+  localizedName: string;
+  berries: { potency: number; berry: string }[];
+}
 
 interface Nature {
   name: string;
@@ -27,7 +37,27 @@ interface Pokemon {
 }
 
 const natures = naturesData as Nature[];
+const allFlavors = berryFlavorsData as BerryFlavor[];
 const allPokemon = wildPokemonData as unknown as Pokemon[];
+
+/** Map nature's likes/dislikes to flavor names */
+function getNatureBerryInfo(nature: Nature) {
+  const likeFlavor = nature.likes
+    ? allFlavors.find((f) => f.localizedName.toLowerCase() === nature.likes!.toLowerCase())
+    : null;
+  const dislikeFlavor = nature.dislikes
+    ? allFlavors.find((f) => f.localizedName.toLowerCase() === nature.dislikes!.toLowerCase())
+    : null;
+
+  const likeBerries = likeFlavor
+    ? getBerriesByFlavor(likeFlavor.name, 10).slice(0, 6)
+    : [];
+  const dislikeBerries = dislikeFlavor
+    ? getBerriesByFlavor(dislikeFlavor.name, 10).slice(0, 6)
+    : [];
+
+  return { likeFlavor, dislikeFlavor, likeBerries, dislikeBerries };
+}
 
 const ROLE_SUGGESTIONS: { role: string; nature: string; desc: string }[] = [
   { role: "Physical Attacker", nature: "Adamant", desc: "+Atk / -SpA" },
@@ -159,8 +189,8 @@ export function NatureCalc() {
               </thead>
               <tbody>
                 {natures.map((nature) => (
+                  <React.Fragment key={nature.name}>
                   <tr
-                    key={nature.name}
                     onClick={() =>
                       setSelectedNature(
                         selectedNature?.name === nature.name ? null : nature
@@ -196,12 +226,92 @@ export function NatureCalc() {
                         </td>
                       );
                     })}
-                    <td className="px-3 py-2 text-center text-xs text-gray-500">
-                      {nature.likes && nature.dislikes
-                        ? `${nature.likes} / ${nature.dislikes}`
-                        : "—"}
+                    <td className="px-3 py-2 text-center text-xs">
+                      {(() => {
+                        const berryInfo = getNatureBerryInfo(nature);
+                        if (!berryInfo.likeFlavor || !berryInfo.dislikeFlavor) {
+                          return <span className="text-gray-500">—</span>;
+                        }
+                        const isOpen = selectedNature?.name === nature.name;
+                        return (
+                          <div className="flex flex-col gap-0.5">
+                            <div className="flex items-center gap-1 justify-center">
+                              <span className="text-[9px] text-emerald-400">♥</span>
+                              <span className="text-[10px] text-gray-400">{nature.likes}</span>
+                            </div>
+                            <div className="flex items-center gap-1 justify-center">
+                              <span className="text-[9px] text-red-400">✕</span>
+                              <span className="text-[10px] text-gray-400">{nature.dislikes}</span>
+                            </div>
+                            <span className="text-[8px] text-gray-600">{isOpen ? "▲" : "▼"}</span>
+                          </div>
+                        );
+                      })()}
                     </td>
                   </tr>
+                  {selectedNature?.name === nature.name && (() => {
+                    const berryInfo = getNatureBerryInfo(nature);
+                    if (!berryInfo.likeFlavor || !berryInfo.dislikeFlavor) return null;
+                    return (
+                      <tr>
+                        <td colSpan={7} className="px-3 pb-3 pt-0">
+                          <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-3">
+                            <div className="mb-2 flex items-center gap-1.5">
+                              <span className="text-[10px] font-bold text-violet-400">
+                                {t("natureCalc.berryPreferences")}
+                              </span>
+                            </div>
+                            <div className="grid gap-2 sm:grid-cols-2">
+                              <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-2.5">
+                                <div className="mb-1 flex items-center gap-1">
+                                  <span className="text-[10px] text-emerald-400">♥</span>
+                                  <span className="text-[10px] font-bold text-emerald-400">{t("natureCalc.likesFlavor")}</span>
+                                  <span className="rounded bg-emerald-500/20 px-1 py-0.5 text-[9px] font-bold text-emerald-300">
+                                    {berryInfo.likeFlavor.localizedName}
+                                  </span>
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                  {berryInfo.likeBerries.map((b) => (
+                                    <span
+                                      key={b.berry.name}
+                                      className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[9px] text-emerald-300/80"
+                                      title={`Potency: ${b.potency}`}
+                                    >
+                                      {b.berry.name} ({b.potency})
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-2.5">
+                                <div className="mb-1 flex items-center gap-1">
+                                  <span className="text-[10px] text-red-400">✕</span>
+                                  <span className="text-[10px] font-bold text-red-400">{t("natureCalc.dislikesFlavor")}</span>
+                                  <span className="rounded bg-red-500/20 px-1 py-0.5 text-[9px] font-bold text-red-300">
+                                    {berryInfo.dislikeFlavor.localizedName}
+                                  </span>
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                  {berryInfo.dislikeBerries.map((b) => (
+                                    <span
+                                      key={b.berry.name}
+                                      className="rounded bg-red-500/10 px-1.5 py-0.5 text-[9px] text-red-300/80"
+                                      title={`Potency: ${b.potency}`}
+                                    >
+                                      {b.berry.name} ({b.potency})
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                            <p className="mt-1.5 text-[9px] italic text-gray-500">
+                              {t("natureCalc.berryNote")}
+                            </p>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })()}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

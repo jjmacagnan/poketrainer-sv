@@ -7,9 +7,97 @@ import type { PokemonType } from "@/data/types";
 import { STAT_NAMES } from "@/lib/constants";
 import abilitiesData from "@/data/generated/abilities.json";
 import itemsData from "@/data/generated/items.json";
+import evolutionChainsData from "@/data/generated/evolution-chains.json";
+import pokemonJsonData from "@/data/generated/pokemon.json";
 
 const abilitiesList = abilitiesData as { name: string; effect: string; shortEffect: string; flavorText: string }[];
 const itemsList = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
+
+// ── Static Evolution Chain Types ──────────────────────────────────────────────
+
+interface StaticEvoDetail {
+  trigger: string;
+  minLevel: number | null;
+  item: string | null;
+  heldItem: string | null;
+  knownMove: string | null;
+  minHappiness: number | null;
+  location: string | null;
+  timeOfDay: string;
+  needsOverworldRain: boolean;
+}
+
+interface StaticEvoNode {
+  isBaby: boolean;
+  species: string;
+  evolutionDetails: StaticEvoDetail[];
+  evolvesTo: StaticEvoNode[];
+}
+
+interface StaticEvoChain {
+  id: number;
+  babyTriggerItem: string | null;
+  chain: StaticEvoNode;
+}
+
+const evolutionChains = evolutionChainsData as StaticEvoChain[];
+const allPokemonForEvo = pokemonJsonData as { nationalDex: number; name: string }[];
+
+function getSpeciesId(speciesName: string): number {
+  const found = allPokemonForEvo.find(
+    (p) => p.name.toLowerCase() === speciesName.toLowerCase()
+  );
+  return found?.nationalDex ?? 0;
+}
+
+function findEvolutionChain(speciesName: string): StaticEvoNode | null {
+  const lower = speciesName.toLowerCase();
+  function containsSpecies(node: StaticEvoNode): boolean {
+    if (node.species === lower) return true;
+    return node.evolvesTo.some(containsSpecies);
+  }
+  const chain = evolutionChains.find((c) => containsSpecies(c.chain));
+  return chain ? chain.chain : null;
+}
+
+function formatStaticTrigger(detail: StaticEvoDetail): string {
+  const { trigger, minLevel, item, heldItem, knownMove, minHappiness, location, timeOfDay } = detail;
+  if (trigger === "level-up") {
+    if (minLevel) return `Lv. ${minLevel}`;
+    if (minHappiness) return "Friendship";
+    if (knownMove) return `Know ${formatItemName(knownMove)}`;
+    if (location) return `Level up at ${formatItemName(location)}`;
+    if (timeOfDay) return `Level up (${timeOfDay})`;
+    return "Level up";
+  }
+  if (trigger === "use-item" && item) return formatItemName(item);
+  if (trigger === "use-move" && knownMove) return `Use ${formatItemName(knownMove)}`;
+  if (trigger === "trade") {
+    if (heldItem) return `Trade w/ ${formatItemName(heldItem)}`;
+    return "Trade";
+  }
+  if (trigger === "shed") return "Shed";
+  if (trigger === "spin") return "Spin";
+  if (trigger === "three-critical-hits") return "3 Critical Hits";
+  if (trigger === "take-damage") return "Take Damage";
+  return capitalize(trigger ?? "");
+}
+
+function flattenStaticChain(root: StaticEvoNode): EvoStep[] {
+  const steps: EvoStep[] = [];
+  function walk(node: StaticEvoNode) {
+    for (const child of node.evolvesTo) {
+      steps.push({
+        from: { name: node.species, id: getSpeciesId(node.species) },
+        to: { name: child.species, id: getSpeciesId(child.species) },
+        trigger: child.evolutionDetails.length > 0 ? formatStaticTrigger(child.evolutionDetails[0]) : "",
+      });
+      walk(child);
+    }
+  }
+  walk(root);
+  return steps;
+}
 
 import { TRAINING_LOCATIONS } from "@/data/training-locations";
 import { useI18n } from "@/i18n";
@@ -83,25 +171,6 @@ interface SVMove {
   method: string;
 }
 
-interface EvoNode {
-  species: { name: string; url: string };
-  evolution_details: {
-    trigger: { name: string };
-    min_level: number | null;
-    item: { name: string } | null;
-    held_item: { name: string } | null;
-    happiness: number | null;
-    time_of_day: string;
-    known_move?: { name: string } | null;
-    location?: { name: string } | null;
-  }[];
-  evolves_to: EvoNode[];
-}
-
-interface EvoChain {
-  chain: EvoNode;
-}
-
 interface EvoStage {
   name: string;
   id: number;
@@ -128,12 +197,29 @@ function formatItemName(name: string) {
   return name.split("-").map(capitalize).join(" ");
 }
 
-function formatTrigger(detail: EvoNode["evolution_details"][0]): string {
+// ── Live chain fallback (for non-Gen9 Pokémon not in static data) ─────────────
+
+interface LiveEvoNode {
+  species: { name: string; url: string };
+  evolution_details: {
+    trigger: { name: string };
+    min_level: number | null;
+    item: { name: string } | null;
+    held_item: { name: string } | null;
+    happiness: number | null;
+    time_of_day: string;
+    known_move?: { name: string } | null;
+    location?: { name: string } | null;
+  }[];
+  evolves_to: LiveEvoNode[];
+}
+
+function formatLiveTrigger(detail: LiveEvoNode["evolution_details"][0]): string {
   if (!detail) return "";
   const trigger = detail.trigger?.name;
   if (trigger === "level-up") {
     if (detail.min_level) return `Lv. ${detail.min_level}`;
-    if (detail.happiness) return `Friendship`;
+    if (detail.happiness) return "Friendship";
     if (detail.known_move) return `Know ${formatItemName(detail.known_move.name)}`;
     if (detail.location) return `Level up at ${formatItemName(detail.location.name)}`;
     if (detail.time_of_day) return `Level up (${detail.time_of_day})`;
@@ -146,21 +232,19 @@ function formatTrigger(detail: EvoNode["evolution_details"][0]): string {
   }
   if (trigger === "shed") return "Shed";
   if (trigger === "spin") return "Spin";
-  if (trigger === "tower-of-darkness") return "Tower of Darkness";
-  if (trigger === "tower-of-waters") return "Tower of Waters";
   if (trigger === "three-critical-hits") return "3 Critical Hits";
   if (trigger === "take-damage") return "Take Damage";
   return capitalize(trigger ?? "");
 }
 
-function flattenChain(node: EvoNode): EvoStep[] {
+function flattenLiveChain(node: LiveEvoNode): EvoStep[] {
   const steps: EvoStep[] = [];
-  function walk(n: EvoNode) {
+  function walk(n: LiveEvoNode) {
     for (const child of n.evolves_to) {
       steps.push({
         from: { name: n.species.name, id: extractId(n.species.url) },
         to: { name: child.species.name, id: extractId(child.species.url) },
-        trigger: formatTrigger(child.evolution_details[0]),
+        trigger: formatLiveTrigger(child.evolution_details[0]),
       });
       walk(child);
     }
@@ -342,8 +426,14 @@ export function PokemonDetailModal({
       }
       setEncounters(svEncounters);
 
-      const chain: EvoChain = await fetch(sp.evolution_chain.url).then((r) => r.json());
-      setEvoSteps(flattenChain(chain.chain));
+      // Try static evolution chain first (Gen 9), fall back to live fetch
+      const staticChain = findEvolutionChain(pokemon.name);
+      if (staticChain) {
+        setEvoSteps(flattenStaticChain(staticChain));
+      } else {
+        const chain = await fetch(sp.evolution_chain.url).then((r) => r.json());
+        setEvoSteps(flattenLiveChain(chain.chain));
+      }
     } catch {
       // silently fail — data might just not be available
     } finally {

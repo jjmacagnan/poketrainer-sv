@@ -1,0 +1,618 @@
+[
+  {
+    "id": 1,
+    "name": "spicy",
+    "contestType": "Cool",
+    "localizedName": "Spicy",
+    "berries": [
+      {
+        "potency": 10,
+        "berry": "rowap"
+      },
+      {
+        "potency": 10,
+        "berry": "leppa"
+      },
+      {
+        "potency": 10,
+        "berry": "oran"
+      },
+      {
+        "potency": 10,
+        "berry": "persim"
+      },
+      {
+        "potency": 10,
+        "berry": "lum"
+      },
+      {
+        "potency": 10,
+        "berry": "razz"
+      },
+      {
+        "potency": 10,
+        "berry": "pinap"
+      },
+      {
+        "potency": 10,
+        "berry": "pomeg"
+      },
+      {
+        "potency": 10,
+        "berry": "qualot"
+      },
+      {
+        "potency": 10,
+        "berry": "hondew"
+      },
+      {
+        "potency": 10,
+        "berry": "nomel"
+      },
+      {
+        "potency": 10,
+        "berry": "belue"
+      },
+      {
+        "potency": 10,
+        "berry": "rindo"
+      },
+      {
+        "potency": 10,
+        "berry": "shuca"
+      },
+      {
+        "potency": 10,
+        "berry": "charti"
+      },
+      {
+        "potency": 10,
+        "berry": "apicot"
+      },
+      {
+        "potency": 10,
+        "berry": "cheri"
+      },
+      {
+        "potency": 15,
+        "berry": "chople"
+      },
+      {
+        "potency": 15,
+        "berry": "figy"
+      },
+      {
+        "potency": 15,
+        "berry": "occa"
+      },
+      {
+        "potency": 20,
+        "berry": "tamato"
+      },
+      {
+        "potency": 20,
+        "berry": "tanga"
+      },
+      {
+        "potency": 25,
+        "berry": "babiri"
+      },
+      {
+        "potency": 30,
+        "berry": "starf"
+      },
+      {
+        "potency": 30,
+        "berry": "liechi"
+      },
+      {
+        "potency": 30,
+        "berry": "spelon"
+      },
+      {
+        "potency": 30,
+        "berry": "petaya"
+      },
+      {
+        "potency": 30,
+        "berry": "lansat"
+      },
+      {
+        "potency": 40,
+        "berry": "enigma"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "dry",
+    "contestType": "Beauty",
+    "localizedName": "Dry",
+    "berries": [
+      {
+        "potency": 10,
+        "berry": "kasib"
+      },
+      {
+        "potency": 10,
+        "berry": "babiri"
+      },
+      {
+        "potency": 10,
+        "berry": "liechi"
+      },
+      {
+        "potency": 10,
+        "berry": "lum"
+      },
+      {
+        "potency": 10,
+        "berry": "sitrus"
+      },
+      {
+        "potency": 10,
+        "berry": "oran"
+      },
+      {
+        "potency": 10,
+        "berry": "razz"
+      },
+      {
+        "potency": 10,
+        "berry": "bluk"
+      },
+      {
+        "potency": 10,
+        "berry": "kelpsy"
+      },
+      {
+        "potency": 10,
+        "berry": "hondew"
+      },
+      {
+        "potency": 10,
+        "berry": "grepa"
+      },
+      {
+        "potency": 10,
+        "berry": "tamato"
+      },
+      {
+        "potency": 10,
+        "berry": "enigma"
+      },
+      {
+        "potency": 10,
+        "berry": "spelon"
+      },
+      {
+        "potency": 10,
+        "berry": "starf"
+      },
+      {
+        "potency": 10,
+        "berry": "chesto"
+      },
+      {
+        "potency": 10,
+        "berry": "yache"
+      },
+      {
+        "potency": 10,
+        "berry": "persim"
+      },
+      {
+        "potency": 10,
+        "berry": "coba"
+      },
+      {
+        "potency": 10,
+        "berry": "lansat"
+      },
+      {
+        "potency": 15,
+        "berry": "passho"
+      },
+      {
+        "potency": 15,
+        "berry": "wiki"
+      },
+      {
+        "potency": 15,
+        "berry": "kebia"
+      },
+      {
+        "potency": 20,
+        "berry": "charti"
+      },
+      {
+        "potency": 20,
+        "berry": "cornn"
+      },
+      {
+        "potency": 25,
+        "berry": "chilan"
+      },
+      {
+        "potency": 30,
+        "berry": "apicot"
+      },
+      {
+        "potency": 30,
+        "berry": "pamtre"
+      },
+      {
+        "potency": 30,
+        "berry": "ganlon"
+      },
+      {
+        "potency": 40,
+        "berry": "micle"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "sweet",
+    "contestType": "Cute",
+    "localizedName": "Sweet",
+    "berries": [
+      {
+        "potency": 10,
+        "berry": "leppa"
+      },
+      {
+        "potency": 10,
+        "berry": "persim"
+      },
+      {
+        "potency": 10,
+        "berry": "lum"
+      },
+      {
+        "potency": 10,
+        "berry": "sitrus"
+      },
+      {
+        "potency": 10,
+        "berry": "micle"
+      },
+      {
+        "potency": 10,
+        "berry": "occa"
+      },
+      {
+        "potency": 10,
+        "berry": "payapa"
+      },
+      {
+        "potency": 10,
+        "berry": "haban"
+      },
+      {
+        "potency": 10,
+        "berry": "chilan"
+      },
+      {
+        "potency": 10,
+        "berry": "ganlon"
+      },
+      {
+        "potency": 10,
+        "berry": "bluk"
+      },
+      {
+        "potency": 10,
+        "berry": "nanab"
+      },
+      {
+        "potency": 10,
+        "berry": "pomeg"
+      },
+      {
+        "potency": 10,
+        "berry": "qualot"
+      },
+      {
+        "potency": 10,
+        "berry": "grepa"
+      },
+      {
+        "potency": 10,
+        "berry": "cornn"
+      },
+      {
+        "potency": 10,
+        "berry": "pamtre"
+      },
+      {
+        "potency": 10,
+        "berry": "pecha"
+      },
+      {
+        "potency": 15,
+        "berry": "mago"
+      },
+      {
+        "potency": 15,
+        "berry": "shuca"
+      },
+      {
+        "potency": 15,
+        "berry": "wacan"
+      },
+      {
+        "potency": 20,
+        "berry": "kasib"
+      },
+      {
+        "potency": 20,
+        "berry": "magost"
+      },
+      {
+        "potency": 30,
+        "berry": "watmel"
+      },
+      {
+        "potency": 30,
+        "berry": "liechi"
+      },
+      {
+        "potency": 30,
+        "berry": "salac"
+      },
+      {
+        "potency": 30,
+        "berry": "lansat"
+      },
+      {
+        "potency": 30,
+        "berry": "starf"
+      },
+      {
+        "potency": 40,
+        "berry": "custap"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "bitter",
+    "contestType": "Smart",
+    "localizedName": "Bitter",
+    "berries": [
+      {
+        "potency": 10,
+        "berry": "lansat"
+      },
+      {
+        "potency": 10,
+        "berry": "starf"
+      },
+      {
+        "potency": 10,
+        "berry": "custap"
+      },
+      {
+        "potency": 10,
+        "berry": "lum"
+      },
+      {
+        "potency": 10,
+        "berry": "sitrus"
+      },
+      {
+        "potency": 10,
+        "berry": "chople"
+      },
+      {
+        "potency": 10,
+        "berry": "colbur"
+      },
+      {
+        "potency": 10,
+        "berry": "leppa"
+      },
+      {
+        "potency": 10,
+        "berry": "salac"
+      },
+      {
+        "potency": 10,
+        "berry": "oran"
+      },
+      {
+        "potency": 10,
+        "berry": "nanab"
+      },
+      {
+        "potency": 10,
+        "berry": "wepear"
+      },
+      {
+        "potency": 10,
+        "berry": "pomeg"
+      },
+      {
+        "potency": 10,
+        "berry": "kelpsy"
+      },
+      {
+        "potency": 10,
+        "berry": "hondew"
+      },
+      {
+        "potency": 10,
+        "berry": "magost"
+      },
+      {
+        "potency": 10,
+        "berry": "watmel"
+      },
+      {
+        "potency": 10,
+        "berry": "rawst"
+      },
+      {
+        "potency": 10,
+        "berry": "passho"
+      },
+      {
+        "potency": 15,
+        "berry": "aguav"
+      },
+      {
+        "potency": 15,
+        "berry": "coba"
+      },
+      {
+        "potency": 15,
+        "berry": "rindo"
+      },
+      {
+        "potency": 20,
+        "berry": "haban"
+      },
+      {
+        "potency": 20,
+        "berry": "rabuta"
+      },
+      {
+        "potency": 30,
+        "berry": "durin"
+      },
+      {
+        "potency": 30,
+        "berry": "ganlon"
+      },
+      {
+        "potency": 30,
+        "berry": "petaya"
+      },
+      {
+        "potency": 40,
+        "berry": "jaboca"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "sour",
+    "contestType": "Tough",
+    "localizedName": "Sour",
+    "berries": [
+      {
+        "potency": 10,
+        "berry": "leppa"
+      },
+      {
+        "potency": 10,
+        "berry": "oran"
+      },
+      {
+        "potency": 10,
+        "berry": "persim"
+      },
+      {
+        "potency": 10,
+        "berry": "sitrus"
+      },
+      {
+        "potency": 10,
+        "berry": "jaboca"
+      },
+      {
+        "potency": 10,
+        "berry": "aspear"
+      },
+      {
+        "potency": 10,
+        "berry": "wacan"
+      },
+      {
+        "potency": 10,
+        "berry": "kebia"
+      },
+      {
+        "potency": 10,
+        "berry": "tanga"
+      },
+      {
+        "potency": 10,
+        "berry": "petaya"
+      },
+      {
+        "potency": 10,
+        "berry": "wepear"
+      },
+      {
+        "potency": 10,
+        "berry": "pinap"
+      },
+      {
+        "potency": 10,
+        "berry": "kelpsy"
+      },
+      {
+        "potency": 10,
+        "berry": "qualot"
+      },
+      {
+        "potency": 10,
+        "berry": "grepa"
+      },
+      {
+        "potency": 10,
+        "berry": "rabuta"
+      },
+      {
+        "potency": 10,
+        "berry": "durin"
+      },
+      {
+        "potency": 15,
+        "berry": "iapapa"
+      },
+      {
+        "potency": 15,
+        "berry": "payapa"
+      },
+      {
+        "potency": 15,
+        "berry": "yache"
+      },
+      {
+        "potency": 20,
+        "berry": "colbur"
+      },
+      {
+        "potency": 20,
+        "berry": "nomel"
+      },
+      {
+        "potency": 30,
+        "berry": "belue"
+      },
+      {
+        "potency": 30,
+        "berry": "salac"
+      },
+      {
+        "potency": 30,
+        "berry": "apicot"
+      },
+      {
+        "potency": 30,
+        "berry": "lansat"
+      },
+      {
+        "potency": 30,
+        "berry": "starf"
+      },
+      {
+        "potency": 40,
+        "berry": "rowap"
+      }
+    ]
+  }
+]

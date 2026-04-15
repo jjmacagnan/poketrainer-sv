@@ -82,6 +82,10 @@
     "herba.Sour": "5★ & 6★ Tera Raids — most common in Poison, Ground, Fighting type raids",
     "herba.Bitter": "5★ & 6★ Tera Raids — most common in Dragon, Psychic, Ghost type raids",
     "herba.Spicy": "5★ & 6★ Tera Raids — most common in Fire, Electric, Dark type raids",
+    "showFlavors": "🧪 Show flavors",
+    "hideFlavors": "✕ Hide flavors",
+    "berryAlternatives": "🫐 Equivalent berries",
+    "berryAltNote": "Berries with similar flavor to the Herba Mystica used in the recipe",
     "footer": "PokéTrainer SV Tools — Sandwich Builder v1.0",
     "footerNote": "Data based on community-verified recipes"
   },
@@ -169,7 +173,11 @@
     "natureB": "Nature B",
     "diff": "Diff",
     "compareNote": "Comparison with IVs 31, EVs 252 on all stats, Level 100",
-    "selectToComparePrompt": "Select a Pokémon to compare natures"
+    "selectToComparePrompt": "Select a Pokémon to compare natures",
+    "berryPreferences": "🫐 Berry Preferences",
+    "likesFlavor": "Likes:",
+    "dislikesFlavor": "Dislikes:",
+    "berryNote": "Feeding berries the nature likes increases friendship faster. Feeding disliked berries reduces friendship."
   },
   "raid": {
     "title": "Tera Raid Build Maker",
