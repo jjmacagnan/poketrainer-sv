@@ -220,7 +220,8 @@
     "discordDesc": "Entre no servidor para trocar dicas, builds e tirar dúvidas com a comunidade.",
     "discordBtn": "Entrar no Discord",
     "videosTitle": "Vídeos em destaque",
-    "videoPlaceholder": "Em breve"
+    "videoPlaceholder": "Em breve",
+    "viewAllVideos": "Ver todos os vídeos no YouTube"
   },
   "footer": {
     "tagline": "Ferramentas para jogadores de Pokémon Scarlet & Violet.",

@@ -220,7 +220,8 @@
     "discordDesc": "Join the server to share tips, builds and chat with the community.",
     "discordBtn": "Join Discord",
     "videosTitle": "Featured videos",
-    "videoPlaceholder": "Coming soon"
+    "videoPlaceholder": "Coming soon",
+    "viewAllVideos": "View all videos on YouTube"
   },
   "footer": {
     "tagline": "Tools for Pokémon Scarlet & Violet players.",
