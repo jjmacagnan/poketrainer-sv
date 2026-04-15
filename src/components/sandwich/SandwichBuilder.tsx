@@ -3,52 +3,189 @@
 import { useState, useMemo } from "react";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
-import {
-  SHINY_RECIPES,
-  ENCOUNTER_RECIPES,
-  ALL_RECIPES,
-  MEAL_POWERS,
-} from "@/data/sandwich-recipes";
+import { ALL_RECIPES, MEAL_POWERS } from "@/data/sandwich-recipes";
 import type { SandwichRecipe } from "@/data/sandwich-recipes";
+import {
+  SHINY_GUIDE,
+  ENCOUNTER_GUIDE,
+  RAID_GUIDE,
+  BREEDING_RECIPES,
+} from "@/data/sandwich-guide";
+import type { SandwichGuideEntry } from "@/data/sandwich-guide";
 import { useI18n } from "@/i18n";
 import { RecipeCard } from "./RecipeCard";
 import { RecipeDetail } from "./RecipeDetail";
 
-type Tab = "shiny" | "encounter" | "search";
+type Tab = "shiny" | "encounter" | "raid" | "breeding" | "search";
+
+const GUIDE_DATA: Record<Tab, SandwichGuideEntry[]> = {
+  shiny: SHINY_GUIDE,
+  encounter: ENCOUNTER_GUIDE,
+  raid: RAID_GUIDE,
+  breeding: [],
+  search: [],
+};
+
+const HERBA_COLORS: Record<string, string> = {
+  Salty: "#6CB4E4",
+  Sweet: "#FF9CC2",
+  Spicy: "#FF6B35",
+  Sour: "#8AC926",
+  Bitter: "#9B59B6",
+};
+
+function HerbaBadge({ herba }: { herba: string }) {
+  return (
+    <span
+      className="rounded px-1.5 py-0.5 text-[10px] font-bold text-white"
+      style={{ background: HERBA_COLORS[herba] ?? "#666" }}
+    >
+      {herba}
+    </span>
+  );
+}
+
+function TypeGuideCard({
+  entry,
+  isSelected,
+  onToggle,
+  onSelectRecipe,
+}: {
+  entry: SandwichGuideEntry;
+  isSelected: boolean;
+  onToggle: () => void;
+  onSelectRecipe: (r: SandwichRecipe) => void;
+}) {
+  const { t } = useI18n();
+  const primary = entry.recipes[0];
+  const hasAlts = entry.recipes.length > 1;
+  const typeColor = TYPE_COLORS[entry.type] ?? "#666";
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
+      {/* Card header — click to expand */}
+      <button
+        onClick={onToggle}
+        className="flex w-full items-center gap-3 p-3 text-left transition-colors hover:bg-white/5"
+      >
+        {/* Type badge */}
+        <span
+          className="shrink-0 rounded-lg px-2.5 py-1 text-xs font-bold text-white"
+          style={{ background: typeColor }}
+        >
+          {entry.type}
+        </span>
+
+        {/* Primary recipe info */}
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-sm font-semibold text-gray-100">
+            {primary.name}
+          </div>
+          <div className="mt-0.5 flex flex-wrap items-center gap-1">
+            {primary.herba.length > 0 ? (
+              primary.herba.map((h, i) => <HerbaBadge key={i} herba={h} />)
+            ) : (
+              <span className="text-[10px] font-semibold text-teal-400">{t("sandwich.noHerba")}</span>
+            )}
+          </div>
+        </div>
+
+        {/* Badges */}
+        <div className="flex shrink-0 items-center gap-1.5">
+          {hasAlts && (
+            <span className="rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold text-violet-300">
+              {t("sandwich.altBadge", { count: entry.recipes.length - 1 })}
+            </span>
+          )}
+          <span
+            className={`text-gray-400 transition-transform ${isSelected ? "rotate-180" : ""}`}
+          >
+            ▾
+          </span>
+        </div>
+      </button>
+
+      {/* Inline recipe picker */}
+      {isSelected && (
+        <div className="border-t border-white/10 bg-black/20 p-2">
+          <div className="mb-1.5 px-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+            {t("sandwich.selectRecipe")}
+          </div>
+          <div className="grid gap-1.5">
+            {entry.recipes.map((recipe, i) => (
+              <button
+                key={i}
+                onClick={() => onSelectRecipe(recipe)}
+                className="w-full rounded-lg border border-white/10 bg-white/5 p-2.5 text-left transition-colors hover:border-white/20 hover:bg-white/10"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      {i === 0 && (
+                        <span className="rounded bg-yellow-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase text-yellow-400">
+                          {t("sandwich.bestBadge")}
+                        </span>
+                      )}
+                      <span className="text-xs font-semibold text-gray-100">
+                        {recipe.name}
+                      </span>
+                    </div>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {recipe.herba.map((h, j) => (
+                        <HerbaBadge key={j} herba={h} />
+                      ))}
+                      {recipe.herba.length === 0 && (
+                        <span className="text-[10px] text-teal-400">{t("sandwich.noHerbaMystica")}</span>
+                      )}
+                    </div>
+                    <div className="mt-1 text-[10px] text-gray-500">
+                      {recipe.ingredients.join(", ")}
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    {recipe.powers.slice(0, 1).map((p, j) => (
+                      <div key={j} className="text-[10px] font-semibold text-gray-300">
+                        {p}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function SandwichBuilder() {
   const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("shiny");
   const [selectedType, setSelectedType] = useState<PokemonType | null>(null);
-  const [selectedRecipe, setSelectedRecipe] = useState<SandwichRecipe | null>(
-    null
-  );
+  const [selectedRecipe, setSelectedRecipe] = useState<SandwichRecipe | null>(null);
+  const [selectedEntry, setSelectedEntry] = useState<SandwichGuideEntry | null>(null);
   const [searchPower, setSearchPower] = useState("");
   const [searchType, setSearchType] = useState("");
 
-  const filteredShiny = useMemo(() => {
-    if (!selectedType) return SHINY_RECIPES;
-    return SHINY_RECIPES.filter((x) => x.type === selectedType);
-  }, [selectedType]);
-
-  const filteredEncounter = useMemo(() => {
-    if (!selectedType) return ENCOUNTER_RECIPES;
-    return ENCOUNTER_RECIPES.filter((x) => x.type === selectedType);
-  }, [selectedType]);
+  const filteredGuide = useMemo(() => {
+    const data = GUIDE_DATA[tab] ?? [];
+    if (!selectedType) return data;
+    return data.filter((e) => e.type === selectedType);
+  }, [tab, selectedType]);
 
   const searchResults = useMemo(() => {
     if (!searchPower && !searchType) return [];
     return ALL_RECIPES.filter((r) => {
       const matchPower =
         !searchPower ||
-        r.powers.some((p) =>
-          p.toLowerCase().includes(searchPower.toLowerCase())
-        );
+        r.powers.some((p) => p.toLowerCase().includes(searchPower.toLowerCase()));
       const matchType = !searchType || r.type === searchType;
       return matchPower && matchType;
     });
   }, [searchPower, searchType]);
 
+  // Detail view
   if (selectedRecipe) {
     return (
       <div className="mx-auto max-w-xl px-4 py-6">
@@ -60,11 +197,47 @@ export function SandwichBuilder() {
     );
   }
 
-  const tabs: { id: Tab; label: string; desc: string }[] = [
-    { id: "shiny", label: t("sandwich.tabShiny"), desc: t("sandwich.tabShinyDesc") },
-    { id: "encounter", label: t("sandwich.tabEncounter"), desc: t("sandwich.tabEncounterDesc") },
-    { id: "search", label: t("sandwich.tabSearch"), desc: t("sandwich.tabSearchDesc") },
+  const tabs: { id: Tab; label: string; desc: string; color: string }[] = [
+    { id: "shiny", label: t("sandwich.tabShiny"), desc: t("sandwich.tabShinyDesc"), color: "#FFD700" },
+    { id: "encounter", label: t("sandwich.tabEncounter"), desc: t("sandwich.tabEncounterDesc"), color: "#4ECDC4" },
+    { id: "raid", label: t("sandwich.tabRaid"), desc: t("sandwich.tabRaidDesc"), color: "#E040FB" },
+    { id: "breeding", label: t("sandwich.tabBreeding"), desc: t("sandwich.tabBreedingDesc"), color: "#F9A825" },
+    { id: "search", label: t("sandwich.tabSearch"), desc: t("sandwich.tabSearchDesc"), color: "#90CAF9" },
   ];
+
+  const tabBanners: Record<Tab, { title: string; info: string; gradient: string; border: string; titleColor: string }> = {
+    shiny: {
+      title: t("sandwich.shinyTitle"),
+      info: t("sandwich.shinyInfo"),
+      gradient: "linear-gradient(135deg, rgba(255,215,0,0.07), rgba(255,107,107,0.07))",
+      border: "1px solid rgba(255,215,0,0.2)",
+      titleColor: "text-yellow-400",
+    },
+    encounter: {
+      title: t("sandwich.encounterTitle"),
+      info: t("sandwich.encounterInfo"),
+      gradient: "linear-gradient(135deg, rgba(78,205,196,0.07), rgba(44,140,133,0.07))",
+      border: "1px solid rgba(78,205,196,0.2)",
+      titleColor: "text-teal-400",
+    },
+    raid: {
+      title: t("sandwich.raidTitle"),
+      info: t("sandwich.raidInfo"),
+      gradient: "linear-gradient(135deg, rgba(224,64,251,0.07), rgba(103,58,183,0.07))",
+      border: "1px solid rgba(224,64,251,0.2)",
+      titleColor: "text-purple-400",
+    },
+    breeding: {
+      title: t("sandwich.breedingTitle"),
+      info: t("sandwich.breedingInfo"),
+      gradient: "linear-gradient(135deg, rgba(249,168,37,0.07), rgba(251,192,45,0.07))",
+      border: "1px solid rgba(249,168,37,0.2)",
+      titleColor: "text-yellow-500",
+    },
+    search: { title: "", info: "", gradient: "", border: "", titleColor: "" },
+  };
+
+  const banner = tabBanners[tab];
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
@@ -81,9 +254,7 @@ export function SandwichBuilder() {
         >
           {t("sandwich.title")}
         </h1>
-        <p className="text-sm text-gray-400">
-          {t("sandwich.subtitle")}
-        </p>
+        <p className="text-sm text-gray-400">{t("sandwich.subtitle")}</p>
       </div>
 
       {/* Tabs */}
@@ -94,12 +265,18 @@ export function SandwichBuilder() {
             onClick={() => {
               setTab(tb.id);
               setSelectedType(null);
+              setSelectedEntry(null);
             }}
             className={`flex-1 rounded-lg px-2 py-2.5 text-center text-sm font-bold transition-all ${
               tab === tb.id
-                ? "border-b-2 border-violet-500 bg-violet-500/15 text-white"
+                ? "border-b-2 bg-white/10 text-white"
                 : "border-b-2 border-transparent text-gray-400"
             }`}
+            style={
+              tab === tb.id
+                ? { borderColor: tb.color }
+                : undefined
+            }
           >
             <div>{tb.label}</div>
             <div className="text-[10px] font-normal opacity-70">{tb.desc}</div>
@@ -107,11 +284,11 @@ export function SandwichBuilder() {
         ))}
       </div>
 
-      {/* Type Filter */}
-      {tab !== "search" && (
+      {/* Type Filter — only for tabs that group by Pokémon type */}
+      {tab !== "search" && tab !== "breeding" && (
         <div className="mb-5 flex flex-wrap justify-center gap-1.5">
           <button
-            onClick={() => setSelectedType(null)}
+            onClick={() => { setSelectedType(null); setSelectedEntry(null); }}
             className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
               !selectedType
                 ? "border-white/30 bg-white/15 text-white"
@@ -123,19 +300,14 @@ export function SandwichBuilder() {
           {TYPES.map((tp) => (
             <button
               key={tp}
-              onClick={() =>
-                setSelectedType(selectedType === tp ? null : tp)
-              }
+              onClick={() => {
+                setSelectedType(selectedType === tp ? null : tp);
+                setSelectedEntry(null);
+              }}
               className="rounded-full border px-3 py-1 text-[11px] font-bold text-white transition-all"
               style={{
-                background:
-                  selectedType === tp
-                    ? TYPE_COLORS[tp]
-                    : "rgba(255,255,255,0.05)",
-                borderColor:
-                  selectedType === tp
-                    ? TYPE_COLORS[tp]
-                    : "rgba(255,255,255,0.1)",
+                background: selectedType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
+                borderColor: selectedType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.1)",
                 opacity: selectedType === tp ? 1 : 0.6,
               }}
             >
@@ -194,50 +366,94 @@ export function SandwichBuilder() {
         </div>
       )}
 
-      {/* Shiny Tab */}
-      {tab === "shiny" && (
+      {/* Breeding tab */}
+      {tab === "breeding" && (
         <div>
           <div
             className="mb-4 rounded-xl p-3.5 text-sm text-gray-400"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255,215,0,0.07), rgba(255,107,107,0.07))",
-              border: "1px solid rgba(255,215,0,0.2)",
-            }}
+            style={{ background: banner.gradient, border: banner.border }}
           >
-            <strong className="text-yellow-400">{t("sandwich.shinyTitle")}</strong>{" "}
-            — {t("sandwich.shinyInfo")}
+            <strong className={banner.titleColor}>{banner.title}</strong> —{" "}
+            {banner.info}
           </div>
-          <div className="grid gap-2.5 sm:grid-cols-2">
-            {filteredShiny.map((r, i) => (
-              <RecipeCard key={i} recipe={r} onSelect={setSelectedRecipe} />
-            ))}
-          </div>
+
+          {/* Egg Power level sections */}
+          {([3, 2, 1] as const).map((level) => {
+            const recipes = BREEDING_RECIPES.filter((r) =>
+              r.powers[0].includes(`Lv.${level}`)
+            );
+            if (recipes.length === 0) return null;
+            return (
+              <div key={level} className="mb-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <span
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                      level === 3
+                        ? "bg-yellow-500/20 text-yellow-400"
+                        : level === 2
+                          ? "bg-orange-500/20 text-orange-400"
+                          : "bg-white/10 text-gray-400"
+                    }`}
+                  >
+                    {t("sandwich.eggPowerLevel", { level: String(level) })}
+                    {level === 3 && ` ${t("sandwich.eggFastest")}`}
+                    {level === 2 && ` ${t("sandwich.eggRecommended")}`}
+                    {level === 1 && ` ${t("sandwich.eggBudget")}`}
+                  </span>
+                  {level === 3 && (
+                    <span className="text-[10px] text-gray-500">
+                      {t("sandwich.requiresHerba")}
+                    </span>
+                  )}
+                </div>
+                <div className="grid gap-2">
+                  {recipes.map((r, i) => (
+                    <RecipeCard key={i} recipe={r} onSelect={setSelectedRecipe} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Encounter Tab */}
-      {tab === "encounter" && (
+      {/* Guide tabs (shiny / encounter / raid) */}
+      {tab !== "search" && tab !== "breeding" && (
         <div>
-          <div
-            className="mb-4 rounded-xl p-3.5 text-sm text-gray-400"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(78,205,196,0.07), rgba(44,140,133,0.07))",
-              border: "1px solid rgba(78,205,196,0.2)",
-            }}
-          >
-            <strong className="text-teal-400">{t("sandwich.encounterTitle")}</strong> —{" "}
-            {t("sandwich.encounterInfo")}
-          </div>
-          <div className="grid gap-2.5 sm:grid-cols-2">
-            {filteredEncounter.map((r, i) => (
-              <RecipeCard key={i} recipe={r} onSelect={setSelectedRecipe} />
+          {/* Info banner */}
+          {banner.title && (
+            <div
+              className="mb-4 rounded-xl p-3.5 text-sm text-gray-400"
+              style={{ background: banner.gradient, border: banner.border }}
+            >
+              <strong className={banner.titleColor}>{banner.title}</strong> —{" "}
+              {banner.info}
+            </div>
+          )}
+
+          {/* Type entry cards */}
+          <div className="grid gap-2.5">
+            {filteredGuide.map((entry) => (
+              <TypeGuideCard
+                key={entry.type}
+                entry={entry}
+                isSelected={selectedEntry?.type === entry.type}
+                onToggle={() =>
+                  setSelectedEntry(
+                    selectedEntry?.type === entry.type ? null : entry
+                  )
+                }
+                onSelectRecipe={(r) => {
+                  setSelectedEntry(null);
+                  setSelectedRecipe(r);
+                }}
+              />
             ))}
           </div>
-          {filteredEncounter.length === 0 && (
+
+          {filteredGuide.length === 0 && (
             <div className="py-10 text-center text-gray-500">
-              {t("sandwich.noEncounter")}
+              {t("sandwich.noRecipes")}
             </div>
           )}
         </div>

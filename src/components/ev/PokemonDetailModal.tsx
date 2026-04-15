@@ -5,6 +5,11 @@ import { TypeBadge } from "@/components/ui/TypeBadge";
 import { StatBar } from "@/components/ui/StatBar";
 import type { PokemonType } from "@/data/types";
 import { STAT_NAMES } from "@/lib/constants";
+import abilitiesData from "@/data/generated/abilities.json";
+import itemsData from "@/data/generated/items.json";
+
+const abilitiesList = abilitiesData as { name: string; effect: string; shortEffect: string; flavorText: string }[];
+const itemsList = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
 
 export interface PokemonEntry {
   dexNumber: number;
@@ -563,22 +568,36 @@ export function PokemonDetailModal({
 
           {/* Abilities */}
           <Section title="Abilities">
-            <div className="flex flex-wrap gap-2">
-              {pokemon.abilities.map((a) => (
-                <div
-                  key={a.name}
-                  className={`rounded-lg border px-3 py-1.5 text-sm font-semibold ${
-                    a.isHidden
-                      ? "border-violet-400/30 bg-violet-500/10 text-violet-300"
-                      : "border-white/10 bg-white/5 text-gray-200"
-                  }`}
-                >
-                  {a.name}
-                  {a.isHidden && (
-                    <span className="ml-1.5 text-[10px] text-violet-400">(H)</span>
-                  )}
-                </div>
-              ))}
+            <div className="flex flex-col gap-2">
+              {pokemon.abilities.map((a) => {
+                const abilityData = abilitiesList.find((ab) => ab.name === a.name);
+                return (
+                  <div
+                    key={a.name}
+                    className={`flex flex-col rounded-lg border px-3 py-2 ${
+                      a.isHidden
+                        ? "border-violet-400/30 bg-violet-500/10"
+                        : "border-white/10 bg-white/5"
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <span className={`text-sm font-bold ${a.isHidden ? "text-violet-300" : "text-gray-200"}`}>
+                        {a.name}
+                      </span>
+                      {a.isHidden && (
+                        <span className="ml-2 rounded bg-violet-500/20 px-1.5 py-0.5 text-[10px] font-black text-violet-400">
+                          HIDDEN
+                        </span>
+                      )}
+                    </div>
+                    {(abilityData?.shortEffect || abilityData?.flavorText) && (
+                      <p className="mt-1 text-[11px] leading-relaxed text-gray-400">
+                        {abilityData.shortEffect || abilityData.flavorText}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </Section>
 
@@ -734,15 +753,32 @@ export function PokemonDetailModal({
           {/* Held Items */}
           {pokemon.heldItems && pokemon.heldItems.length > 0 && (
             <Section title="Wild Held Items">
-              <div className="flex flex-wrap gap-2">
-                {pokemon.heldItems.map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-gray-300"
-                  >
-                    {item}
-                  </span>
-                ))}
+              <div className="flex flex-col gap-2">
+                {pokemon.heldItems.map((itemName) => {
+                  const itemData = itemsList.find((i) => i.name === itemName);
+                  return (
+                    <div
+                      key={itemName}
+                      className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2"
+                    >
+                      {itemData?.sprite ? (
+                        <img src={itemData.sprite} alt={itemName} className="h-8 w-8 shrink-0 pixelated" />
+                      ) : (
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white/10 text-[10px] text-white/40">
+                          ?
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <span className="text-sm font-bold text-gray-200">{itemName}</span>
+                        {(itemData?.officialDescription || itemData?.description) && (
+                          <p className="mt-0.5 text-[10px] leading-relaxed text-gray-400">
+                            {itemData.officialDescription || itemData.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </Section>
           )}

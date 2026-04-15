@@ -7,6 +7,19 @@ import { clampEVs, VITAMIN_AMOUNT } from "@/lib/ev-calculator";
 import { useI18n } from "@/i18n";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import type { PokemonType } from "@/data/types";
+import itemsData from "@/data/generated/items.json";
+
+const itemsList = itemsData as { name: string; description: string; sprite: string }[];
+const getSprite = (name: string) => itemsList.find((i) => i.name === name)?.sprite || "";
+
+const STAT_ITEMS: Record<StatName, { vitamin: string; berry: string; powerItem: string }> = {
+  HP: { vitamin: "HP Up", berry: "Pomeg Berry", powerItem: "Power Weight" },
+  Atk: { vitamin: "Protein", berry: "Kelpsy Berry", powerItem: "Power Bracer" },
+  Def: { vitamin: "Iron", berry: "Qualot Berry", powerItem: "Power Belt" },
+  SpA: { vitamin: "Calcium", berry: "Hondew Berry", powerItem: "Power Lens" },
+  SpD: { vitamin: "Zinc", berry: "Grepa Berry", powerItem: "Power Band" },
+  Spe: { vitamin: "Carbos", berry: "Tamato Berry", powerItem: "Power Anklet" },
+};
 
 const STAT_COLORS: Record<StatName, string> = {
   HP: "#FF5959",
@@ -199,17 +212,21 @@ export function PokemonSlot({
                 </button>
                 <button
                   onClick={() => updateEV(stat, VITAMIN_AMOUNT)}
-                  className="rounded bg-violet-500/15 px-1.5 py-0.5 text-[10px] font-bold text-violet-300 transition-colors hover:bg-violet-500/25"
-                  title={t("pokemonSlot.vitaminTitle")}
+                  className="group relative flex h-6 w-8 items-center justify-center rounded bg-violet-500/15 transition-colors hover:bg-violet-500/25"
                 >
-                  +10
+                  <img src={getSprite(STAT_ITEMS[stat].vitamin)} alt={STAT_ITEMS[stat].vitamin} className="h-5 w-5 pixelated" />
+                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-[10px] font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
+                    +{VITAMIN_AMOUNT} ({STAT_ITEMS[stat].vitamin})
+                  </div>
                 </button>
                 <button
                   onClick={() => updateEV(stat, -VITAMIN_AMOUNT)}
-                  className="rounded bg-white/5 px-1.5 py-0.5 text-[10px] font-bold text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
-                  title="-10"
+                  className="group relative flex h-6 w-8 items-center justify-center rounded bg-white/5 transition-colors hover:bg-white/10"
                 >
-                  -10
+                  <img src={getSprite(STAT_ITEMS[stat].berry)} alt={STAT_ITEMS[stat].berry} className="h-5 w-5 pixelated" />
+                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-[10px] font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
+                    -{VITAMIN_AMOUNT} ({STAT_ITEMS[stat].berry})
+                  </div>
                 </button>
               </div>
             </div>
@@ -278,33 +295,43 @@ export function PokemonSlot({
                   powerItem: data.machoBrace ? data.powerItem : null,
                 })
               }
-              className={`rounded-full border px-3 py-1 text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition-all ${
                 data.machoBrace
                   ? "border-yellow-400/50 bg-yellow-500/20 text-yellow-300"
                   : "border-white/10 bg-white/5 text-gray-400"
               }`}
             >
+              <img src={getSprite("Macho Brace")} alt="Macho Brace" className="h-4 w-4 pixelated" />
               {t("pokemonSlot.machoBrace")} {data.machoBrace ? "(2×)" : ""}
             </button>
 
-            <select
-              value={data.powerItem || ""}
-              onChange={(e) =>
-                onChange({
-                  ...data,
-                  powerItem: (e.target.value as StatName) || null,
-                  machoBrace: e.target.value ? false : data.machoBrace,
-                })
-              }
-              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-bold text-gray-400"
-            >
-              <option value="">{t("pokemonSlot.powerItemDrop")}</option>
-              {POWER_ITEMS.map((pi) => (
-                <option key={pi.stat} value={pi.stat}>
-                  {pi.name} (+8 {pi.stat})
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 pr-3 pl-1 py-0.5">
+              {data.powerItem ? (
+                <img src={getSprite(STAT_ITEMS[data.powerItem].powerItem)} alt="Power Item" className="h-5 w-5 pixelated" />
+              ) : (
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10 text-[10px] text-white/30">
+                  ?
+                </div>
+              )}
+              <select
+                value={data.powerItem || ""}
+                onChange={(e) =>
+                  onChange({
+                    ...data,
+                    powerItem: (e.target.value as StatName) || null,
+                    machoBrace: e.target.value ? false : data.machoBrace,
+                  })
+                }
+                className="bg-transparent text-xs font-bold text-gray-400 outline-none"
+              >
+                <option value="">{t("pokemonSlot.powerItemDrop")}</option>
+                {POWER_ITEMS.map((pi) => (
+                  <option key={pi.stat} value={pi.stat}>
+                    {pi.name} (+8 {pi.stat})
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         )}
       </div>
