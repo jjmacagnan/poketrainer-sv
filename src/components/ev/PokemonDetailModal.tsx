@@ -4,14 +4,43 @@ import { useEffect, useState, useCallback } from "react";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { StatBar } from "@/components/ui/StatBar";
 import type { PokemonType } from "@/data/types";
+import { TYPE_COLORS } from "@/data/types";
 import { STAT_NAMES } from "@/lib/constants";
 import abilitiesData from "@/data/generated/abilities.json";
 import itemsData from "@/data/generated/items.json";
 import evolutionChainsData from "@/data/generated/evolution-chains.json";
 import pokemonJsonData from "@/data/generated/pokemon.json";
+import movesJsonData from "@/data/generated/moves.json";
 
 const abilitiesList = abilitiesData as { name: string; effect: string; shortEffect: string; flavorText: string }[];
 const itemsList = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
+
+interface MoveData {
+  id: number;
+  name: string;
+  type: string;
+  category: string;
+  power: number | null;
+  pp: number | null;
+  accuracy: number | null;
+  priority: number;
+  target: string;
+  tm: number | null;
+  effect: string;
+}
+
+const movesLookup = (movesJsonData as MoveData[]).reduce<Record<string, MoveData>>(
+  (acc, m) => {
+    // key by normalized name: "Iron Defense" → "iron-defense"
+    acc[m.name.toLowerCase().replace(/ /g, "-")] = m;
+    return acc;
+  },
+  {}
+);
+
+function getMoveData(apiName: string): MoveData | undefined {
+  return movesLookup[apiName.toLowerCase()];
+}
 
 // ── Static Evolution Chain Types ──────────────────────────────────────────────
 
@@ -767,17 +796,30 @@ export function PokemonDetailModal({
                     <div>
                       <p className="mb-1.5 text-xs font-semibold text-emerald-400">Level Up ({levelUp.length})</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {levelUp.slice(0, visibleLimit).map((m) => (
-                          <span
-                            key={`lu-${m.name}`}
-                            className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
-                          >
-                            <span className="font-mono text-[10px] text-emerald-400/70">
-                              {m.level > 0 ? m.level : "—"}
+                        {levelUp.slice(0, visibleLimit).map((m) => {
+                          const md = getMoveData(m.name);
+                          return (
+                            <span
+                              key={`lu-${m.name}`}
+                              className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                              title={md?.effect ?? ""}
+                            >
+                              <span className="font-mono text-[10px] text-emerald-400/70 w-4 text-center">
+                                {m.level > 0 ? m.level : "—"}
+                              </span>
+                              {md && (
+                                <span
+                                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                  style={{ background: TYPE_COLORS[md.type as PokemonType] ?? "#888" }}
+                                />
+                              )}
+                              <span>{formatItemName(m.name)}</span>
+                              {md?.power && (
+                                <span className="text-[9px] text-gray-500">{md.power}</span>
+                              )}
                             </span>
-                            {formatItemName(m.name)}
-                          </span>
-                        ))}
+                          );
+                        })}
                         {!showAllMoves && levelUp.length > visibleLimit && (
                           <span className="text-xs text-gray-600">+{levelUp.length - visibleLimit} more</span>
                         )}
@@ -790,14 +832,32 @@ export function PokemonDetailModal({
                     <div>
                       <p className="mb-1.5 text-xs font-semibold text-blue-400">TM ({tm.length})</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {tm.slice(0, visibleLimit).map((m) => (
-                          <span
-                            key={`tm-${m.name}`}
-                            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
-                          >
-                            {formatItemName(m.name)}
-                          </span>
-                        ))}
+                        {tm.slice(0, visibleLimit).map((m) => {
+                          const md = getMoveData(m.name);
+                          return (
+                            <span
+                              key={`tm-${m.name}`}
+                              className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                              title={md?.effect ?? ""}
+                            >
+                              {md?.tm !== null && md?.tm !== undefined && (
+                                <span className="font-mono text-[9px] font-bold text-yellow-500/80">
+                                  TM{String(md.tm).padStart(3, "0")}
+                                </span>
+                              )}
+                              {md && (
+                                <span
+                                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                  style={{ background: TYPE_COLORS[md.type as PokemonType] ?? "#888" }}
+                                />
+                              )}
+                              <span>{formatItemName(m.name)}</span>
+                              {md?.power && (
+                                <span className="text-[9px] text-gray-500">{md.power}</span>
+                              )}
+                            </span>
+                          );
+                        })}
                         {!showAllMoves && tm.length > visibleLimit && (
                           <span className="text-xs text-gray-600">+{tm.length - visibleLimit} more</span>
                         )}
@@ -810,14 +870,27 @@ export function PokemonDetailModal({
                     <div>
                       <p className="mb-1.5 text-xs font-semibold text-pink-400">Egg ({egg.length})</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {egg.map((m) => (
-                          <span
-                            key={`egg-${m.name}`}
-                            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
-                          >
-                            {formatItemName(m.name)}
-                          </span>
-                        ))}
+                        {egg.map((m) => {
+                          const md = getMoveData(m.name);
+                          return (
+                            <span
+                              key={`egg-${m.name}`}
+                              className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                              title={md?.effect ?? ""}
+                            >
+                              {md && (
+                                <span
+                                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                  style={{ background: TYPE_COLORS[md.type as PokemonType] ?? "#888" }}
+                                />
+                              )}
+                              <span>{formatItemName(m.name)}</span>
+                              {md?.power && (
+                                <span className="text-[9px] text-gray-500">{md.power}</span>
+                              )}
+                            </span>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -827,14 +900,27 @@ export function PokemonDetailModal({
                     <div>
                       <p className="mb-1.5 text-xs font-semibold text-amber-400">Tutor ({tutor.length})</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {tutor.map((m) => (
-                          <span
-                            key={`tut-${m.name}`}
-                            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
-                          >
-                            {formatItemName(m.name)}
-                          </span>
-                        ))}
+                        {tutor.map((m) => {
+                          const md = getMoveData(m.name);
+                          return (
+                            <span
+                              key={`tut-${m.name}`}
+                              className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                              title={md?.effect ?? ""}
+                            >
+                              {md && (
+                                <span
+                                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                  style={{ background: TYPE_COLORS[md.type as PokemonType] ?? "#888" }}
+                                />
+                              )}
+                              <span>{formatItemName(m.name)}</span>
+                              {md?.power && (
+                                <span className="text-[9px] text-gray-500">{md.power}</span>
+                              )}
+                            </span>
+                          );
+                        })}
                       </div>
                     </div>
                   )}

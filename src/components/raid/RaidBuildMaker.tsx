@@ -23,12 +23,19 @@ import { useI18n } from "@/i18n";
 import { BuildExport } from "./BuildExport";
 
 interface Pokemon {
+  dexNumber: number;
   nationalDex: number;
   name: string;
   types: string[];
   baseStats: Record<string, number>;
+  evYield: { stat: string; amount: number }[];
   abilities: { name: string; isHidden: boolean }[];
   sprite: string;
+  artwork: string;
+  pokedex: string;
+  height?: number;
+  weight?: number;
+  heldItems?: string[];
 }
 
 interface Nature {
@@ -45,6 +52,9 @@ interface Move {
   power: number | null;
   pp: number | null;
   accuracy: number | null;
+  priority: number;
+  target: string;
+  tm: number | null;
   effect?: string;
 }
 
@@ -62,7 +72,7 @@ interface MoveMeta {
     ailmentChance: number;
     flinchChance: number;
     statChance: number;
-  };
+  } | null;
   statChanges: { stat: string; change: number }[];
 }
 
@@ -638,11 +648,18 @@ export function RaidBuildMaker() {
               {build.pokemon && (
                 <div className="mt-2 flex items-center gap-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={build.pokemon.sprite} alt={build.pokemon.name} width={40} height={40} className="pixelated" />
-                  <div className="flex gap-1">
-                    {build.pokemon.types.map((tp) => (
-                      <TypeBadge key={tp} type={tp as PokemonType} small />
-                    ))}
+                  <img src={build.pokemon.artwork} alt={build.pokemon.name} width={48} height={48} className="object-contain" />
+                  <div>
+                    <div className="flex flex-wrap gap-1 mb-1">
+                      {build.pokemon.types.map((tp) => (
+                        <TypeBadge key={tp} type={tp as PokemonType} small />
+                      ))}
+                    </div>
+                    <div className="text-[10px] text-gray-500">
+                      #{build.pokemon.nationalDex}
+                      {build.pokemon.height ? ` · ${(build.pokemon.height / 10).toFixed(1)}m` : ""}
+                      {build.pokemon.weight ? ` · ${(build.pokemon.weight / 10).toFixed(1)}kg` : ""}
+                    </div>
                   </div>
                 </div>
               )}
@@ -828,9 +845,16 @@ export function RaidBuildMaker() {
                               style={{ background: TYPE_COLORS[m.type as PokemonType] || "#888" }}
                             />
                             <span className="flex-1 truncate font-semibold text-gray-100">{m.name}</span>
-                            <span className="shrink-0 text-[10px] text-gray-500">
-                              {m.category} {m.power ? `· ${m.power}bp` : ""}
-                            </span>
+                            <div className="flex shrink-0 items-center gap-1">
+                              {m.tm !== null && (
+                                <span className="rounded bg-yellow-500/20 px-1 py-0.5 text-[9px] font-bold text-yellow-400">
+                                  TM{String(m.tm).padStart(3, "0")}
+                                </span>
+                              )}
+                              <span className="text-[10px] text-gray-500">
+                                {m.category} {m.power ? `· ${m.power}bp` : ""}
+                              </span>
+                            </div>
                           </div>
                           {m.effect && (
                             <span className="mt-1 w-full truncate text-[10px] text-gray-500">
@@ -845,7 +869,8 @@ export function RaidBuildMaker() {
                     />
                     {move && (() => {
                       const selectedMove = allMoves.find((m) => m.name === move);
-                      const meta = allMoveMeta.find((m) => m.name === move);
+                      const moveKey = move.toLowerCase().replace(/ /g, "-");
+                      const meta = allMoveMeta.find((m) => m.name === moveKey);
                       if (!selectedMove) return null;
                       return (
                         <div className="mt-1.5 space-y-1.5">
@@ -859,18 +884,42 @@ export function RaidBuildMaker() {
                           )}
                           {meta && (() => {
                             const tags: { label: string; color: string }[] = [];
-                            if (meta.meta.drain > 0) tags.push({ label: `Drain ${meta.meta.drain}%`, color: "#10B981" });
-                            if (meta.meta.drain < 0) tags.push({ label: `Recoil ${Math.abs(meta.meta.drain)}%`, color: "#EF4444" });
-                            if (meta.meta.healing > 0) tags.push({ label: `Heal ${meta.meta.healing}%`, color: "#34D399" });
-                            if (meta.meta.critRate > 0) tags.push({ label: `Crit +${meta.meta.critRate}`, color: "#F59E0B" });
-                            if (meta.meta.flinchChance > 0) tags.push({ label: `Flinch ${meta.meta.flinchChance}%`, color: "#8B5CF6" });
-                            if (meta.meta.ailment !== "none" && meta.meta.ailmentChance > 0) tags.push({ label: `${meta.meta.ailment} ${meta.meta.ailmentChance}%`, color: "#EC4899" });
-                            if (meta.meta.ailment !== "none" && meta.meta.ailmentChance === 0 && meta.meta.category !== "damage") tags.push({ label: meta.meta.ailment, color: "#EC4899" });
-                            if (meta.meta.minHits && meta.meta.maxHits) {
-                              const hitsLabel = meta.meta.minHits === meta.meta.maxHits
-                                ? `${meta.meta.minHits} hits`
-                                : `${meta.meta.minHits}–${meta.meta.maxHits} hits`;
-                              tags.push({ label: hitsLabel, color: "#60A5FA" });
+                            // TM badge
+                            if (selectedMove.tm !== null) tags.push({ label: `TM${String(selectedMove.tm).padStart(3, "0")}`, color: "#EAB308" });
+                            // Priority
+                            if (selectedMove.priority > 0) tags.push({ label: `Priority +${selectedMove.priority}`, color: "#06B6D4" });
+                            if (selectedMove.priority < 0) tags.push({ label: `Priority ${selectedMove.priority}`, color: "#6B7280" });
+                            // Target
+                            const TARGET_LABELS: Record<string, string> = {
+                              "all-opponents": "Hits all foes",
+                              "all-other-pokemon": "Hits all others",
+                              "entire-field": "Affects field",
+                              "users-field": "User's field",
+                              "opponents-field": "Foe's field",
+                              "random-opponent": "Random foe",
+                              "all-allies": "Hits all allies",
+                              "ally": "Hits ally",
+                              "all-pokemon": "Hits everyone",
+                              "user-and-allies": "User + allies",
+                            };
+                            if (TARGET_LABELS[selectedMove.target]) {
+                              tags.push({ label: TARGET_LABELS[selectedMove.target], color: "#818CF8" });
+                            }
+                            // Move meta
+                            if (meta.meta) {
+                              if (meta.meta.drain > 0) tags.push({ label: `Drain ${meta.meta.drain}%`, color: "#10B981" });
+                              if (meta.meta.drain < 0) tags.push({ label: `Recoil ${Math.abs(meta.meta.drain)}%`, color: "#EF4444" });
+                              if (meta.meta.healing > 0) tags.push({ label: `Heal ${meta.meta.healing}%`, color: "#34D399" });
+                              if (meta.meta.critRate > 0) tags.push({ label: `Crit +${meta.meta.critRate}`, color: "#F59E0B" });
+                              if (meta.meta.flinchChance > 0) tags.push({ label: `Flinch ${meta.meta.flinchChance}%`, color: "#8B5CF6" });
+                              if (meta.meta.ailment !== "none" && meta.meta.ailmentChance > 0) tags.push({ label: `${meta.meta.ailment} ${meta.meta.ailmentChance}%`, color: "#EC4899" });
+                              if (meta.meta.ailment !== "none" && meta.meta.ailmentChance === 0 && meta.meta.category !== "damage") tags.push({ label: meta.meta.ailment, color: "#EC4899" });
+                              if (meta.meta.minHits && meta.meta.maxHits) {
+                                const hitsLabel = meta.meta.minHits === meta.meta.maxHits
+                                  ? `${meta.meta.minHits} hits`
+                                  : `${meta.meta.minHits}–${meta.meta.maxHits} hits`;
+                                tags.push({ label: hitsLabel, color: "#60A5FA" });
+                              }
                             }
                             for (const sc of meta.statChanges) {
                               const sign = sc.change > 0 ? "+" : "";

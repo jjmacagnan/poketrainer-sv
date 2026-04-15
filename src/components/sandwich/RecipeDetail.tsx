@@ -21,6 +21,52 @@ function parseIngredient(ing: string): { name: string; qty: number } {
   return { name: ing, qty: 1 };
 }
 
+const INGREDIENT_EMOJI: Record<string, string> = {
+  // Main ingredients
+  "Chorizo":        "🥩",
+  "Red Pepper":     "🫑",
+  "Cucumber":       "🥒",
+  "Yellow Pepper":  "🫑",
+  "Lettuce":        "🥬",
+  "Klawf Stick":    "🦀",
+  "Pickle":         "🥒",
+  "Green Pepper":   "🫑",
+  "Ham":            "🍖",
+  "Prosciutto":     "🍖",
+  "Onion":          "🧅",
+  "Cherry Tomato":  "🍅",
+  "Jalapeno":       "🌶️",
+  "Red Onion":      "🧅",
+  "Avocado":        "🥑",
+  "Smoked Fillet":  "🐟",
+  "Hamburger":      "🥩",
+  "Tomato":         "🍅",
+  "Basil":          "🌿",
+  // Condiments
+  "Salt":                 "🧂",
+  "Mayonnaise":           "🫙",
+  "Butter":               "🧈",
+  "Peanut Butter":        "🥜",
+  "Mustard":              "🟡",
+  "Ketchup":              "🍅",
+  "Mayonnaise (Sesame)":  "🫙",
+  "Yogurt":               "🥛",
+  "Whipped Cream":        "🍦",
+  "Cream Cheese":         "🧀",
+  "Olive Oil":            "🫒",
+  "Vinegar":              "🍶",
+  // Herba Mystica
+  "Sweet Herba Mystica":  "🌿",
+  "Salty Herba Mystica":  "🌿",
+  "Sour Herba Mystica":   "🌿",
+  "Bitter Herba Mystica": "🌿",
+  "Spicy Herba Mystica":  "🌿",
+};
+
+function getIngredientEmoji(name: string): string {
+  return INGREDIENT_EMOJI[name] ?? "🥬";
+}
+
 const FLAVOR_COLORS: Record<string, string> = {
   spicy: "#FF6B35",
   dry: "#6CB4E4",
@@ -80,7 +126,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
                 className="flex flex-col rounded-lg bg-white/5 px-3.5 py-2.5"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">🥬</span>
+                  <span className="text-lg">{getIngredientEmoji(parsed.name)}</span>
                   <span className="text-sm font-semibold text-gray-100">
                     {parsed.name}
                   </span>
@@ -191,7 +237,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
                 }}
               >
                 <span className="text-lg">
-                  {cond.includes("Herba") ? "🌿" : "🧂"}
+                  {getIngredientEmoji(cond.replace(/ x\d+$/, "").trim())}
                 </span>{" "}
                 {cond}
               </div>
