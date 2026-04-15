@@ -59,6 +59,28 @@ export const HELD_ITEMS: HeldItem[] = [
   { name: "Metal Coat", category: "Type Boost", description: "1.2× Steel moves" },
   { name: "Silk Scarf", category: "Type Boost", description: "1.2× Normal moves" },
   { name: "Fairy Feather", category: "Type Boost", description: "1.2× Fairy moves" },
+  // EV Training (Power Items)
+  { name: "Macho Brace", category: "EV Training", description: "Doubles EV gain from battles" },
+  { name: "Power Weight", category: "EV Training", description: "+8 HP EVs per battle" },
+  { name: "Power Bracer", category: "EV Training", description: "+8 Attack EVs per battle" },
+  { name: "Power Belt", category: "EV Training", description: "+8 Defense EVs per battle" },
+  { name: "Power Lens", category: "EV Training", description: "+8 Sp. Atk EVs per battle" },
+  { name: "Power Band", category: "EV Training", description: "+8 Sp. Def EVs per battle" },
+  { name: "Power Anklet", category: "EV Training", description: "+8 Speed EVs per battle" },
+  // EV Berries
+  { name: "Pomeg Berry", category: "EV Berry", description: "Reduces HP EVs by 10, increases friendship" },
+  { name: "Kelpsy Berry", category: "EV Berry", description: "Reduces Attack EVs by 10, increases friendship" },
+  { name: "Qualot Berry", category: "EV Berry", description: "Reduces Defense EVs by 10, increases friendship" },
+  { name: "Hondew Berry", category: "EV Berry", description: "Reduces Sp. Atk EVs by 10, increases friendship" },
+  { name: "Grepa Berry", category: "EV Berry", description: "Reduces Sp. Def EVs by 10, increases friendship" },
+  { name: "Tamato Berry", category: "EV Berry", description: "Reduces Speed EVs by 10, increases friendship" },
+  // Vitamins
+  { name: "HP Up", category: "Vitamin", description: "Increases HP EVs by 10" },
+  { name: "Protein", category: "Vitamin", description: "Increases Attack EVs by 10" },
+  { name: "Iron", category: "Vitamin", description: "Increases Defense EVs by 10" },
+  { name: "Calcium", category: "Vitamin", description: "Increases Sp. Atk EVs by 10" },
+  { name: "Zinc", category: "Vitamin", description: "Increases Sp. Def EVs by 10" },
+  { name: "Carbos", category: "Vitamin", description: "Increases Speed EVs by 10" },
 ];
 
 export const ITEM_CATEGORIES = [...new Set(HELD_ITEMS.map((i) => i.category))];

@@ -327,5 +327,614 @@
     "description": "1.2× Fairy moves",
     "officialDescription": "1.2× Fairy moves",
     "sprite": ""
+  },
+  {
+    "name": "Macho Brace",
+    "category": "EV Training",
+    "description": "Doubles EV gain from battles",
+    "officialDescription": "A hold item that promotes growth, but reduces SPEED.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/macho-brace.png"
+  },
+  {
+    "name": "Power Weight",
+    "category": "EV Training",
+    "description": "+8 HP EVs per battle",
+    "officialDescription": "A Pokémon hold item that promotes HP gain on leveling, but reduces the Speed stat.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-weight.png"
+  },
+  {
+    "name": "Power Bracer",
+    "category": "EV Training",
+    "description": "+8 Attack EVs per battle",
+    "officialDescription": "A Pokémon hold item that promotes Attack gain on leveling, but reduces the Speed stat.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-bracer.png"
+  },
+  {
+    "name": "Power Belt",
+    "category": "EV Training",
+    "description": "+8 Defense EVs per battle",
+    "officialDescription": "A Pokémon hold item that promotes Defense gain on leveling, but reduces the Speed stat.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-belt.png"
+  },
+  {
+    "name": "Power Lens",
+    "category": "EV Training",
+    "description": "+8 Sp. Atk EVs per battle",
+    "officialDescription": "A Pokémon hold item that promotes Sp. Atk gain on leveling, but reduces the Speed stat.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-lens.png"
+  },
+  {
+    "name": "Power Band",
+    "category": "EV Training",
+    "description": "+8 Sp. Def EVs per battle",
+    "officialDescription": "A Pokémon hold item that promotes Sp. Def gain on leveling, but reduces the Speed stat.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-band.png"
+  },
+  {
+    "name": "Power Anklet",
+    "category": "EV Training",
+    "description": "+8 Speed EVs per battle",
+    "officialDescription": "A Pokémon hold item that promotes Speed gain on leveling, but reduces the Speed stat.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-anklet.png"
+  },
+  {
+    "name": "Pomeg Berry",
+    "category": "EV Berry",
+    "description": "Reduces HP EVs by 10, increases friendship",
+    "officialDescription": "A Berry to be consumed by Pokémon. Using it on a Pokémon makes it more friendly but lowers its base HP.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pomeg-berry.png"
+  },
+  {
+    "name": "Kelpsy Berry",
+    "category": "EV Berry",
+    "description": "Reduces Attack EVs by 10, increases friendship",
+    "officialDescription": "POKéBLOCK ingredient. Plant in loamy soil to grow KELPSY.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kelpsy-berry.png"
+  },
+  {
+    "name": "Qualot Berry",
+    "category": "EV Berry",
+    "description": "Reduces Defense EVs by 10, increases friendship",
+    "officialDescription": "POKéBLOCK ingredient. Plant in loamy soil to grow QUALOT.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/qualot-berry.png"
+  },
+  {
+    "name": "Hondew Berry",
+    "category": "EV Berry",
+    "description": "Reduces Sp. Atk EVs by 10, increases friendship",
+    "officialDescription": "POKéBLOCK ingredient. Plant in loamy soil to grow HONDEW.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hondew-berry.png"
+  },
+  {
+    "name": "Grepa Berry",
+    "category": "EV Berry",
+    "description": "Reduces Sp. Def EVs by 10, increases friendship",
+    "officialDescription": "POKéBLOCK ingredient. Plant in loamy soil to grow GREPA.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/grepa-berry.png"
+  },
+  {
+    "name": "Tamato Berry",
+    "category": "EV Berry",
+    "description": "Reduces Speed EVs by 10, increases friendship",
+    "officialDescription": "POKéBLOCK ingredient. Plant in loamy soil to grow TAMATO.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tamato-berry.png"
+  },
+  {
+    "name": "HP Up",
+    "category": "Vitamin",
+    "description": "Increases HP EVs by 10",
+    "officialDescription": "Raises the HP of one POKéMON.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hp-up.png"
+  },
+  {
+    "name": "Protein",
+    "category": "Vitamin",
+    "description": "Increases Attack EVs by 10",
+    "officialDescription": "Raises the stat ATTACK of one POKéMON.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/protein.png"
+  },
+  {
+    "name": "Iron",
+    "category": "Vitamin",
+    "description": "Increases Defense EVs by 10",
+    "officialDescription": "Raises the stat DEFENSE of one POKéMON.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/iron.png"
+  },
+  {
+    "name": "Calcium",
+    "category": "Vitamin",
+    "description": "Increases Sp. Atk EVs by 10",
+    "officialDescription": "Raises the stat SP. ATK of one POKéMON.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/calcium.png"
+  },
+  {
+    "name": "Zinc",
+    "category": "Vitamin",
+    "description": "Increases Sp. Def EVs by 10",
+    "officialDescription": "Raises the base SP. DEF stat of one POKéMON.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/zinc.png"
+  },
+  {
+    "name": "Carbos",
+    "category": "Vitamin",
+    "description": "Increases Speed EVs by 10",
+    "officialDescription": "Raises the stat SPEED of one POKéMON.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/carbos.png"
+  },
+  {
+    "name": "Oran Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that restores 10 HP in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/oran-berry.png"
+  },
+  {
+    "name": "Light Ball",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that raises the SP. ATK of PIKACHU.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/light-ball.png"
+  },
+  {
+    "name": "Quick Claw",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that occasionally allows the first strike.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/quick-claw.png"
+  },
+  {
+    "name": "Grip Claw",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Pokémon hold item that extends the duration of multiturn attacks like Bind and Wrap.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/grip-claw.png"
+  },
+  {
+    "name": "Moon Stone",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "Makes certain species of POKéMON evolve.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/moon-stone.png"
+  },
+  {
+    "name": "Leppa Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that restores 10 PP in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leppa-berry.png"
+  },
+  {
+    "name": "Comet Shard",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A shard which fell to the ground when a comet approached. A maniac will buy it for a high price.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/comet-shard.png"
+  },
+  {
+    "name": "Rawst Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that heals a burn in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rawst-berry.png"
+  },
+  {
+    "name": "Snowball",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "An item to be held by a Pokémon. It boosts Attack if hit with an Ice-type attack. It can only be used once.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/snowball.png"
+  },
+  {
+    "name": "Absorb Bulb",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A consumable bulb. If the holder is hit by a Water-type move, its Sp. Atk will rise.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/absorb-bulb.png"
+  },
+  {
+    "name": "Shed Shell",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A tough, discarded carapace to be held by a Pokémon. It enables the holder to switch with a waiting Pokémon in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/shed-shell.png"
+  },
+  {
+    "name": "Nugget",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A nugget of pure gold. Can be sold at a high price.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/nugget.png"
+  },
+  {
+    "name": "Payapa Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Psychic-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/payapa-berry.png"
+  },
+  {
+    "name": "Kings Rock",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that may cause flinching when the foe is hit.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kings-rock.png"
+  },
+  {
+    "name": "Everstone",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A wondrous stone & a hold item that prevents evolution.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/everstone.png"
+  },
+  {
+    "name": "Lagging Tail",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "An item to be held by a Pokémon. It is tremendously heavy and makes the holder move slower than usual.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lagging-tail.png"
+  },
+  {
+    "name": "Aspear Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that defrosts POKéMON in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/aspear-berry.png"
+  },
+  {
+    "name": "Never Melt Ice",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that raises the power of ICE-type moves.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/never-melt-ice.png"
+  },
+  {
+    "name": "Black Sludge",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that gradually restores the HP of Poison-type Pokémon. It inflicts damage on all other types.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-sludge.png"
+  },
+  {
+    "name": "Toxic Orb",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "An item to be held by a Pokémon. It is a bizarre orb that badly poisons the holder in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/toxic-orb.png"
+  },
+  {
+    "name": "Pearl",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A pretty pearl. Can be sold cheaply.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pearl.png"
+  },
+  {
+    "name": "Big Pearl",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A lovely large pearl that would sell at a high price.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/big-pearl.png"
+  },
+  {
+    "name": "Psychic Seed",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "An item to be held by a Pokémon. It boosts Sp. Def on Psychic Terrain. It can only be used once.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/psychic-seed.png"
+  },
+  {
+    "name": "Smoke Ball",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that can be used to flee from a wild POKéMON.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/smoke-ball.png"
+  },
+  {
+    "name": "Oval Stone",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A peculiar stone that makes certain species of Pokémon evolve. It is shaped like an egg.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/oval-stone.png"
+  },
+  {
+    "name": "Lucky Egg",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that boosts EXP. points earned in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lucky-egg.png"
+  },
+  {
+    "name": "Lucky Punch",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that raises CHANSEY’s critical-hit rate.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lucky-punch.png"
+  },
+  {
+    "name": "Dragon Scale",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A strange scale held by DRAGON- type POKéMON.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dragon-scale.png"
+  },
+  {
+    "name": "Electirizer",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A box packed with a tremendous amount of electric energy. It is loved by a certain Pokémon.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/electirizer.png"
+  },
+  {
+    "name": "Magmarizer",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A box packed with a tremendous amount of magma energy. It is loved by a certain Pokémon.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/magmarizer.png"
+  },
+  {
+    "name": "Metal Powder",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that raises DEFENSE.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/metal-powder.png"
+  },
+  {
+    "name": "Quick Powder",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "An item to be held by DITTO. Extremely fine yet hard, this odd powder boosts the Speed stat.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/quick-powder.png"
+  },
+  {
+    "name": "Chesto Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that awakens POKéMON in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/chesto-berry.png"
+  },
+  {
+    "name": "Yellow Shard",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A shard from an ancient item. Can be sold cheaply.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/yellow-shard.png"
+  },
+  {
+    "name": "Deep Sea Scale",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that raises the SP. DEF of CLAMPERL.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/deep-sea-scale.png"
+  },
+  {
+    "name": "Coba Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Flying-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/coba-berry.png"
+  },
+  {
+    "name": "Persim Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that heals confusion in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/persim-berry.png"
+  },
+  {
+    "name": "Passho Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Water-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/passho-berry.png"
+  },
+  {
+    "name": "Up Grade",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A peculiar box made by SILPH CO.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/up-grade.png"
+  },
+  {
+    "name": "Pecha Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that heals poisoning in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pecha-berry.png"
+  },
+  {
+    "name": "Mental Herb",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that snaps POKéMON out of infatuation.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/mental-herb.png"
+  },
+  {
+    "name": "Power Herb",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A single-use item to be held by a Pokémon. It allows the immediate use of a move that charges on the first turn.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/power-herb.png"
+  },
+  {
+    "name": "Pretty Wing",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "Though this feather is beautiful, it’s just a regular feather and has no effect on Pokémon.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pretty-wing.png"
+  },
+  {
+    "name": "Honey",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A sweet honey with a lush aroma that attracts wild Pokémon when it is used in grass, caves, or on special trees.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/honey.png"
+  },
+  {
+    "name": "Tiny Mushroom",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A plain, ordinary mushroom. Can be sold cheaply.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tiny-mushroom.png"
+  },
+  {
+    "name": "Big Mushroom",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A rare mushroom that would sell at a high price.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/big-mushroom.png"
+  },
+  {
+    "name": "Kebia Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Poison-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kebia-berry.png"
+  },
+  {
+    "name": "Cell Battery",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A consumable battery. If the holder is hit by an Electric-type move, its Attack will rise.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cell-battery.png"
+  },
+  {
+    "name": "Bright Powder",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that casts a glare to reduce accuracy.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/bright-powder.png"
+  },
+  {
+    "name": "Tanga Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Bug-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tanga-berry.png"
+  },
+  {
+    "name": "Sticky Barb",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that damages the holder on every turn. It may latch on to foes that touch the holder.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sticky-barb.png"
+  },
+  {
+    "name": "Kasib Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Ghost-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kasib-berry.png"
+  },
+  {
+    "name": "Colbur Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Dark-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/colbur-berry.png"
+  },
+  {
+    "name": "Cleanse Tag",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that helps repel wild POKéMON.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cleanse-tag.png"
+  },
+  {
+    "name": "Babiri Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Steel-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/babiri-berry.png"
+  },
+  {
+    "name": "Heart Scale",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A lovely scale. It is coveted by collectors.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/heart-scale.png"
+  },
+  {
+    "name": "Yache Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Ice-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/yache-berry.png"
+  },
+  {
+    "name": "Wacan Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Electric-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/wacan-berry.png"
+  },
+  {
+    "name": "Air Balloon",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "When held by a Pokémon, the Pokémon will float into the air. When the holder is attacked, this item will burst.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/air-balloon.png"
+  },
+  {
+    "name": "Haban Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Dragon-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/haban-berry.png"
+  },
+  {
+    "name": "Rindo Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A Poffin ingredient. If held by a Pokémon, it weakens a foe’s supereffective Grass-type attack.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rindo-berry.png"
+  },
+  {
+    "name": "Cheri Berry",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that heals paralysis in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cheri-berry.png"
+  },
+  {
+    "name": "Deep Sea Tooth",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A hold item that raises the SP. ATK of CLAMPERL.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/deep-sea-tooth.png"
+  },
+  {
+    "name": "Balm Mushroom",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A rare mushroom which gives off a nice fragrance. A maniac will buy it for a high price.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/balm-mushroom.png"
+  },
+  {
+    "name": "Grassy Seed",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "An item to be held by a Pokémon. It boosts Defense on Grassy Terrain. It can only be used once.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/grassy-seed.png"
+  },
+  {
+    "name": "Misty Seed",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "An item to be held by a Pokémon. It boosts Sp. Def on Misty Terrain. It can only be used once.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/misty-seed.png"
+  },
+  {
+    "name": "Star Piece",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "A red gem shard. It would sell for a very high price.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/star-piece.png"
+  },
+  {
+    "name": "Razor Fang",
+    "category": "Wild Held Item",
+    "description": "Item dropped or held by wild Pokémon",
+    "officialDescription": "An item to be held by a Pokémon. It may cause the foe to flinch when the holder inflicts damage.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/razor-fang.png"
   }
 ]

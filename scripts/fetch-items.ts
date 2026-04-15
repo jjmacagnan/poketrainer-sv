@@ -4,6 +4,7 @@
  */
 import { fetchApi, fetchBatch, writeJsonFile } from "./api-helper";
 import path from "path";
+import fs from "fs/promises";
 import { HELD_ITEMS } from "../src/data/items";
 
 interface ItemResponse {
@@ -51,7 +52,34 @@ async function fetchItem(itemInfo: typeof HELD_ITEMS[0]): Promise<OutputItem> {
 
 async function main() {
   console.log("🔄 Fetching items from PokéAPI...\n");
-  const items = await fetchBatch(HELD_ITEMS, fetchItem, "items");
+  
+  const itemMap = new Map<string, typeof HELD_ITEMS[0]>();
+  for (const i of HELD_ITEMS) {
+    itemMap.set(i.name, i);
+  }
+
+  try {
+    const rawData = await fs.readFile(path.join(__dirname, "../src/data/generated/pokemon.json"), "utf8");
+    const pokemonData = JSON.parse(rawData);
+    for (const p of pokemonData) {
+      if (p.heldItems) {
+        for (const item of p.heldItems) {
+          if (!itemMap.has(item)) {
+            itemMap.set(item, {
+              name: item,
+              category: "Wild Held Item",
+              description: "Item dropped or held by wild Pokémon",
+            });
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.log("⚠ Could not read pokemon.json, skipping dynamic wild items.");
+  }
+
+  const allItemsToFetch = Array.from(itemMap.values());
+  const items = await fetchBatch(allItemsToFetch, fetchItem, "items");
   const outPath = path.join(__dirname, "../src/data/generated/items.json");
   writeJsonFile(outPath, items);
   console.log(`\n✅ ${items.length} items processed`);
