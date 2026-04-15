@@ -8,6 +8,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useI18n } from "@/i18n";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SearchInput } from "@/components/shared/SearchInput";
+import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
 import { PokemonSlot, createEmptySlot } from "./PokemonSlot";
 import type { PokemonSlotData } from "./PokemonSlot";
 
@@ -234,6 +235,14 @@ export function EVTracker() {
           </div>
         </div>
       </div>
+
+      <ToolDisclaimer
+        toolName={t("nav.evTracker")}
+        note={t("evTracker.disclaimerNote")}
+        sources={[
+          { label: "PokéAPI", url: "https://pokeapi.co/docs/v2#info" },
+        ]}
+      />
     </div>
   );
 }

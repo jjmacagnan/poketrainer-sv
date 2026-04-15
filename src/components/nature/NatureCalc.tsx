@@ -9,6 +9,7 @@ import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
 import { useI18n } from "@/i18n";
 import { PageHeader } from "@/components/shared/PageHeader";
+import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
 import { getBerriesByFlavor, getBerry } from "@/lib/berry-utils";
 
 interface BerryFlavor {
@@ -642,6 +643,14 @@ export function NatureCalc() {
           )}
         </div>
       )}
+
+      <ToolDisclaimer
+        toolName={t("nav.natureCalc")}
+        note={t("natureCalc.disclaimerNote")}
+        sources={[
+          { label: "PokéAPI", url: "https://pokeapi.co/docs/v2#info" },
+        ]}
+      />
     </div>
   );
 }

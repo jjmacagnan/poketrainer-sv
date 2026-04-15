@@ -15,6 +15,7 @@ import type { SandwichGuideEntry } from "@/data/sandwich-guide";
 import { useI18n } from "@/i18n";
 import { RecipeCard } from "./RecipeCard";
 import { RecipeDetail } from "./RecipeDetail";
+import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
 
 type Tab = "shiny" | "encounter" | "raid" | "breeding" | "search";
 
@@ -460,11 +461,13 @@ export function SandwichBuilder() {
       )}
 
       {/* Footer */}
-      <div className="mt-8 border-t border-white/10 pt-4 text-center text-xs text-gray-500">
-        {t("sandwich.footer")}
-        <br />
-        {t("sandwich.footerNote")}
-      </div>
+      <ToolDisclaimer
+        toolName={t("sandwich.footer")}
+        note={t("sandwich.footerNote")}
+        sources={[
+          { label: t("sandwich.footerSource"), url: "https://game8.co/games/Pokemon-Scarlet-Violet/archives/397743" },
+        ]}
+      />
     </div>
   );
 }

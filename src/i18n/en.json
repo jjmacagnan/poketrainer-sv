@@ -86,8 +86,9 @@
     "hideFlavors": "✕ Hide flavors",
     "berryAlternatives": "🫐 Equivalent berries",
     "berryAltNote": "Berries with similar flavor to the Herba Mystica used in the recipe",
-    "footer": "PokéTrainer SV Tools — Sandwich Builder v1.0",
-    "footerNote": "Data based on community-verified recipes"
+    "footer": "Sandwich Builder v1.0",
+    "footerNote": "Data based on community-verified recipes",
+    "footerSource": "game8.co"
   },
   "evPokedex": {
     "title": "EV Yield Pokédex",
@@ -119,7 +120,8 @@
     "trainingDungeon": "Farm Tip",
     "trainingLocation": "Location",
     "trainingTarget": "Main Target",
-    "sandwichTip": "Sandwich Tip"
+    "sandwichTip": "Sandwich Tip",
+    "disclaimerNote": "Data from PokéAPI"
   },
   "evTracker": {
     "title": "EV Training Tracker",
@@ -155,7 +157,8 @@
     "whereToTrain": "📍 Where to train {stat}?",
     "farmingSpot": "Farming Spot",
     "target": "Target",
-    "sandwich": "Recommended Sandwich"
+    "sandwich": "Recommended Sandwich",
+    "disclaimerNote": "Data from PokéAPI"
   },
   "natureCalc": {
     "title": "Nature Calculator",
@@ -177,7 +180,8 @@
     "berryPreferences": "🫐 Berry Preferences",
     "likesFlavor": "Likes:",
     "dislikesFlavor": "Dislikes:",
-    "berryNote": "Feeding berries the nature likes increases friendship faster. Feeding disliked berries reduces friendship."
+    "berryNote": "Feeding berries the nature likes increases friendship faster. Feeding disliked berries reduces friendship.",
+    "disclaimerNote": "Data from PokéAPI"
   },
   "raid": {
     "title": "Tera Raid Build Maker",
@@ -204,7 +208,8 @@
     "exportError": "Error exporting image",
     "starRaids": "{stars}-Star Raids",
     "statsUnavailable": "stats unavailable",
-    "defensiveMatchup": "Defensive Matchups"
+    "defensiveMatchup": "Defensive Matchups",
+    "disclaimerNote": "Tier list based on game8.co. Stats and moves from PokéAPI"
   },
   "comunidade": {
     "title": "Community",

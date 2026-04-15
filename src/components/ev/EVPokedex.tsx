@@ -14,6 +14,7 @@ import { FilterBar } from "@/components/shared/FilterBar";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { StatBar } from "@/components/ui/StatBar";
 import { PokemonDetailModal } from "./PokemonDetailModal";
+import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
 
 interface Pokemon {
   dexNumber: number;
@@ -273,6 +274,14 @@ export function EVPokedex() {
           onClose={() => setSelectedPokemon(null)}
         />
       )}
+
+      <ToolDisclaimer
+        toolName={t("nav.evPokedex")}
+        note={t("evPokedex.disclaimerNote")}
+        sources={[
+          { label: "PokéAPI", url: "https://pokeapi.co/docs/v2#info" },
+        ]}
+      />
     </div>
   );
 }

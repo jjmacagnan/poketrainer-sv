@@ -86,8 +86,9 @@
     "hideFlavors": "✕ Esconder flavors",
     "berryAlternatives": "🫐 Berries equivalentes",
     "berryAltNote": "Berries com flavor similar ao Herba Mystica usado na receita",
-    "footer": "PokéTrainer SV Tools — Sandwich Builder v1.0",
-    "footerNote": "Dados baseados em receitas verificadas pela comunidade"
+    "footer": "Sandwich Builder v1.0",
+    "footerNote": "Dados baseados em receitas verificadas pela comunidade",
+    "footerSource": "game8.co"
   },
   "evPokedex": {
     "title": "EV Yield Pokédex",
@@ -119,7 +120,8 @@
     "trainingDungeon": "Dica de Farm",
     "trainingLocation": "Localização",
     "trainingTarget": "Alvo principal",
-    "sandwichTip": "Dica de Sanduíche"
+    "sandwichTip": "Dica de Sanduíche",
+    "disclaimerNote": "Dados da PokéAPI"
   },
   "evTracker": {
     "title": "EV Training Tracker",
@@ -155,7 +157,8 @@
     "whereToTrain": "📍 Onde treinar {stat}?",
     "farmingSpot": "Ponto de Treino",
     "target": "Alvo",
-    "sandwich": "Sanduíche Recomendado"
+    "sandwich": "Sanduíche Recomendado",
+    "disclaimerNote": "Dados da PokéAPI"
   },
   "natureCalc": {
     "title": "Nature Calculator",
@@ -177,7 +180,8 @@
     "berryPreferences": "🫐 Preferências de Berry",
     "likesFlavor": "Gosta:",
     "dislikesFlavor": "Não gosta:",
-    "berryNote": "Dar berries que a nature gosta aumenta a amizade mais rápido. Dar berries que ela não gosta reduz a amizade."
+    "berryNote": "Dar berries que a nature gosta aumenta a amizade mais rápido. Dar berries que ela não gosta reduz a amizade.",
+    "disclaimerNote": "Dados da PokéAPI"
   },
   "raid": {
     "title": "Tera Raid Build Maker",
@@ -204,7 +208,8 @@
     "exportError": "Erro ao exportar imagem",
     "starRaids": "{stars}-Star Raids",
     "statsUnavailable": "stats indisponíveis",
-    "defensiveMatchup": "Multiplicadores de Defesa"
+    "defensiveMatchup": "Multiplicadores de Defesa",
+    "disclaimerNote": "Tier list baseada em game8.co. Stats e moves da PokéAPI"
   },
   "comunidade": {
     "title": "Comunidade",

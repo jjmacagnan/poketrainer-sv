@@ -19,6 +19,7 @@ import { clampEVs } from "@/lib/ev-calculator";
 import { exportShowdown, parseShowdown } from "@/lib/showdown-parser";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { TypeBadge } from "@/components/ui/TypeBadge";
+import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
 import { useI18n } from "@/i18n";
 import { BuildExport } from "./BuildExport";
 
@@ -1127,6 +1128,15 @@ export function RaidBuildMaker() {
           )}
         </div>
       )}
+
+      <ToolDisclaimer
+        toolName={t("nav.raidBuilder")}
+        note={t("raid.disclaimerNote")}
+        sources={[
+          { label: "game8.co (Tier List)", url: "https://game8.co/games/Pokemon-Scarlet-Violet/archives/397713" },
+          { label: "PokéAPI", url: "https://pokeapi.co/docs/v2#info" },
+        ]}
+      />
     </div>
   );
 }
