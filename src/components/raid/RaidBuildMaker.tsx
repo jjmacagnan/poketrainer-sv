@@ -44,6 +44,7 @@ interface Move {
   power: number | null;
   pp: number | null;
   accuracy: number | null;
+  effect?: string;
 }
 
 const allPokemon = pokemonData as Pokemon[];
@@ -786,8 +787,8 @@ export function RaidBuildMaker() {
             <div className="mb-3 text-xs font-bold text-gray-400">{t("raid.moves")}</div>
             <div className="grid gap-2 sm:grid-cols-2">
               {build.moves.map((move, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <span className="w-4 text-center text-xs font-bold text-gray-500">
+                <div key={i} className="flex items-start gap-2">
+                  <span className="mt-2 w-4 text-center text-xs font-bold text-gray-500">
                     {i + 1}
                   </span>
                   <div className="flex-1">
@@ -800,21 +801,40 @@ export function RaidBuildMaker() {
                         return { ...prev, moves };
                       })}
                       renderItem={(m) => (
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="h-2 w-2 rounded-full"
-                            style={{ background: TYPE_COLORS[m.type as PokemonType] || "#888" }}
-                          />
-                          <span className="font-semibold text-gray-100">{m.name}</span>
-                          <span className="text-[10px] text-gray-500">
-                            {m.category} {m.power ? `· ${m.power}bp` : ""}
-                          </span>
+                        <div className="flex w-full flex-col items-start">
+                          <div className="flex w-full items-center gap-2">
+                            <span
+                              className="h-2 w-2 shrink-0 rounded-full"
+                              style={{ background: TYPE_COLORS[m.type as PokemonType] || "#888" }}
+                            />
+                            <span className="flex-1 truncate font-semibold text-gray-100">{m.name}</span>
+                            <span className="shrink-0 text-[10px] text-gray-500">
+                              {m.category} {m.power ? `· ${m.power}bp` : ""}
+                            </span>
+                          </div>
+                          {m.effect && (
+                            <span className="mt-1 w-full truncate text-[10px] text-gray-500">
+                              {m.effect}
+                            </span>
+                          )}
                         </div>
                       )}
                       getLabel={(m) => m.name}
                       placeholder={`Move ${i + 1}...`}
                       filterFn={moveFilter}
                     />
+                    {move && (() => {
+                      const selectedMove = allMoves.find((m) => m.name === move);
+                      if (!selectedMove || !selectedMove.effect) return null;
+                      return (
+                        <div className="mt-1.5 flex items-start gap-1.5 rounded bg-black/20 p-2">
+                          <span className="text-[10px] text-blue-400/80">ⓘ</span>
+                          <div className="flex-1 text-[10px] leading-relaxed text-blue-400/80">
+                            {selectedMove.effect}
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                   {move && (
                     <button
@@ -823,7 +843,7 @@ export function RaidBuildMaker() {
                         moves[i] = null;
                         return { ...prev, moves };
                       })}
-                      className="text-xs text-gray-500 hover:text-red-400"
+                      className="mt-2 text-xs text-gray-500 hover:text-red-400"
                     >
                       ✕
                     </button>
