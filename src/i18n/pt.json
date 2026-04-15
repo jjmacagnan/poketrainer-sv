@@ -143,7 +143,8 @@
     "templates": "📋 Templates:",
     "templatesDesc": "Distribuições populares pré-definidas",
     "limits": "Limites:",
-    "limitsDesc": "252/stat, 510 total"
+    "limitsDesc": "252/stat, 510 total",
+    "disclaimerNote": "Dados da PokéAPI"
   },
   "pokemonSlot": {
     "selectPokemon": "Selecionar Pokémon...",
@@ -157,8 +158,7 @@
     "whereToTrain": "📍 Onde treinar {stat}?",
     "farmingSpot": "Ponto de Treino",
     "target": "Alvo",
-    "sandwich": "Sanduíche Recomendado",
-    "disclaimerNote": "Dados da PokéAPI"
+    "sandwich": "Sanduíche Recomendado"
   },
   "natureCalc": {
     "title": "Nature Calculator",

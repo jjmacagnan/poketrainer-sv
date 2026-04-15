@@ -143,7 +143,8 @@
     "templates": "📋 Templates:",
     "templatesDesc": "Popular pre-defined distributions",
     "limits": "Limits:",
-    "limitsDesc": "252/stat, 510 total"
+    "limitsDesc": "252/stat, 510 total",
+    "disclaimerNote": "Data from PokéAPI"
   },
   "pokemonSlot": {
     "selectPokemon": "Select Pokémon...",
@@ -157,8 +158,7 @@
     "whereToTrain": "📍 Where to train {stat}?",
     "farmingSpot": "Farming Spot",
     "target": "Target",
-    "sandwich": "Recommended Sandwich",
-    "disclaimerNote": "Data from PokéAPI"
+    "sandwich": "Recommended Sandwich"
   },
   "natureCalc": {
     "title": "Nature Calculator",
