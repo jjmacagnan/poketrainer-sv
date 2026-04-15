@@ -11,6 +11,9 @@ import itemsData from "@/data/generated/items.json";
 const abilitiesList = abilitiesData as { name: string; effect: string; shortEffect: string; flavorText: string }[];
 const itemsList = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
 
+import { TRAINING_LOCATIONS } from "@/data/training-locations";
+import { useI18n } from "@/i18n";
+
 export interface PokemonEntry {
   dexNumber: number;
   nationalDex: number;
@@ -193,41 +196,41 @@ function genderLabel(rate: number): string {
 // ── Game availability map ──────────────────────────────────────────────────────
 
 const GAME_META: Record<string, { label: string; name: string; color: string }> = {
-  "red":                { label: "RD",  name: "Pokémon Red",             color: "#CC0000" },
-  "blue":               { label: "BL",  name: "Pokémon Blue",            color: "#0000AA" },
-  "yellow":             { label: "YW",  name: "Pokémon Yellow",          color: "#FFD700" },
-  "gold":               { label: "GD",  name: "Pokémon Gold",            color: "#B8860B" },
-  "silver":             { label: "SV",  name: "Pokémon Silver",          color: "#C0C0C0" },
-  "crystal":            { label: "CY",  name: "Pokémon Crystal",         color: "#4FC3F7" },
-  "ruby":               { label: "RB",  name: "Pokémon Ruby",            color: "#B22222" },
-  "sapphire":           { label: "SP",  name: "Pokémon Sapphire",        color: "#1565C0" },
-  "emerald":            { label: "EM",  name: "Pokémon Emerald",         color: "#2E7D32" },
-  "firered":            { label: "FR",  name: "Pokémon FireRed",         color: "#FF6F00" },
-  "leafgreen":          { label: "LG",  name: "Pokémon LeafGreen",       color: "#388E3C" },
-  "diamond":            { label: "DM",  name: "Pokémon Diamond",         color: "#5C6BC0" },
-  "pearl":              { label: "PL",  name: "Pokémon Pearl",           color: "#EC407A" },
-  "platinum":           { label: "PT",  name: "Pokémon Platinum",        color: "#78909C" },
-  "heartgold":          { label: "HG",  name: "Pokémon HeartGold",       color: "#FFB300" },
-  "soulsilver":         { label: "SS",  name: "Pokémon SoulSilver",      color: "#90A4AE" },
-  "black":              { label: "BK",  name: "Pokémon Black",           color: "#212121" },
-  "white":              { label: "WT",  name: "Pokémon White",           color: "#EEEEEE" },
-  "black-2":            { label: "B2",  name: "Pokémon Black 2",         color: "#37474F" },
-  "white-2":            { label: "W2",  name: "Pokémon White 2",         color: "#CFD8DC" },
-  "x":                  { label: "X",   name: "Pokémon X",               color: "#1565C0" },
-  "y":                  { label: "Y",   name: "Pokémon Y",               color: "#C62828" },
-  "omega-ruby":         { label: "OR",  name: "Pokémon Omega Ruby",      color: "#B71C1C" },
-  "alpha-sapphire":     { label: "AS",  name: "Pokémon Alpha Sapphire",  color: "#1A237E" },
-  "sun":                { label: "SN",  name: "Pokémon Sun",             color: "#FF8F00" },
-  "moon":               { label: "MN",  name: "Pokémon Moon",            color: "#283593" },
-  "ultra-sun":          { label: "US",  name: "Pokémon Ultra Sun",       color: "#E65100" },
-  "ultra-moon":         { label: "UM",  name: "Pokémon Ultra Moon",      color: "#1A237E" },
-  "sword":              { label: "SW",  name: "Pokémon Sword",           color: "#1E88E5" },
-  "shield":             { label: "SH",  name: "Pokémon Shield",          color: "#E53935" },
-  "brilliant-diamond":  { label: "BD",  name: "Brilliant Diamond",       color: "#5E35B1" },
-  "shining-pearl":      { label: "SP2", name: "Shining Pearl",           color: "#F06292" },
-  "legends-arceus":     { label: "LA",  name: "Legends: Arceus",         color: "#6D4C41" },
-  "scarlet":            { label: "SC",  name: "Pokémon Scarlet",         color: "#E53935" },
-  "violet":             { label: "VT",  name: "Pokémon Violet",          color: "#7B1FA2" },
+  "red": { label: "RD", name: "Pokémon Red", color: "#CC0000" },
+  "blue": { label: "BL", name: "Pokémon Blue", color: "#0000AA" },
+  "yellow": { label: "YW", name: "Pokémon Yellow", color: "#FFD700" },
+  "gold": { label: "GD", name: "Pokémon Gold", color: "#B8860B" },
+  "silver": { label: "SV", name: "Pokémon Silver", color: "#C0C0C0" },
+  "crystal": { label: "CY", name: "Pokémon Crystal", color: "#4FC3F7" },
+  "ruby": { label: "RB", name: "Pokémon Ruby", color: "#B22222" },
+  "sapphire": { label: "SP", name: "Pokémon Sapphire", color: "#1565C0" },
+  "emerald": { label: "EM", name: "Pokémon Emerald", color: "#2E7D32" },
+  "firered": { label: "FR", name: "Pokémon FireRed", color: "#FF6F00" },
+  "leafgreen": { label: "LG", name: "Pokémon LeafGreen", color: "#388E3C" },
+  "diamond": { label: "DM", name: "Pokémon Diamond", color: "#5C6BC0" },
+  "pearl": { label: "PL", name: "Pokémon Pearl", color: "#EC407A" },
+  "platinum": { label: "PT", name: "Pokémon Platinum", color: "#78909C" },
+  "heartgold": { label: "HG", name: "Pokémon HeartGold", color: "#FFB300" },
+  "soulsilver": { label: "SS", name: "Pokémon SoulSilver", color: "#90A4AE" },
+  "black": { label: "BK", name: "Pokémon Black", color: "#212121" },
+  "white": { label: "WT", name: "Pokémon White", color: "#EEEEEE" },
+  "black-2": { label: "B2", name: "Pokémon Black 2", color: "#37474F" },
+  "white-2": { label: "W2", name: "Pokémon White 2", color: "#CFD8DC" },
+  "x": { label: "X", name: "Pokémon X", color: "#1565C0" },
+  "y": { label: "Y", name: "Pokémon Y", color: "#C62828" },
+  "omega-ruby": { label: "OR", name: "Pokémon Omega Ruby", color: "#B71C1C" },
+  "alpha-sapphire": { label: "AS", name: "Pokémon Alpha Sapphire", color: "#1A237E" },
+  "sun": { label: "SN", name: "Pokémon Sun", color: "#FF8F00" },
+  "moon": { label: "MN", name: "Pokémon Moon", color: "#283593" },
+  "ultra-sun": { label: "US", name: "Pokémon Ultra Sun", color: "#E65100" },
+  "ultra-moon": { label: "UM", name: "Pokémon Ultra Moon", color: "#1A237E" },
+  "sword": { label: "SW", name: "Pokémon Sword", color: "#1E88E5" },
+  "shield": { label: "SH", name: "Pokémon Shield", color: "#E53935" },
+  "brilliant-diamond": { label: "BD", name: "Brilliant Diamond", color: "#5E35B1" },
+  "shining-pearl": { label: "SP2", name: "Shining Pearl", color: "#F06292" },
+  "legends-arceus": { label: "LA", name: "Legends: Arceus", color: "#6D4C41" },
+  "scarlet": { label: "SC", name: "Pokémon Scarlet", color: "#E53935" },
+  "violet": { label: "VT", name: "Pokémon Violet", color: "#7B1FA2" },
 };
 
 function spriteUrl(id: number) {
@@ -277,6 +280,7 @@ export function PokemonDetailModal({
   const [svMoves, setSvMoves] = useState<SVMove[]>([]);
   const [encounters, setEncounters] = useState<{ location: string; versions: string[]; levels: string; method: string }[]>([]);
   const [showAllMoves, setShowAllMoves] = useState(false);
+  const { t, locale } = useI18n();
   const [loading, setLoading] = useState(true);
   const [shiny, setShiny] = useState(false);
 
@@ -390,7 +394,7 @@ export function PokemonDetailModal({
           className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-1.5 text-gray-400 hover:bg-white/20 hover:text-white"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-            <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </button>
 
@@ -408,11 +412,10 @@ export function PokemonDetailModal({
             />
             <button
               onClick={() => setShiny(!shiny)}
-              className={`rounded-full border px-3 py-1 text-[11px] font-bold transition-all ${
-                shiny
+              className={`rounded-full border px-3 py-1 text-[11px] font-bold transition-all ${shiny
                   ? "border-yellow-400/50 bg-yellow-500/20 text-yellow-300"
                   : "border-white/10 bg-white/5 text-gray-500 hover:text-gray-300"
-              }`}
+                }`}
             >
               ✨ Shiny
             </button>
@@ -536,7 +539,7 @@ export function PokemonDetailModal({
           </Section>
 
           {/* Encounter Locations (SV) */}
-          <Section title="Encounter Locations (Scarlet / Violet)">
+          {/* <Section title="Encounter Locations (Scarlet / Violet)">
             {loading ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
             ) : encounters.length === 0 ? (
@@ -564,7 +567,34 @@ export function PokemonDetailModal({
                 ))}
               </div>
             )}
-          </Section>
+          </Section> */}
+
+          {/* Training Habitat (Best Spots) */}
+          {(() => {
+            const trainingSpot = TRAINING_LOCATIONS[pokemon.name];
+            if (!trainingSpot) return null;
+            return (
+              <Section title={t("evPokedex.trainingTitle")}>
+                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="text-xl">📍</span>
+                    <span className="text-sm font-bold text-emerald-300">{t("evPokedex.trainingDungeon")}</span>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <div className="text-[10px] font-bold text-emerald-500/70 uppercase">{t("evPokedex.trainingLocation")}</div>
+                      <div className="text-xs font-semibold text-gray-200">{trainingSpot.location[locale as "pt" | "en"]}</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-emerald-500/70 uppercase">{t("evPokedex.sandwichTip")}</div>
+                      <div className="text-xs font-semibold text-gray-200">{trainingSpot.sandwich[locale as "pt" | "en"]}</div>
+                      <div className="text-[9px] text-emerald-500/60">{trainingSpot.sandwich.effect}</div>
+                    </div>
+                  </div>
+                </div>
+              </Section>
+            );
+          })()}
 
           {/* Abilities */}
           <Section title="Abilities">
@@ -574,11 +604,10 @@ export function PokemonDetailModal({
                 return (
                   <div
                     key={a.name}
-                    className={`flex flex-col rounded-lg border px-3 py-2 ${
-                      a.isHidden
+                    className={`flex flex-col rounded-lg border px-3 py-2 ${a.isHidden
                         ? "border-violet-400/30 bg-violet-500/10"
                         : "border-white/10 bg-white/5"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center">
                       <span className={`text-sm font-bold ${a.isHidden ? "text-violet-300" : "text-gray-200"}`}>
@@ -893,11 +922,10 @@ export function PokemonDetailModal({
 
 function EvoSprite({ id, name, active }: { id: number; name: string; active: boolean }) {
   return (
-    <div className={`flex flex-col items-center gap-1 rounded-xl border p-2 ${
-      active
+    <div className={`flex flex-col items-center gap-1 rounded-xl border p-2 ${active
         ? "border-violet-500/40 bg-violet-500/10"
         : "border-white/10 bg-white/5"
-    }`}>
+      }`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={spriteUrl(id)}

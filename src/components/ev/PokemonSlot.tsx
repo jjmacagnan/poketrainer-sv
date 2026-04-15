@@ -8,6 +8,7 @@ import { useI18n } from "@/i18n";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import type { PokemonType } from "@/data/types";
 import itemsData from "@/data/generated/items.json";
+import { getBestTrainingTargets } from "@/lib/farming-logic";
 
 const itemsList = itemsData as { name: string; description: string; sprite: string }[];
 const getSprite = (name: string) => itemsList.find((i) => i.name === name)?.sprite || "";
@@ -76,8 +77,9 @@ export function PokemonSlot({
   onSelectPokemon,
   templateOptions,
 }: PokemonSlotProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [showModifiers, setShowModifiers] = useState(false);
+  const [activeFarmingStat, setActiveFarmingStat] = useState<StatName | null>(null);
 
   const totalEVs = Object.values(data.evs).reduce((a, b) => a + b, 0);
   const remaining = MAX_EV_TOTAL - totalEVs;
@@ -178,7 +180,18 @@ export function PokemonSlot({
           const value = data.evs[stat];
           const fill = (value / MAX_EV_PER_STAT) * 100;
           return (
-            <div key={stat} className="flex items-center gap-2">
+            <div key={stat} className="relative flex items-center gap-2">
+              <button
+                onClick={() => setActiveFarmingStat(activeFarmingStat === stat ? null : stat)}
+                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-colors ${
+                  activeFarmingStat === stat
+                    ? "bg-emerald-500/20 text-emerald-400"
+                    : "bg-white/5 text-gray-500 hover:text-white"
+                }`}
+                title={t("pokemonSlot.whereToTrain", { stat })}
+              >
+                📍
+              </button>
               <span className="w-8 shrink-0 text-right text-xs font-bold text-gray-400">
                 {stat}
               </span>
@@ -229,6 +242,59 @@ export function PokemonSlot({
                   </div>
                 </button>
               </div>
+
+              {/* Farming Spot Popover */}
+              {activeFarmingStat === stat && (() => {
+                const targets = getBestTrainingTargets(stat);
+                return (
+                  <div className="absolute left-8 right-0 z-50 p-1">
+                    <div className="rounded-xl border border-emerald-500/30 bg-gray-900 p-3 shadow-2xl ring-1 ring-black">
+                      <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
+                        <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
+                          {t("pokemonSlot.whereToTrain", { stat })}
+                        </span>
+                        <button onClick={() => setActiveFarmingStat(null)} className="text-gray-500 hover:text-white transition-colors">✕</button>
+                      </div>
+                      
+                      <div className="max-h-60 space-y-3 overflow-y-auto pr-1 thin-scrollbar">
+                        {targets.map((target, idx) => (
+                          <div key={target.name} className={`space-y-2 pb-2 ${idx !== targets.length - 1 ? "border-b border-white/5" : ""}`}>
+                            <div className="flex items-center gap-2">
+                              <img src={target.sprite} alt={target.name} className="h-6 w-6 pixelated shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[12px] font-bold text-gray-100 truncate">{target.name}</span>
+                                  <span className="text-[10px] font-black text-emerald-400">+{target.yieldAmount} EV</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {target.location ? (
+                              <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/10 p-2">
+                                <div>
+                                  <div className="text-[9px] font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.farmingSpot")}</div>
+                                  <div className="text-[11px] text-gray-200 leading-tight">{target.location.location[locale as "pt" | "en"]}</div>
+                                </div>
+                                <div className="mt-1.5 pt-1.5 border-t border-emerald-500/10">
+                                  <div className="text-[9px] font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.sandwich")}</div>
+                                  <div className="text-[10px] text-gray-300 leading-tight">
+                                    {target.location.sandwich[locale as "pt" | "en"]}
+                                    <span className="ml-1 text-[9px] text-emerald-500/50">({target.location.sandwich.effect})</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="rounded-lg bg-white/5 border border-white/5 p-2 italic text-[10px] text-gray-500">
+                                {t("evPokedex.noEncounterData")}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           );
         })}

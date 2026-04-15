@@ -110,7 +110,12 @@
     "eggMoves": "Egg",
     "tutorMoves": "Tutor",
     "showAll": "Mostrar todos os {count} movimentos",
-    "showLess": "Mostrar menos"
+    "showLess": "Mostrar menos",
+    "trainingTitle": "Áreas de Treino (Paldea)",
+    "trainingDungeon": "Dica de Farm",
+    "trainingLocation": "Localização",
+    "trainingTarget": "Alvo principal",
+    "sandwichTip": "Dica de Sanduíche"
   },
   "evTracker": {
     "title": "EV Training Tracker",
@@ -142,7 +147,11 @@
     "templatesDrop": "📋 Templates...",
     "pokerus": "🦠 Pokérus",
     "machoBrace": "💪 Macho Brace",
-    "powerItemDrop": "⚡ Power Item..."
+    "powerItemDrop": "⚡ Power Item...",
+    "whereToTrain": "📍 Onde treinar {stat}?",
+    "farmingSpot": "Ponto de Treino",
+    "target": "Alvo",
+    "sandwich": "Sanduíche Recomendado"
   },
   "natureCalc": {
     "title": "Nature Calculator",
