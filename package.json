@@ -10,7 +10,11 @@
     "fetch-data": "tsx scripts/fetch-all.ts",
     "fetch-pokemon": "tsx scripts/fetch-pokemon.ts",
     "fetch-natures": "tsx scripts/fetch-natures.ts",
-    "fetch-moves": "tsx scripts/fetch-moves.ts"
+    "fetch-moves": "tsx scripts/fetch-moves.ts",
+    "fetch-abilities": "tsx scripts/fetch-abilities.ts",
+    "fetch-items": "tsx scripts/fetch-items.ts",
+    "fetch-types": "tsx scripts/fetch-types.ts",
+    "fetch-all": "npm run fetch-pokemon && npm run fetch-natures && npm run fetch-moves && npm run fetch-abilities && npm run fetch-items && npm run fetch-types"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.87.0",

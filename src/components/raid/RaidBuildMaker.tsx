@@ -5,9 +5,11 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import pokemonData from "@/data/generated/pokemon.json";
 import naturesData from "@/data/generated/natures.json";
 import movesData from "@/data/generated/moves.json";
+import abilitiesData from "@/data/generated/abilities.json";
+import itemsData from "@/data/generated/items.json";
+import typesData from "@/data/generated/types.json";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
-import { HELD_ITEMS } from "@/data/items";
 import { RAID_TIER_LIST, TIER_COLORS, TIER_DESCRIPTIONS, type TierRank, type RaidRole, type RaidTierEntry, type RaidBuild } from "@/data/raid-tier-list";
 import { STAT_NAMES, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
@@ -47,6 +49,9 @@ interface Move {
 const allPokemon = pokemonData as Pokemon[];
 const natures = naturesData as Nature[];
 const allMoves = movesData as Move[];
+const abilities = abilitiesData as { name: string; effect: string; shortEffect: string; flavorText: string }[];
+const HELD_ITEMS = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
+const allTypesData = typesData as { name: string; weaknesses: string[]; resistances: string[]; immunities: string[] }[];
 
 const STAT_COLORS: Record<StatName, string> = {
   HP: "#FF5959", Atk: "#F5AC78", Def: "#FAE078",
@@ -193,6 +198,35 @@ export function RaidBuildMaker() {
     }
     return stats;
   }, [build.pokemon, build.nature, build.ivs, build.evs, build.level]);
+
+  // Calculated Defenses Matchups
+  const defenses = useMemo(() => {
+    const activeTypes = build.teraType ? [build.teraType] : (build.pokemon?.types || []);
+    if (activeTypes.length === 0) return null;
+
+    let multiplierMap: Record<string, number> = {};
+    TYPES.forEach((t) => { multiplierMap[t] = 1; });
+
+    activeTypes.forEach((t) => {
+      const typeInfo = allTypesData.find((x) => x.name.toLowerCase() === t.toLowerCase());
+      if (!typeInfo) return;
+      typeInfo.weaknesses.forEach((w) => {
+        if (multiplierMap[w]) multiplierMap[w] *= 2;
+      });
+      typeInfo.resistances.forEach((r) => {
+        if (multiplierMap[r]) multiplierMap[r] *= 0.5;
+      });
+      typeInfo.immunities.forEach((i) => {
+        if (multiplierMap[i]) multiplierMap[i] = 0;
+      });
+    });
+
+    const weaknesses = Object.entries(multiplierMap).filter(([_, m]) => m > 1).map(([t, m]) => ({ type: t as PokemonType, mult: m }));
+    const resistances = Object.entries(multiplierMap).filter(([_, m]) => m < 1 && m > 0).map(([t]) => t as PokemonType);
+    const immunities = Object.entries(multiplierMap).filter(([_, m]) => m === 0).map(([t]) => t as PokemonType);
+
+    return { weaknesses, resistances, immunities };
+  }, [build.teraType, build.pokemon]);
 
   const updateEV = useCallback((stat: StatName, delta: number) => {
     setBuild((prev) => ({ ...prev, evs: clampEVs(prev.evs, stat, delta) }));
@@ -621,6 +655,40 @@ export function RaidBuildMaker() {
                   </button>
                 ))}
               </div>
+              {defenses && (
+                <div className="mt-4 border-t border-white/5 pt-3">
+                  <div className="text-[10px] font-bold text-gray-500 uppercase">{t("raid.defensiveMatchup", { defaultValue: "Defensive Matchups" })}</div>
+                  <div className="mt-1.5 flex flex-col gap-1.5">
+                    {defenses.weaknesses.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-1">
+                        <span className="w-12 text-[10px] text-red-400">Weak:</span>
+                        {defenses.weaknesses.map((w) => (
+                          <div key={w.type} className="flex items-center">
+                            <TypeBadge type={w.type} small />
+                            <span className="ml-0.5 text-[9px] font-bold text-red-400">x{w.mult}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {defenses.resistances.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-1">
+                        <span className="w-12 text-[10px] text-green-400">Resist:</span>
+                        {defenses.resistances.map((r) => (
+                          <TypeBadge key={r} type={r} small />
+                        ))}
+                      </div>
+                    )}
+                    {defenses.immunities.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-1">
+                        <span className="w-12 text-[10px] text-gray-400">Immune:</span>
+                        {defenses.immunities.map((i) => (
+                          <TypeBadge key={i} type={i} small />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -670,6 +738,11 @@ export function RaidBuildMaker() {
                   {t("raid.selectPokemon")}
                 </div>
               )}
+              {build.ability && (
+                <div className="mt-2 rounded bg-black/20 p-2 text-[10px] text-gray-400">
+                  {abilities.find(a => a.name === build.ability)?.shortEffect || "No description available."}
+                </div>
+              )}
             </div>
 
             <div className="rounded-xl border border-white/10 bg-white/5 p-4">
@@ -679,15 +752,32 @@ export function RaidBuildMaker() {
                 value={build.item}
                 onSelect={(i) => setBuild((prev) => ({ ...prev, item: i.name }))}
                 renderItem={(i) => (
-                  <div>
-                    <span className="font-semibold text-gray-100">{i.name}</span>
-                    <span className="ml-1.5 text-[10px] text-gray-500">{i.description}</span>
+                  <div className="flex items-center gap-2">
+                    {i.sprite && <img src={i.sprite} alt={i.name} className="h-6 w-6 pixelated" />}
+                    <div>
+                      <span className="font-semibold text-gray-100">{i.name}</span>
+                      <span className="block text-[10px] text-gray-500">{i.description}</span>
+                    </div>
                   </div>
                 )}
                 getLabel={(i) => i.name}
                 placeholder={t("raid.searchItem")}
                 filterFn={itemFilter}
               />
+              {build.item && (() => {
+                const selectedItem = HELD_ITEMS.find((i) => i.name === build.item);
+                if (!selectedItem) return null;
+                return (
+                  <div className="mt-2 flex items-start gap-2 rounded bg-black/20 p-2">
+                    {selectedItem.sprite && (
+                      <img src={selectedItem.sprite} alt={selectedItem.name} className="h-6 w-6 shrink-0 pixelated" />
+                    )}
+                    <div className="flex-1 text-[10px] text-gray-400">
+                      {selectedItem.officialDescription || selectedItem.description}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
 

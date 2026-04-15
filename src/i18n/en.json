@@ -186,7 +186,8 @@
     "exportPng": "📸 Export PNG",
     "exportError": "Error exporting image",
     "starRaids": "{stars}-Star Raids",
-    "statsUnavailable": "stats unavailable"
+    "statsUnavailable": "stats unavailable",
+    "defensiveMatchup": "Defensive Matchups"
   },
   "comunidade": {
     "title": "Community",
