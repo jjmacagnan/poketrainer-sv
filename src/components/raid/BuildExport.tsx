@@ -7,6 +7,11 @@ import type { PokemonType } from "@/data/types";
 import { STAT_NAMES } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { useI18n } from "@/i18n";
+import abilitiesData from "@/data/generated/abilities.json";
+import itemsData from "@/data/generated/items.json";
+
+const abilitiesList = abilitiesData as { name: string; shortEffect: string; flavorText: string }[];
+const itemsList = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
 
 const STAT_COLORS: Record<StatName, string> = {
   HP: "#FF5959", Atk: "#F5AC78", Def: "#FAE078",
@@ -27,10 +32,15 @@ interface BuildExportProps {
   evs: Record<StatName, number>;
   stats: Record<StatName, number>;
   notes: string;
+  defenses?: {
+    weaknesses: { type: string; mult: number }[];
+    resistances: string[];
+    immunities: string[];
+  } | null;
 }
 
 export function BuildExport({
-  pokemon, teraType, nature, ability, item, moves, evs, stats, notes,
+  pokemon, teraType, nature, ability, item, moves, evs, stats, notes, defenses
 }: BuildExportProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const { t } = useI18n();
@@ -130,33 +140,74 @@ export function BuildExport({
           </div>
 
           {/* Info Row */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-            {[
-              { label: t("common.nature"), value: nature },
-              { label: t("common.ability"), value: ability },
-              { label: t("raid.heldItem"), value: item },
-            ].map((info) => (
-              info.value && (
-                <div
-                  key={info.label}
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    borderRadius: 8,
-                    padding: "6px 12px",
-                    flex: 1,
-                    minWidth: 120,
-                  }}
-                >
-                  <div style={{ fontSize: 9, fontWeight: 700, color: "#6b7280", textTransform: "uppercase" }}>
-                    {info.label}
-                  </div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: "#f3f4f6" }}>
-                    {info.value}
+          <div style={{ display: "flex", gap: 8, marginBottom: 12, alignItems: "stretch" }}>
+            {/* Nature */}
+            {nature && (
+              <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: "8px 12px", minWidth: 100 }}>
+                <div style={{ fontSize: 9, fontWeight: 700, color: "#6b7280", textTransform: "uppercase" }}>{t("common.nature")}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#f3f4f6" }}>{nature}</div>
+              </div>
+            )}
+
+            {/* Ability */}
+            {ability && (() => {
+              const abilityData = abilitiesList.find(a => a.name === ability);
+              return (
+                <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: "8px 12px", flex: 1.5 }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: "#6b7280", textTransform: "uppercase" }}>{t("common.ability")}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#f3f4f6" }}>{ability}</div>
+                  {abilityData && (
+                    <div style={{ fontSize: 9, color: "#9ca3af", marginTop: 4, lineHeight: 1.3 }}>
+                      {abilityData.shortEffect || abilityData.flavorText}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* Item */}
+            {item && (() => {
+              const itemData = itemsList.find(i => i.name === item);
+              return (
+                <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: "8px 12px", flex: 1, display: "flex", gap: 8 }}>
+                  {itemData?.sprite && (
+                    <img src={itemData.sprite} alt={item} style={{ width: 28, height: 28, imageRendering: "pixelated" }} crossOrigin="anonymous" />
+                  )}
+                  <div>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: "#6b7280", textTransform: "uppercase" }}>{t("raid.heldItem")}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#f3f4f6" }}>{item}</div>
                   </div>
                 </div>
-              )
-            ))}
+              );
+            })()}
           </div>
+
+          {/* Defenses */}
+          {defenses && (defenses.weaknesses.length > 0 || defenses.resistances.length > 0) && (
+            <div style={{ marginBottom: 12, display: "flex", gap: 12, flexWrap: "wrap", paddingBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+              {defenses.weaknesses.length > 0 && (
+                <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: "#f87171", marginRight: 4 }}>WEAK:</span>
+                  {defenses.weaknesses.map(w => (
+                    <div key={w.type} style={{ display: "flex", alignItems: "center", background: "rgba(248,113,113,0.1)", padding: "2px 6px", borderRadius: 4 }}>
+                      <span style={{ color: TYPE_COLORS[w.type as PokemonType], fontSize: 9, fontWeight: 700 }}>{w.type.toUpperCase()}</span>
+                      <span style={{ marginLeft: 4, fontSize: 9, fontWeight: 700, color: "#f87171" }}>x{w.mult}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {defenses.resistances.length > 0 && (
+                <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: "#4ade80", marginRight: 4 }}>RESIST:</span>
+                  {defenses.resistances.map(r => (
+                    <div key={r} style={{ background: "rgba(74,222,128,0.1)", padding: "2px 6px", borderRadius: 4 }}>
+                      <span style={{ color: TYPE_COLORS[r as PokemonType], fontSize: 9, fontWeight: 700 }}>{r.toUpperCase()}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Moves */}
           <div style={{ marginBottom: 12 }}>

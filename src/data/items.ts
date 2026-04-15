@@ -23,6 +23,8 @@ export const HELD_ITEMS: HeldItem[] = [
   { name: "Razor Claw", category: "Offensive", description: "+1 critical hit ratio" },
   { name: "Throat Spray", category: "Offensive", description: "+1 Sp. Atk after using a sound move" },
   { name: "Punching Glove", category: "Offensive", description: "1.1× punching moves, no contact" },
+  { name: "Flame Orb", category: "Offensive", description: "Burns the holder at the end of the turn" },
+  { name: "Toxic Orb", category: "Offensive", description: "Badly poisons the holder at the end of the turn" },
   // Defensive
   { name: "Leftovers", category: "Defensive", description: "Restores 1/16 HP each turn" },
   { name: "Rocky Helmet", category: "Defensive", description: "Deals 1/6 HP to attacker on contact" },

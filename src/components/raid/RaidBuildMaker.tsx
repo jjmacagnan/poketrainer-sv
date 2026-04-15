@@ -968,6 +968,7 @@ export function RaidBuildMaker() {
                 evs={build.evs}
                 stats={calcStats}
                 notes={build.notes}
+                defenses={defenses}
               />
             </div>
           )}

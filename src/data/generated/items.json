@@ -105,6 +105,20 @@
     "sprite": ""
   },
   {
+    "name": "Flame Orb",
+    "category": "Offensive",
+    "description": "Burns the holder at the end of the turn",
+    "officialDescription": "An item to be held by a Pokémon. It is a bizarre orb that inflicts a burn on the holder in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/flame-orb.png"
+  },
+  {
+    "name": "Toxic Orb",
+    "category": "Offensive",
+    "description": "Badly poisons the holder at the end of the turn",
+    "officialDescription": "An item to be held by a Pokémon. It is a bizarre orb that badly poisons the holder in battle.",
+    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/toxic-orb.png"
+  },
+  {
     "name": "Leftovers",
     "category": "Defensive",
     "description": "Restores 1/16 HP each turn",
@@ -593,13 +607,6 @@
     "description": "Item dropped or held by wild Pokémon",
     "officialDescription": "A hold item that gradually restores the HP of Poison-type Pokémon. It inflicts damage on all other types.",
     "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/black-sludge.png"
-  },
-  {
-    "name": "Toxic Orb",
-    "category": "Wild Held Item",
-    "description": "Item dropped or held by wild Pokémon",
-    "officialDescription": "An item to be held by a Pokémon. It is a bizarre orb that badly poisons the holder in battle.",
-    "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/toxic-orb.png"
   },
   {
     "name": "Pearl",
