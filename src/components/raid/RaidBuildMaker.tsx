@@ -36,6 +36,20 @@ interface Pokemon {
   height?: number;
   weight?: number;
   heldItems?: string[];
+  isLegendary?: boolean;
+  isMythical?: boolean;
+  captureRate?: number;
+  genderRate?: number;
+  eggGroups?: string[];
+  habitat?: string | null;
+  generation?: string;
+  color?: string;
+  growthRate?: string;
+  baseHappiness?: number;
+  flavorText?: string;
+  evolutionChainId?: number;
+  baseExperience?: number | null;
+  formVariants?: { name: string; id: number }[];
 }
 
 interface Nature {
@@ -654,12 +668,23 @@ export function RaidBuildMaker() {
                       {build.pokemon.types.map((tp) => (
                         <TypeBadge key={tp} type={tp as PokemonType} small />
                       ))}
+                      {build.pokemon.isLegendary && (
+                        <span className="rounded-full bg-yellow-500/15 px-1.5 py-0.5 text-[9px] font-bold text-yellow-300">★ Legendary</span>
+                      )}
+                      {build.pokemon.isMythical && (
+                        <span className="rounded-full bg-pink-500/15 px-1.5 py-0.5 text-[9px] font-bold text-pink-300">✦ Mythical</span>
+                      )}
                     </div>
                     <div className="text-[10px] text-gray-500">
                       #{build.pokemon.nationalDex}
                       {build.pokemon.height ? ` · ${(build.pokemon.height / 10).toFixed(1)}m` : ""}
                       {build.pokemon.weight ? ` · ${(build.pokemon.weight / 10).toFixed(1)}kg` : ""}
                     </div>
+                    {build.pokemon.flavorText && (
+                      <p className="mt-1 text-[10px] italic leading-relaxed text-gray-500 line-clamp-2">
+                        {build.pokemon.flavorText}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}

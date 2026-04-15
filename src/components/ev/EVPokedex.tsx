@@ -303,6 +303,16 @@ function PokemonCard({
           {t("evPokedex.best")}
         </div>
       )}
+      {(pokemon as { isLegendary?: boolean; isMythical?: boolean }).isLegendary && !isBest && (
+        <div className="absolute right-2 top-2 rounded-full bg-yellow-500/10 px-2 py-0.5 text-[10px] font-bold text-yellow-400/70">
+          ★
+        </div>
+      )}
+      {(pokemon as { isMythical?: boolean }).isMythical && !isBest && (
+        <div className="absolute right-2 top-2 rounded-full bg-pink-500/10 px-2 py-0.5 text-[10px] font-bold text-pink-400/70">
+          ✦
+        </div>
+      )}
 
       <div className="mb-3 flex items-center gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}

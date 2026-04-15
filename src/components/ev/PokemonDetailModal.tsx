@@ -145,28 +145,24 @@ export interface PokemonEntry {
   height?: number;
   weight?: number;
   heldItems?: string[];
+  // Pre-cached species data (from pokemon-species endpoint)
+  isLegendary?: boolean;
+  isMythical?: boolean;
+  captureRate?: number;
+  genderRate?: number;
+  eggGroups?: string[];
+  habitat?: string | null;
+  generation?: string;
+  color?: string;
+  growthRate?: string;
+  baseHappiness?: number;
+  flavorText?: string;
+  evolutionChainId?: number;
+  baseExperience?: number | null;
+  formVariants?: { name: string; id: number }[];
 }
 
 // ── PokéAPI types ─────────────────────────────────────────────────────────────
-
-interface SpeciesData {
-  habitat: { name: string } | null;
-  egg_groups: { name: string }[];
-  gender_rate: number;
-  is_legendary: boolean;
-  is_mythical: boolean;
-  color: { name: string };
-  generation: { name: string };
-  capture_rate: number;
-  growth_rate: { name: string };
-  flavor_text_entries: {
-    flavor_text: string;
-    language: { name: string };
-    version: { name: string };
-  }[];
-  evolution_chain: { url: string };
-  varieties: { is_default: boolean; pokemon: { name: string; url: string } }[];
-}
 
 interface PokemonApiData {
   base_experience: number | null;
@@ -177,19 +173,6 @@ interface PokemonApiData {
       level_learned_at: number;
       move_learn_method: { name: string };
       version_group: { name: string };
-    }[];
-  }[];
-}
-
-interface EncounterData {
-  location_area: { name: string; url: string };
-  version_details: {
-    version: { name: string };
-    max_chance: number;
-    encounter_details: {
-      min_level: number;
-      max_level: number;
-      method: { name: string };
     }[];
   }[];
 }
@@ -280,18 +263,6 @@ function flattenLiveChain(node: LiveEvoNode): EvoStep[] {
   }
   walk(node);
   return steps;
-}
-
-function formatLocationName(name: string): string {
-  return name
-    .replace(/-area$/, "")
-    .split("-")
-    .map(capitalize)
-    .join(" ");
-}
-
-function formatMethodName(name: string): string {
-  return name.split("-").map(capitalize).join(" ");
 }
 
 function formatGrowthRate(name: string): string {
@@ -386,12 +357,10 @@ export function PokemonDetailModal({
   pokemon: PokemonEntry;
   onClose: () => void;
 }) {
-  const [species, setSpecies] = useState<SpeciesData | null>(null);
   const [evoSteps, setEvoSteps] = useState<EvoStep[]>([]);
   const [gameVersions, setGameVersions] = useState<string[]>([]);
   const [baseExperience, setBaseExperience] = useState<number | null>(null);
   const [svMoves, setSvMoves] = useState<SVMove[]>([]);
-  const [encounters, setEncounters] = useState<{ location: string; versions: string[]; levels: string; method: string }[]>([]);
   const [showAllMoves, setShowAllMoves] = useState(false);
   const { t, locale } = useI18n();
   const [loading, setLoading] = useState(true);
@@ -400,13 +369,13 @@ export function PokemonDetailModal({
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [sp, pkm, enc] = await Promise.all([
-        fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.nationalDex}/`).then((r) => r.json()) as Promise<SpeciesData>,
-        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.nationalDex}/`).then((r) => r.json()) as Promise<PokemonApiData>,
-        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.nationalDex}/encounters`).then((r) => r.json()).catch(() => []) as Promise<EncounterData[]>,
-      ]);
-      setSpecies(sp);
-      setBaseExperience(pkm.base_experience);
+      // Species data is now pre-cached in pokemon.json — only fetch pokemon
+      // endpoint for moves + game availability (too large to pre-cache per pokemon)
+      const pkm = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${pokemon.nationalDex}/`
+      ).then((r) => r.json()) as PokemonApiData;
+
+      setBaseExperience(pokemon.baseExperience ?? pkm.base_experience);
       setGameVersions(pkm.game_indices.map((g) => g.version.name));
 
       // Filter moves for Scarlet/Violet
@@ -432,35 +401,15 @@ export function PokemonDetailModal({
       });
       setSvMoves(moves);
 
-      // Filter encounters for SV
-      const svEncounters: typeof encounters = [];
-      for (const e of enc) {
-        const svVersions = e.version_details.filter(
-          (vd) => vd.version.name === "scarlet" || vd.version.name === "violet"
-        );
-        if (svVersions.length > 0) {
-          const details = svVersions[0].encounter_details[0];
-          const levelRange = details
-            ? details.min_level === details.max_level
-              ? `Lv. ${details.min_level}`
-              : `Lv. ${details.min_level}–${details.max_level}`
-            : "";
-          svEncounters.push({
-            location: formatLocationName(e.location_area.name),
-            versions: svVersions.map((v) => capitalize(v.version.name)),
-            levels: levelRange,
-            method: details ? formatMethodName(details.method.name) : "",
-          });
-        }
-      }
-      setEncounters(svEncounters);
-
       // Try static evolution chain first (Gen 9), fall back to live fetch
+      // using pre-cached evolutionChainId (avoids fetching species just for this)
       const staticChain = findEvolutionChain(pokemon.name);
       if (staticChain) {
         setEvoSteps(flattenStaticChain(staticChain));
-      } else {
-        const chain = await fetch(sp.evolution_chain.url).then((r) => r.json());
+      } else if (pokemon.evolutionChainId) {
+        const chain = await fetch(
+          `https://pokeapi.co/api/v2/evolution-chain/${pokemon.evolutionChainId}/`
+        ).then((r) => r.json());
         setEvoSteps(flattenLiveChain(chain.chain));
       }
     } catch {
@@ -468,7 +417,7 @@ export function PokemonDetailModal({
     } finally {
       setLoading(false);
     }
-  }, [pokemon.nationalDex]);
+  }, [pokemon.nationalDex, pokemon.name, pokemon.evolutionChainId, pokemon.baseExperience]);
 
   useEffect(() => {
     fetchData();
@@ -481,18 +430,10 @@ export function PokemonDetailModal({
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  const flavorText = species?.flavor_text_entries
-    .filter((e) => e.language.name === "en")
-    .reverse()
-    .find((e) => ["scarlet", "violet", "sword", "shield"].includes(e.version.name))
-    ?.flavor_text?.replace(/\f/g, " ")
-    .replace(/\u00ad/g, "")
-    ?? species?.flavor_text_entries.find((e) => e.language.name === "en")?.flavor_text?.replace(/\f/g, " ") ?? "";
+  // Use pre-cached data; fall back to species live data for backward compat
+  const flavorText = pokemon.flavorText ?? "";
 
   const totalStats = STAT_NAMES.reduce((s, stat) => s + (pokemon.baseStats[stat] ?? 0), 0);
-
-  // All forms from varieties (excluding default)
-  const forms = (species?.varieties ?? []).filter((v) => !v.is_default);
 
   return (
     <div
@@ -546,12 +487,12 @@ export function PokemonDetailModal({
               <span className="font-mono">#{String(pokemon.nationalDex).padStart(4, "0")}</span>
               <span>·</span>
               <span className="capitalize">{pokemon.pokedex}</span>
-              {species?.is_legendary && (
+              {pokemon.isLegendary && (
                 <span className="rounded-full bg-yellow-500/15 px-2 py-0.5 text-[10px] font-bold text-yellow-300">
                   Legendary
                 </span>
               )}
-              {species?.is_mythical && (
+              {pokemon.isMythical && (
                 <span className="rounded-full bg-pink-500/15 px-2 py-0.5 text-[10px] font-bold text-pink-300">
                   Mythical
                 </span>
@@ -581,33 +522,30 @@ export function PokemonDetailModal({
               {pokemon.weight !== undefined && (
                 <InfoRow label="Weight" value={`${(pokemon.weight / 10).toFixed(2)} kg`} />
               )}
-              {species?.color && (
-                <InfoRow label="Color" value={capitalize(species.color.name)} />
+              {pokemon.color && (
+                <InfoRow label="Color" value={capitalize(pokemon.color)} />
               )}
-              {species && (
-                <InfoRow label="Gender" value={genderLabel(species.gender_rate)} />
+              {pokemon.genderRate !== undefined && (
+                <InfoRow label="Gender" value={genderLabel(pokemon.genderRate)} />
               )}
-              {species?.habitat && (
-                <InfoRow label="Habitat" value={capitalize(species.habitat.name)} />
+              {pokemon.habitat && (
+                <InfoRow label="Habitat" value={capitalize(pokemon.habitat)} />
               )}
-              {species?.generation && (
+              {pokemon.generation && (
                 <InfoRow
                   label="Generation"
-                  value={species.generation.name
-                    .replace("generation-", "Gen ")
-                    .toUpperCase()
-                    .replace("GEN ", "Gen ")}
+                  value={`Gen ${pokemon.generation}`}
                 />
               )}
               <InfoRow label="Region" value={capitalize(pokemon.pokedex)} />
               {baseExperience !== null && (
                 <InfoRow label="Base EXP" value={String(baseExperience)} />
               )}
-              {species?.capture_rate !== undefined && (
-                <InfoRow label="Catch Rate" value={String(species.capture_rate)} />
+              {pokemon.captureRate !== undefined && (
+                <InfoRow label="Catch Rate" value={String(pokemon.captureRate)} />
               )}
-              {species?.growth_rate && (
-                <InfoRow label="Growth" value={formatGrowthRate(species.growth_rate.name)} />
+              {pokemon.growthRate && (
+                <InfoRow label="Growth" value={formatGrowthRate(pokemon.growthRate)} />
               )}
               {pokemon.abilities.length > 0 && (
                 <div className="col-span-2">
@@ -940,15 +878,15 @@ export function PokemonDetailModal({
           </Section>
 
           {/* Egg Groups */}
-          {species?.egg_groups && species.egg_groups.length > 0 && (
+          {pokemon.eggGroups && pokemon.eggGroups.length > 0 && (
             <Section title="Egg Groups">
               <div className="flex gap-2">
-                {species.egg_groups.map((eg) => (
+                {pokemon.eggGroups.map((eg) => (
                   <span
-                    key={eg.name}
+                    key={eg}
                     className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-gray-300"
                   >
-                    {capitalize(eg.name)}
+                    {eg}
                   </span>
                 ))}
               </div>
@@ -1045,32 +983,22 @@ export function PokemonDetailModal({
           </Section>
 
           {/* Alternate Forms */}
-          {forms.length > 0 && (
+          {pokemon.formVariants && pokemon.formVariants.length > 0 && (
             <Section title="Other Forms">
               <div className="flex flex-wrap gap-3">
-                {forms.map((v) => {
-                  const formId = extractId(v.pokemon.url.replace("pokemon/", "pokemon-species/"));
-                  const displayName = v.pokemon.name
-                    .split("-")
-                    .slice(1)
-                    .map(capitalize)
-                    .join(" ") || v.pokemon.name;
-                  // For forms, use the pokemon endpoint ID directly from URL
-                  const pokemonId = extractId(v.pokemon.url);
-                  return (
-                    <div key={v.pokemon.name} className="flex flex-col items-center gap-1">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`}
-                        alt={v.pokemon.name}
-                        width={56}
-                        height={56}
-                        className="pixelated"
-                      />
-                      <span className="text-[10px] text-gray-500">{displayName}</span>
-                    </div>
-                  );
-                })}
+                {pokemon.formVariants.map((v) => (
+                  <div key={v.name} className="flex flex-col items-center gap-1">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${v.id}.png`}
+                      alt={v.name}
+                      width={56}
+                      height={56}
+                      className="pixelated"
+                    />
+                    <span className="text-[10px] text-gray-500">{v.name}</span>
+                  </div>
+                ))}
               </div>
             </Section>
           )}
