@@ -32,7 +32,8 @@
     "evPokedexDesc": "Searchable list of all Pokémon with EV yields and locations",
     "evTrackerDesc": "Track your team's EV training progress with Pokérus and Power Items",
     "raidBuilderDesc": "Build and share optimized builds for 5★/6★/7★ Tera Raids",
-    "natureCalcDesc": "Nature calculator, stat calculator, and Mint suggestions by role"
+    "natureCalcDesc": "Nature calculator, stat calculator, and Mint suggestions by role",
+    "openTool": "Open"
   },
   "sandwich": {
     "title": "Sandwich Builder",
