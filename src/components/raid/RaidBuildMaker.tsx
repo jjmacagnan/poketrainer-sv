@@ -228,6 +228,13 @@ export function RaidBuildMaker() {
   const [roleFilter, setRoleFilter] = useState<RaidRole | "all">("all");
   const [selectedEntry, setSelectedEntry] = useState<RaidTierEntry | null>(null);
 
+  // Boss Finder state
+  const [bossFinderOpen, setBossFinderOpen] = useState(false);
+  const [bossPokemon, setBossPokemon] = useState<Pokemon | null>(null);
+  const [bossTeraType, setBossTeraType] = useState<PokemonType | null>(null);
+  const [bossStars, setBossStars] = useState<5 | 6 | 7 | null>(null);
+
+
   const totalEvs = Object.values(build.evs).reduce((a, b) => a + b, 0);
 
   // Calculated stats
@@ -374,6 +381,43 @@ export function RaidBuildMaker() {
     });
   }, [tagFilter, roleFilter]);
 
+
+  // Boss Finder: score tier list entries by type effectiveness against boss tera type
+  const bossRecommendations = useMemo((): { entry: RaidTierEntry; score: number; seMovesForBoss: string[] }[] => {
+    if (!bossTeraType) return [];
+
+    const bossTypeData = allTypesData.find(
+      (td) => td.name.toLowerCase() === bossTeraType.toLowerCase()
+    );
+    const bossWeaknesses = new Set((bossTypeData?.weaknesses ?? []).map((w) => w.toLowerCase()));
+
+    return RAID_TIER_LIST
+      .map((entry) => {
+        const primaryBuild = entry.builds[0];
+        const seMovesForBoss: string[] = [];
+
+        for (const moveName of primaryBuild.moves) {
+          const moveData = allMoves.find(
+            (m) => m.name.toLowerCase() === moveName.toLowerCase()
+          );
+          if (moveData && bossWeaknesses.has(moveData.type.toLowerCase())) {
+            seMovesForBoss.push(moveName);
+          }
+        }
+
+        let score = seMovesForBoss.length * 2;
+        if (entry.tags.includes("Top Pick")) score += 1;
+        if (entry.tags.includes("Solo Viable")) score += 1;
+        if (entry.tags.includes("7★ Ready") && bossStars === 7) score += 1;
+        if (entry.tags.includes("Budget Pick")) score += 0.5;
+
+        return { entry, score, seMovesForBoss };
+      })
+      .filter((r) => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6);
+  }, [bossTeraType, bossStars]);
+
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
   const itemFilter = useCallback((i: { name: string }, q: string) => i.name.toLowerCase().includes(q), []);
@@ -410,6 +454,245 @@ export function RaidBuildMaker() {
       {/* Tier List Tab */}
       {tab === "tierlist" && (
         <div>
+          {/* Boss Finder Panel */}
+          <div className="mb-5 rounded-xl border border-violet-500/30 bg-violet-500/5">
+            <button
+              onClick={() => setBossFinderOpen(!bossFinderOpen)}
+              className="flex w-full items-center justify-between px-4 py-3 text-left"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-base">🎯</span>
+                <div>
+                  <span className="text-sm font-bold text-violet-300">{t("raid.bossFinder")}</span>
+                  {!bossTeraType && (
+                    <span className="ml-2 text-xs text-gray-500">{t("raid.bossFinderSubtitle")}</span>
+                  )}
+                  {bossTeraType && (
+                    <span className="ml-2 text-xs text-violet-400">
+                      {bossPokemon ? `${bossPokemon.name} · ` : ""}{bossTeraType} Tera
+                      {bossStars ? ` · ${bossStars}★` : ""}
+                      {" "}· {bossRecommendations.length} builds
+                    </span>
+                  )}
+                </div>
+              </div>
+              <span className="text-xs text-gray-500">{bossFinderOpen ? "▲" : "▼"}</span>
+            </button>
+
+            {bossFinderOpen && (
+              <div className="border-t border-violet-500/20 px-4 pb-4 pt-3">
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {/* Boss Pokemon search */}
+                  <div>
+                    <div className="mb-1.5 text-[10px] font-bold uppercase text-gray-500">
+                      {locale === "pt" ? "Pokémon Boss (opcional)" : "Boss Pokémon (optional)"}
+                    </div>
+                    <SearchDropdown
+                      items={allPokemon}
+                      value={bossPokemon?.name || ""}
+                      onSelect={(p) => setBossPokemon(p)}
+                      renderItem={(p) => (
+                        <>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={p.sprite} alt={p.name} width={24} height={24} className="pixelated" />
+                          <span className="font-semibold text-gray-100">{p.name}</span>
+                          <span className="text-xs text-gray-500">#{p.nationalDex}</span>
+                        </>
+                      )}
+                      getLabel={(p) => p.name}
+                      placeholder={t("raid.searchBoss")}
+                      filterFn={pokemonFilter}
+                    />
+                    {bossPokemon && (
+                      <div className="mt-1.5 flex items-center gap-1.5">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={bossPokemon.sprite} alt={bossPokemon.name} width={28} height={28} className="pixelated" />
+                        <div className="flex flex-wrap gap-0.5">
+                          {bossPokemon.types.map((tp) => (
+                            <TypeBadge key={tp} type={tp as PokemonType} small />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Boss Tera Type */}
+                  <div>
+                    <div className="mb-1.5 text-[10px] font-bold uppercase text-gray-500">
+                      {t("raid.bossTeraType")}
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {TYPES.map((tp) => (
+                        <button
+                          key={tp}
+                          onClick={() => setBossTeraType(bossTeraType === tp ? null : tp)}
+                          className="rounded-full border px-2 py-0.5 text-[10px] font-bold text-white transition-all"
+                          style={{
+                            background: bossTeraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
+                            borderColor: bossTeraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.1)",
+                            opacity: bossTeraType === tp ? 1 : 0.5,
+                          }}
+                        >
+                          {tp}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Star level */}
+                  <div>
+                    <div className="mb-1.5 text-[10px] font-bold uppercase text-gray-500">
+                      {t("raid.starLevel")}
+                    </div>
+                    <div className="flex gap-1.5">
+                      {([5, 6, 7] as const).map((s) => (
+                        <button
+                          key={s}
+                          onClick={() => setBossStars(bossStars === s ? null : s)}
+                          className={`rounded-lg border px-3 py-1.5 text-sm font-bold transition-all ${
+                            bossStars === s
+                              ? "border-yellow-500/50 bg-yellow-500/15 text-yellow-300"
+                              : "border-white/10 bg-white/5 text-gray-400 hover:text-white"
+                          }`}
+                        >
+                          {s}★
+                        </button>
+                      ))}
+                    </div>
+                    {bossTeraType && (
+                      <button
+                        onClick={() => { setBossPokemon(null); setBossTeraType(null); setBossStars(null); }}
+                        className="mt-3 text-xs text-gray-500 underline hover:text-red-400"
+                      >
+                        {t("raid.clearBoss")}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Recommended builds section */}
+          {bossTeraType && (
+            <div className="mb-6">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="text-base">⭐</span>
+                <span className="text-sm font-bold text-yellow-300">{t("raid.recommended")}</span>
+                <span className="rounded-full bg-yellow-500/15 px-2 py-0.5 text-[10px] font-bold text-yellow-400">
+                  {t("raid.recommendedCount", { count: bossRecommendations.length })}
+                </span>
+                {bossTeraType && (
+                  <TypeBadge type={bossTeraType} small />
+                )}
+                {bossStars && (
+                  <span className="text-xs font-bold text-gray-400">{bossStars}★</span>
+                )}
+              </div>
+
+              {bossRecommendations.length === 0 ? (
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-gray-500">
+                  {t("raid.noBossRecommendations")}
+                </div>
+              ) : (
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {bossRecommendations.map(({ entry, seMovesForBoss }) => {
+                    const spriteNum = entry.spriteId ?? entry.nationalDex;
+                    const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
+                    const primaryBuild = entry.builds[0];
+                    const isSelected = selectedEntry?.name === entry.name && selectedEntry?.role === entry.role;
+                    return (
+                      <div key={`rec-${entry.name}-${entry.role}`} className="flex flex-col gap-1">
+                        <button
+                          onClick={() => setSelectedEntry(isSelected ? null : entry)}
+                          className={`group flex items-center gap-3 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+                            isSelected
+                              ? "border-yellow-500/50 bg-yellow-500/10"
+                              : "border-yellow-500/20 bg-yellow-500/5 hover:border-yellow-500/40"
+                          }`}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-sm font-bold text-gray-100">{entry.name}</span>
+                              {entry.tags.slice(0, 1).map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
+                                  style={{ background: TAG_COLORS[tag] + "CC" }}
+                                >
+                                  {locale === "pt" ? TAG_NAMES[tag].pt : TAG_NAMES[tag].en}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="mt-1 flex items-center gap-1.5">
+                              <TypeBadge type={primaryBuild.teraType as PokemonType} small />
+                              <span className="text-[10px] text-gray-500">{primaryBuild.nature} · {primaryBuild.ability}</span>
+                            </div>
+                            {seMovesForBoss.length > 0 && (
+                              <div className="mt-1 flex flex-wrap items-center gap-0.5">
+                                <span className="text-[9px] font-bold text-green-400">{t("raid.coverageLabel")}</span>
+                                {seMovesForBoss.map((mv) => {
+                                  const moveData = allMoves.find((m) => m.name.toLowerCase() === mv.toLowerCase());
+                                  return (
+                                    <span
+                                      key={mv}
+                                      className="rounded px-1 py-0.5 text-[9px] font-bold"
+                                      style={{
+                                        background: (TYPE_COLORS[moveData?.type as PokemonType] || "#888") + "33",
+                                        color: TYPE_COLORS[moveData?.type as PokemonType] || "#aaa",
+                                      }}
+                                    >
+                                      {mv} <span className="text-green-400">SE</span>
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        </button>
+
+                        {/* Build picker — same pattern as main tier list */}
+                        {isSelected && (
+                          <div className="rounded-xl border border-yellow-500/30 bg-gray-900/80 p-2">
+                            <div className="mb-1.5 px-1 text-[10px] font-semibold text-gray-500">
+                              {locale === "pt" ? "Selecione uma build:" : "Select a build:"}
+                            </div>
+                            {entry.builds.map((buildOption, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => loadTierBuild(entry, buildOption)}
+                                className="mb-1 w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-left transition-all hover:border-yellow-500/30 hover:bg-yellow-500/10 last:mb-0"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-semibold text-gray-200">{buildOption.name}</span>
+                                  <TypeBadge type={buildOption.teraType as PokemonType} small />
+                                </div>
+                                <div className="mt-0.5 text-[10px] text-gray-500">
+                                  {buildOption.nature} · {buildOption.ability} · {buildOption.item}
+                                </div>
+                                <div className="mt-0.5 text-[10px] text-gray-600">
+                                  {buildOption.moves.join(" · ")}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="mt-4 border-t border-white/5 pt-4">
+                <div className="mb-2 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                  {locale === "pt" ? "Guia Completo" : "Full Guide"}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Filters */}
           <div className="mb-4 flex flex-wrap items-center gap-3">
             {/* Tag filter */}

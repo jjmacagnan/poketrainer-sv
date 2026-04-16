@@ -625,7 +625,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Hisuian Samurott",
     nationalDex: 503,
-    spriteId: 10091,
+    spriteId: 10236,
     tags: ["Niche Pick"],
     role: "physical",
     builds: [
@@ -656,7 +656,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Galarian Zapdos",
     nationalDex: 145,
-    spriteId: 10169,
+    spriteId: 10170,
     tags: ["Niche Pick"],
     role: "physical",
     builds: [
@@ -1395,7 +1395,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Galarian Moltres",
     nationalDex: 146,
-    spriteId: 10170,
+    spriteId: 10171,
     tags: ["Niche Pick"],
     role: "special",
     builds: [
@@ -1568,7 +1568,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Hisuian Typhlosion",
     nationalDex: 157,
-    spriteId: 10093,
+    spriteId: 10233,
     tags: ["Niche Pick"],
     role: "special",
     builds: [
@@ -1935,7 +1935,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Alolan Ninetales",
     nationalDex: 38,
-    spriteId: 10103,
+    spriteId: 10104,
     tags: ["Niche Pick"],
     role: "support",
     builds: [
