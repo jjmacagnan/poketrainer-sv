@@ -1,22 +1,7 @@
 "use client";
 
-import { LegalPageTemplate, type LegalMeta, type LegalSection } from "@/components/legal/LegalPageTemplate";
+import { GithubLink, LegalPageTemplate, type LegalMeta, type LegalSection } from "@/components/legal/LegalPageTemplate";
 import { type Locale } from "@/i18n";
-
-const GITHUB_ISSUES = "https://github.com/jjmacagnan/poketrainer-sv/issues";
-
-function GithubLink() {
-  return (
-    <a
-      href={GITHUB_ISSUES}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-400 underline hover:text-blue-300"
-    >
-      GitHub Issues
-    </a>
-  );
-}
 
 const meta: LegalMeta = {
   pt: { title: "Política de Privacidade", updated: "Última atualização: abril de 2025" },
@@ -53,9 +38,9 @@ function getSections(locale: Locale): LegalSection[] {
         title: "3. Cookies",
         body: (
           <p className="leading-relaxed">
-            We use only strictly necessary technical cookies for site functionality (such as
-            language preference). We do not use tracking cookies for advertising or remarketing
-            purposes.
+            This site does not use cookies. Language preference is stored exclusively in{" "}
+            <em>localStorage</em>, not in cookies. We do not use tracking cookies for advertising
+            or remarketing purposes.
           </p>
         ),
       },
@@ -142,9 +127,9 @@ function getSections(locale: Locale): LegalSection[] {
       title: "3. Cookies",
       body: (
         <p className="leading-relaxed">
-          Utilizamos apenas cookies técnicos estritamente necessários para o funcionamento do site
-          (como preferência de idioma). Não utilizamos cookies de rastreamento para fins
-          publicitários ou de remarketing.
+          Este site não utiliza cookies. A preferência de idioma é armazenada exclusivamente no{" "}
+          <em>localStorage</em> do navegador, não em cookies. Não utilizamos cookies de
+          rastreamento para fins publicitários ou de remarketing.
         </p>
       ),
     },

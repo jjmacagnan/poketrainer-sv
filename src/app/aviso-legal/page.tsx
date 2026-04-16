@@ -1,22 +1,7 @@
 "use client";
 
-import { LegalPageTemplate, type LegalMeta, type LegalSection } from "@/components/legal/LegalPageTemplate";
+import { GithubLink, LegalPageTemplate, type LegalMeta, type LegalSection } from "@/components/legal/LegalPageTemplate";
 import { type Locale } from "@/i18n";
-
-const GITHUB_ISSUES = "https://github.com/jjmacagnan/poketrainer-sv/issues";
-
-function GithubLink() {
-  return (
-    <a
-      href={GITHUB_ISSUES}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-400 underline hover:text-blue-300"
-    >
-      GitHub Issues
-    </a>
-  );
-}
 
 const meta: LegalMeta = {
   pt: { title: "Aviso Legal", updated: "Última atualização: abril de 2025" },
