@@ -20,8 +20,8 @@ export function LegalPageTemplate({ meta, getSections }: LegalPageTemplateProps)
       <h1 className="mb-2 text-3xl font-black text-white">{title}</h1>
       <p className="mb-10 text-sm text-gray-500">{updated}</p>
       <div className="flex flex-col gap-8 text-gray-300">
-        {sections.map((s, index) => (
-          <section key={index}>
+        {sections.map((s) => (
+          <section key={s.title}>
             <h2 className="mb-3 text-lg font-bold text-white">{s.title}</h2>
             {s.body}
           </section>
