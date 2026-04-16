@@ -62,7 +62,7 @@ export default function FeedbackPage() {
       <div className="mx-auto flex min-h-[60vh] max-w-lg items-center justify-center px-4 py-16">
         <div className="animate-fade-up w-full rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center">
           <div className="mb-4 text-5xl">✅</div>
-          <h2 className="mb-2 font-[family-name:var(--font-syne)] text-2xl font-extrabold text-white">
+          <h2 className="mb-2 font-[family-name:var(--font-syne)] text-2xl font-extrabold leading-normal text-white">
             {t("feedback.successTitle")}
           </h2>
           <p className="mb-6 text-sm text-gray-400">{t("feedback.successBody")}</p>
@@ -88,6 +88,7 @@ export default function FeedbackPage() {
             background: "linear-gradient(135deg, #22D3EE, #A78BFA)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
+            paddingBottom: "0.1em",
           }}
         >
           {t("feedback.title")}
