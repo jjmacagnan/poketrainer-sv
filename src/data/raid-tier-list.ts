@@ -1,7 +1,7 @@
 import type { PokemonType } from "./types";
 import type { StatName } from "@/lib/constants";
 
-export type TierRank = "SS" | "S" | "A" | "B" | "C";
+export type RaidTag = "Solo Viable" | "Top Pick" | "7★ Ready" | "Budget Pick" | "Support Star" | "Niche Pick";
 export type RaidRole = "physical" | "special" | "support";
 
 export interface RaidBuild {
@@ -20,46 +20,60 @@ export interface RaidTierEntry {
   nationalDex: number;
   /** Sprite ID — defaults to nationalDex. Override for alternate forms. */
   spriteId?: number;
-  tier: TierRank;
+  tags: RaidTag[];
   role: RaidRole;
   /** At least one build is required — index 0 is always the primary/recommended build. */
   builds: [RaidBuild, ...RaidBuild[]];
 }
 
-export const TIER_COLORS: Record<TierRank, string> = {
-  SS: "#FF4444",
-  S: "#FF8C00",
-  A: "#FFD700",
-  B: "#4CAF50",
-  C: "#64B5F6",
+export const TAG_COLORS: Record<RaidTag, string> = {
+  "Solo Viable": "#FF4444",
+  "Top Pick": "#FF8C00",
+  "7★ Ready": "#A855F7",
+  "Budget Pick": "#4CAF50",
+  "Support Star": "#3B82F6",
+  "Niche Pick": "#64748B",
 };
 
-export const TIER_DESCRIPTIONS: Record<TierRank, { pt: string; en: string }> = {
-  SS: {
-    pt: "Domina qualquer raid sozinho. Stats e movepool excepcionais.",
-    en: "Can tackle any raid solo. Exceptional stats and movepool.",
+export const TAG_NAMES: Record<RaidTag, { pt: string; en: string }> = {
+  "Solo Viable": { pt: "Viável Solo", en: "Solo Viable" },
+  "Top Pick": { pt: "Recomendado", en: "Top Pick" },
+  "7★ Ready": { pt: "7★ Pronto", en: "7★ Ready" },
+  "Budget Pick": { pt: "Fácil de Montar", en: "Budget Pick" },
+  "Support Star": { pt: "Suporte Top", en: "Support Star" },
+  "Niche Pick": { pt: "Uso Situacional", en: "Niche Pick" },
+};
+
+export const TAG_LABELS: Record<RaidTag, { pt: string; en: string }> = {
+  "Solo Viable": {
+    pt: "Pode encarar quase qualquer raid sozinho.",
+    en: "Can handle almost any raid alone.",
   },
-  S: {
-    pt: "Funciona contra a maioria dos bosses independente do Tera Type.",
-    en: "Works against most bosses regardless of Tera Type.",
+  "Top Pick": {
+    pt: "Escolha recomendada pela comunidade.",
+    en: "Community-recommended choice.",
   },
-  A: {
-    pt: "Viável contra vários bosses, muito eficaz no role certo.",
-    en: "Viable against many bosses, very effective in the right role.",
+  "7★ Ready": {
+    pt: "Comprovado em raids de 7 estrelas.",
+    en: "Proven in 7-star raids.",
   },
-  B: {
-    pt: "Bom e fácil de usar, mas superado por tiers mais altos.",
-    en: "Good and easy to use, but outclassed by higher tiers.",
+  "Budget Pick": {
+    pt: "Fácil de obter e montar.",
+    en: "Easy to obtain and build.",
   },
-  C: {
-    pt: "Feito para estratégias específicas, funciona melhor com suporte.",
-    en: "Built for specific strategies, works best with team support.",
+  "Support Star": {
+    pt: "Excelente no papel de suporte.",
+    en: "Excellent in the support role.",
+  },
+  "Niche Pick": {
+    pt: "Funciona muito bem em matchups específicos.",
+    en: "Works great in specific matchups.",
   },
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
-// Tier list based on game8.co Tera Raid rankings
-// https://game8.co/games/Pokemon-Scarlet-Violet/archives/397713
+// Pokémon guide based on community consensus (Smogon, Reddit, Serebii)
+// Tags reflect competitive viability, accessibility and role for Tera Raids
 // ══════════════════════════════════════════════════════════════════════════════
 
 export const RAID_TIER_LIST: RaidTierEntry[] = [
@@ -72,7 +86,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Ogerpon",
     nationalDex: 1017,
-    tier: "SS",
+    tags: ["Solo Viable", "Top Pick"],
     role: "physical",
     builds: [
       {
@@ -102,7 +116,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Ursaluna",
     nationalDex: 901,
-    tier: "S",
+    tags: ["Solo Viable", "Top Pick"],
     role: "physical",
     builds: [
       {
@@ -130,7 +144,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Annihilape",
     nationalDex: 979,
-    tier: "S",
+    tags: ["Top Pick", "7★ Ready"],
     role: "physical",
     builds: [
       {
@@ -158,7 +172,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Iron Hands",
     nationalDex: 992,
-    tier: "S",
+    tags: ["Top Pick", "Budget Pick"],
     role: "physical",
     builds: [
       {
@@ -186,7 +200,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Koraidon",
     nationalDex: 1007,
-    tier: "S",
+    tags: ["Solo Viable", "Top Pick"],
     role: "physical",
     builds: [
       {
@@ -214,7 +228,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Azumarill",
     nationalDex: 184,
-    tier: "S",
+    tags: ["Top Pick", "Budget Pick"],
     role: "physical",
     builds: [
       {
@@ -242,7 +256,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Chesnaught",
     nationalDex: 652,
-    tier: "S",
+    tags: ["7★ Ready", "Budget Pick"],
     role: "physical",
     builds: [
       {
@@ -270,7 +284,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Arceus",
     nationalDex: 493,
-    tier: "S",
+    tags: ["Solo Viable", "Top Pick"],
     role: "physical",
     builds: [
       {
@@ -300,7 +314,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Zamazenta",
     nationalDex: 889,
-    tier: "A",
+    tags: ["7★ Ready"],
     role: "physical",
     builds: [
       {
@@ -328,7 +342,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Perrserker",
     nationalDex: 863,
-    tier: "A",
+    tags: ["7★ Ready", "Budget Pick"],
     role: "physical",
     builds: [
       {
@@ -356,7 +370,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Ceruledge",
     nationalDex: 937,
-    tier: "A",
+    tags: ["7★ Ready"],
     role: "physical",
     builds: [
       {
@@ -384,7 +398,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Scizor",
     nationalDex: 212,
-    tier: "A",
+    tags: ["7★ Ready"],
     role: "physical",
     builds: [
       {
@@ -413,7 +427,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     name: "Calyrex (Ice Rider)",
     nationalDex: 898,
     spriteId: 10193,
-    tier: "A",
+    tags: ["7★ Ready"],
     role: "physical",
     builds: [
       {
@@ -441,7 +455,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Krookodile",
     nationalDex: 553,
-    tier: "A",
+    tags: ["Budget Pick"],
     role: "physical",
     builds: [
       {
@@ -471,7 +485,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Urshifu",
     nationalDex: 892,
-    tier: "B",
+    tags: ["Niche Pick"],
     role: "physical",
     builds: [
       {
@@ -499,7 +513,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Gliscor",
     nationalDex: 472,
-    tier: "B",
+    tags: ["Niche Pick", "Budget Pick"],
     role: "physical",
     builds: [
       {
@@ -527,7 +541,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Kommo-o",
     nationalDex: 784,
-    tier: "B",
+    tags: ["Niche Pick"],
     role: "physical",
     builds: [
       {
@@ -555,7 +569,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Enamorus",
     nationalDex: 905,
-    tier: "B",
+    tags: ["Niche Pick"],
     role: "physical",
     builds: [
       {
@@ -583,7 +597,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Iron Thorns",
     nationalDex: 995,
-    tier: "B",
+    tags: ["Niche Pick", "Budget Pick"],
     role: "physical",
     builds: [
       {
@@ -611,8 +625,8 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Hisuian Samurott",
     nationalDex: 503,
-    spriteId: 10091,
-    tier: "B",
+    spriteId: 10236,
+    tags: ["Niche Pick"],
     role: "physical",
     builds: [
       {
@@ -642,8 +656,8 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Galarian Zapdos",
     nationalDex: 145,
-    spriteId: 10169,
-    tier: "C",
+    spriteId: 10170,
+    tags: ["Niche Pick"],
     role: "physical",
     builds: [
       {
@@ -661,7 +675,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Greninja",
     nationalDex: 658,
-    tier: "C",
+    tags: ["Niche Pick"],
     role: "physical",
     builds: [
       {
@@ -689,7 +703,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Sneasler",
     nationalDex: 903,
-    tier: "C",
+    tags: ["Niche Pick"],
     role: "physical",
     builds: [
       {
@@ -707,7 +721,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Baxcalibur",
     nationalDex: 998,
-    tier: "C",
+    tags: ["Niche Pick"],
     role: "physical",
     builds: [
       {
@@ -735,7 +749,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Iron Leaves",
     nationalDex: 1010,
-    tier: "C",
+    tags: ["Niche Pick"],
     role: "physical",
     builds: [
       {
@@ -753,7 +767,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Mimikyu",
     nationalDex: 778,
-    tier: "C",
+    tags: ["Niche Pick", "Budget Pick"],
     role: "physical",
     builds: [
       {
@@ -778,6 +792,60 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
       },
     ],
   },
+  {
+    name: "Garchomp",
+    nationalDex: 445,
+    tags: ["Niche Pick", "7★ Ready"],
+    role: "physical",
+    builds: [
+      {
+        name: "Ground Tera Breaking Swipe Build",
+        teraType: "Ground",
+        nature: "Adamant",
+        ability: "Rough Skin",
+        item: "Shell Bell",
+        moves: ["Breaking Swipe", "Swords Dance", "Earthquake", "Protect"],
+        evs: { HP: 252, Atk: 252, Def: 4, SpA: 0, SpD: 0, Spe: 0 },
+        strategy: "Build para Emboar 7★. Breaking Swipe debuffa Atk do boss físico. Rough Skin pune moves de contato (Flare Blitz, Close Combat). Swords Dance para setup após reduzir Atk do boss. Earthquake com Tera Ground STAB para dano massivo. Protect para turno seguro.",
+      },
+    ],
+  },
+  {
+    name: "Seviper",
+    nationalDex: 336,
+    tags: ["Niche Pick"],
+    role: "special",
+    builds: [
+      {
+        name: "Poison Tera Acid Spray Solo Build",
+        teraType: "Poison",
+        nature: "Modest",
+        ability: "Shed Skin",
+        item: "Shell Bell",
+        moves: ["Gastro Acid", "Acid Spray", "Venoshock", "Sludge Bomb"],
+        evs: { HP: 4, Atk: 0, Def: 252, SpA: 252, SpD: 0, Spe: 0 },
+        strategy: "Build solo para Serperior 7★ (Tera Grass). Gastro Acid remove Contrary — Serperior se auto-nerfa com Leaf Storm. Acid Spray empilha -SpD no boss. Sludge Bomb envenena e ativa Venoshock (130 BP). STAB Poison super efetivo contra Tera Grass.",
+      },
+    ],
+  },
+  {
+    name: "Cloyster",
+    nationalDex: 91,
+    tags: ["Niche Pick"],
+    role: "physical",
+    builds: [
+      {
+        name: "Water Tera Shell Smash Build",
+        teraType: "Water",
+        nature: "Adamant",
+        ability: "Shell Armor",
+        item: "Loaded Dice",
+        moves: ["Rock Blast", "Iron Defense", "Shell Smash", "Aqua Ring"],
+        evs: { HP: 252, Atk: 252, Def: 4, SpA: 0, SpD: 0, Spe: 0 },
+        strategy: "Build para raids de boss Bug (ex: Samurott 7★). Rock Blast é super efetivo com multi-hit garantido pelo Loaded Dice. Iron Defense x2 antes de Shell Smash compensa o -Def. Shell Armor impede crits do boss. Tera Water defensivo contra Water STAB.",
+      },
+    ],
+  },
 
   // ┌──────────────────────────────────────────────────────────────────────────┐
   // │ SPECIAL ATTACKERS                                                       │
@@ -787,7 +855,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Arceus",
     nationalDex: 493,
-    tier: "SS",
+    tags: ["Solo Viable", "Top Pick"],
     role: "special",
     builds: [
       {
@@ -818,7 +886,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     name: "Calyrex-Shadow",
     nationalDex: 898,
     spriteId: 10194,
-    tier: "S",
+    tags: ["Solo Viable", "Top Pick"],
     role: "special",
     builds: [
       {
@@ -846,7 +914,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Miraidon",
     nationalDex: 1008,
-    tier: "S",
+    tags: ["Solo Viable", "Top Pick"],
     role: "special",
     builds: [
       {
@@ -874,7 +942,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Magearna",
     nationalDex: 801,
-    tier: "S",
+    tags: ["Top Pick", "7★ Ready"],
     role: "special",
     builds: [
       {
@@ -902,7 +970,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Manaphy",
     nationalDex: 490,
-    tier: "S",
+    tags: ["Top Pick"],
     role: "special",
     builds: [
       {
@@ -930,7 +998,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Munkidori",
     nationalDex: 1014,
-    tier: "S",
+    tags: ["Top Pick"],
     role: "special",
     builds: [
       {
@@ -959,7 +1027,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     name: "Hoopa Unbound",
     nationalDex: 720,
     spriteId: 10086,
-    tier: "S",
+    tags: ["Top Pick", "7★ Ready"],
     role: "special",
     builds: [
       {
@@ -989,7 +1057,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Mewtwo",
     nationalDex: 150,
-    tier: "A",
+    tags: ["7★ Ready"],
     role: "special",
     builds: [
       {
@@ -1017,7 +1085,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Slowbro",
     nationalDex: 80,
-    tier: "A",
+    tags: ["7★ Ready", "Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1045,7 +1113,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Slowking",
     nationalDex: 199,
-    tier: "A",
+    tags: ["7★ Ready", "Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1073,7 +1141,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Bellibolt",
     nationalDex: 939,
-    tier: "A",
+    tags: ["Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1101,7 +1169,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Serperior",
     nationalDex: 497,
-    tier: "A",
+    tags: ["Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1129,7 +1197,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Flutter Mane",
     nationalDex: 987,
-    tier: "A",
+    tags: ["7★ Ready"],
     role: "special",
     builds: [
       {
@@ -1157,7 +1225,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Gholdengo",
     nationalDex: 1000,
-    tier: "A",
+    tags: ["7★ Ready"],
     role: "special",
     builds: [
       {
@@ -1187,7 +1255,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Skeledirge",
     nationalDex: 911,
-    tier: "B",
+    tags: ["Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1215,7 +1283,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Vaporeon",
     nationalDex: 134,
-    tier: "B",
+    tags: ["Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1243,7 +1311,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Kyogre",
     nationalDex: 382,
-    tier: "B",
+    tags: ["Niche Pick"],
     role: "special",
     builds: [
       {
@@ -1271,7 +1339,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Sinistcha",
     nationalDex: 1013,
-    tier: "B",
+    tags: ["Niche Pick", "Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1299,7 +1367,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Armarouge",
     nationalDex: 936,
-    tier: "B",
+    tags: ["Niche Pick", "Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1327,8 +1395,8 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Galarian Moltres",
     nationalDex: 146,
-    spriteId: 10170,
-    tier: "B",
+    spriteId: 10171,
+    tags: ["Niche Pick"],
     role: "special",
     builds: [
       {
@@ -1358,7 +1426,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Terapagos",
     nationalDex: 1024,
-    tier: "C",
+    tags: ["Niche Pick"],
     role: "special",
     builds: [
       {
@@ -1376,7 +1444,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Decidueye",
     nationalDex: 724,
-    tier: "C",
+    tags: ["Niche Pick"],
     role: "special",
     builds: [
       {
@@ -1444,7 +1512,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Dipplin",
     nationalDex: 1011,
-    tier: "C",
+    tags: ["Niche Pick", "Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1462,7 +1530,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Torkoal",
     nationalDex: 324,
-    tier: "C",
+    tags: ["Niche Pick", "Budget Pick"],
     role: "special",
     builds: [
       {
@@ -1500,8 +1568,8 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Hisuian Typhlosion",
     nationalDex: 157,
-    spriteId: 10093,
-    tier: "C",
+    spriteId: 10233,
+    tags: ["Niche Pick"],
     role: "special",
     builds: [
       {
@@ -1539,7 +1607,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Klefki",
     nationalDex: 707,
-    tier: "C",
+    tags: ["Niche Pick"],
     role: "special",
     builds: [
       {
@@ -1583,7 +1651,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Mew",
     nationalDex: 151,
-    tier: "SS",
+    tags: ["Support Star", "Solo Viable"],
     role: "support",
     builds: [
       {
@@ -1613,7 +1681,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Grimmsnarl",
     nationalDex: 861,
-    tier: "S",
+    tags: ["Support Star", "Top Pick"],
     role: "support",
     builds: [
       {
@@ -1651,7 +1719,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Clefairy",
     nationalDex: 35,
-    tier: "S",
+    tags: ["Support Star", "Budget Pick"],
     role: "support",
     builds: [
       {
@@ -1669,7 +1737,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Alcremie",
     nationalDex: 869,
-    tier: "S",
+    tags: ["Support Star", "Budget Pick"],
     role: "support",
     builds: [
       {
@@ -1689,7 +1757,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Cresselia",
     nationalDex: 488,
-    tier: "A",
+    tags: ["Support Star"],
     role: "support",
     builds: [
       {
@@ -1707,7 +1775,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Toxapex",
     nationalDex: 748,
-    tier: "A",
+    tags: ["Support Star", "Niche Pick"],
     role: "support",
     builds: [
       {
@@ -1725,7 +1793,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Stonjourner",
     nationalDex: 874,
-    tier: "A",
+    tags: ["Niche Pick"],
     role: "support",
     builds: [
       {
@@ -1755,7 +1823,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Umbreon",
     nationalDex: 197,
-    tier: "B",
+    tags: ["Niche Pick", "Budget Pick"],
     role: "support",
     builds: [
       {
@@ -1773,7 +1841,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Overqwil",
     nationalDex: 904,
-    tier: "B",
+    tags: ["Niche Pick"],
     role: "support",
     builds: [
       {
@@ -1801,7 +1869,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Charjabug",
     nationalDex: 737,
-    tier: "B",
+    tags: ["Niche Pick", "Budget Pick"],
     role: "support",
     builds: [
       {
@@ -1821,7 +1889,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Oranguru",
     nationalDex: 765,
-    tier: "C",
+    tags: ["Niche Pick"],
     role: "support",
     builds: [
       {
@@ -1849,7 +1917,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Scovillain",
     nationalDex: 952,
-    tier: "C",
+    tags: ["Niche Pick"],
     role: "support",
     builds: [
       {
@@ -1867,8 +1935,8 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Alolan Ninetales",
     nationalDex: 38,
-    spriteId: 10103,
-    tier: "C",
+    spriteId: 10104,
+    tags: ["Niche Pick"],
     role: "support",
     builds: [
       {

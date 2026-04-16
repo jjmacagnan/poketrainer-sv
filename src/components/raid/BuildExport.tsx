@@ -9,9 +9,11 @@ import type { StatName } from "@/lib/constants";
 import { useI18n } from "@/i18n";
 import abilitiesData from "@/data/generated/abilities.json";
 import itemsData from "@/data/generated/items.json";
+import movesData from "@/data/generated/moves.json";
 
 const abilitiesList = abilitiesData as { name: string; shortEffect: string; flavorText: string }[];
 const itemsList = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
+const movesList = movesData as { name: string; effect?: string }[];
 
 const STAT_COLORS: Record<StatName, string> = {
   HP: "#FF5959", Atk: "#F5AC78", Def: "#FAE078",
@@ -214,21 +216,32 @@ export function BuildExport({
             <div style={{ fontSize: 9, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", marginBottom: 6 }}>
               {t("raid.moves")}
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
-              {moves.filter(Boolean).map((move, i) => (
-                <div
-                  key={i}
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    borderRadius: 6,
-                    padding: "5px 10px",
-                    fontSize: 12,
-                    fontWeight: 600,
-                  }}
-                >
-                  {move}
-                </div>
-              ))}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+              {moves.filter(Boolean).map((move, i) => {
+                const moveData = movesList.find(m => m.name === move);
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      background: "rgba(255,255,255,0.05)",
+                      borderRadius: 6,
+                      padding: "6px 10px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "#f3f4f6" }}>
+                      {move}
+                    </div>
+                    {moveData?.effect && (
+                      <div style={{ marginTop: 3, fontSize: 8, color: "#9ca3af", lineHeight: 1.3 }}>
+                        {moveData.effect}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 

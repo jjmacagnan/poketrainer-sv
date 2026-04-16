@@ -1,0 +1,1992 @@
+[
+  {
+    "id": 24,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "mankey",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "primeape",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 28,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "annihilape",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "use-move",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": null,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 96,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "wooper",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "quagsire",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 20,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        },
+        {
+          "isBaby": false,
+          "species": "clodsire",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 20,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 101,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "girafarig",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "farigiraf",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": "twin-beam",
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 103,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "dunsparce",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "dudunsparce",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": "hyper-drill",
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 317,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "pawniard",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "bisharp",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 52,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "kingambit",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "three-defeated-bisharp",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": null,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 442,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "applin",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "flapple",
+          "evolutionDetails": [
+            {
+              "item": "tart-apple",
+              "trigger": "use-item",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        },
+        {
+          "isBaby": false,
+          "species": "appletun",
+          "evolutionDetails": [
+            {
+              "item": "sweet-apple",
+              "trigger": "use-item",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        },
+        {
+          "isBaby": false,
+          "species": "dipplin",
+          "evolutionDetails": [],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "hydrapple",
+              "evolutionDetails": [],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 465,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "duraludon",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "archaludon",
+          "evolutionDetails": [],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 478,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "sprigatito",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "floragato",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 16,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "meowscarada",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "level-up",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": 36,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 479,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "fuecoco",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "crocalor",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 16,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "skeledirge",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "level-up",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": 36,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 480,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "quaxly",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "quaxwell",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 16,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "quaquaval",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "level-up",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": 36,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 481,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "lechonk",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "oinkologne",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 18,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 482,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "tarountula",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "spidops",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 15,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 483,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "nymble",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "lokix",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 24,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 484,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "pawmi",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "pawmo",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 18,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "pawmot",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "level-up",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": null,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 485,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "tandemaus",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "maushold",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "other",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 25,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 486,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "fidough",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "dachsbun",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 26,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 487,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "smoliv",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "dolliv",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 25,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "arboliva",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "level-up",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": 35,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 488,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "squawkabilly",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 489,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "nacli",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "naclstack",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 24,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "garganacl",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "level-up",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": 38,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 490,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "charcadet",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "armarouge",
+          "evolutionDetails": [
+            {
+              "item": "auspicious-armor",
+              "trigger": "use-item",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        },
+        {
+          "isBaby": false,
+          "species": "ceruledge",
+          "evolutionDetails": [
+            {
+              "item": "malicious-armor",
+              "trigger": "use-item",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 491,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "tadbulb",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "bellibolt",
+          "evolutionDetails": [
+            {
+              "item": "thunder-stone",
+              "trigger": "use-item",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 492,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "wattrel",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "kilowattrel",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 25,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 493,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "maschiff",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "mabosstiff",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 30,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 494,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "shroodle",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "grafaiai",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 28,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 495,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "bramblin",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "brambleghast",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 496,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "toedscool",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "toedscruel",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 30,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 497,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "klawf",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 498,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "capsakid",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "scovillain",
+          "evolutionDetails": [
+            {
+              "item": "fire-stone",
+              "trigger": "use-item",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 499,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "rellor",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "rabsca",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 500,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "flittle",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "espathra",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 35,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 501,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "tinkatink",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "tinkatuff",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 24,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "tinkaton",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "level-up",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": 38,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 502,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "wiglett",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "wugtrio",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 26,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 503,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "bombirdier",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 504,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "finizen",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "palafin",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 38,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 505,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "varoom",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "revavroom",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 40,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 506,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "cyclizar",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 507,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "orthworm",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 508,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "glimmet",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "glimmora",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 35,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 509,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "greavard",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "houndstone",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 30,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": "night"
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 510,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "flamigo",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 511,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "cetoddle",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "cetitan",
+          "evolutionDetails": [
+            {
+              "item": "ice-stone",
+              "trigger": "use-item",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 512,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "veluza",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 513,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "dondozo",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 514,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "tatsugiri",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 515,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "great-tusk",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 516,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "scream-tail",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 517,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "brute-bonnet",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 518,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "flutter-mane",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 519,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "slither-wing",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 520,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "sandy-shocks",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 521,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-treads",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 522,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-bundle",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 523,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-hands",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 524,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-jugulis",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 525,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-moth",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 526,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-thorns",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 527,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "frigibax",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "arctibax",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "level-up",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": 35,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": [
+            {
+              "isBaby": false,
+              "species": "baxcalibur",
+              "evolutionDetails": [
+                {
+                  "item": null,
+                  "trigger": "level-up",
+                  "gender": null,
+                  "heldItem": null,
+                  "knownMove": null,
+                  "knownMoveType": null,
+                  "location": null,
+                  "minLevel": 54,
+                  "minHappiness": null,
+                  "needsOverworldRain": false,
+                  "partySpecies": null,
+                  "partyType": null,
+                  "turnUpsideDown": false,
+                  "timeOfDay": ""
+                }
+              ],
+              "evolvesTo": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 528,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "gimmighoul",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "gholdengo",
+          "evolutionDetails": [
+            {
+              "item": null,
+              "trigger": "gimmmighoul-coins",
+              "gender": null,
+              "heldItem": null,
+              "knownMove": null,
+              "knownMoveType": null,
+              "location": null,
+              "minLevel": null,
+              "minHappiness": null,
+              "needsOverworldRain": false,
+              "partySpecies": null,
+              "partyType": null,
+              "turnUpsideDown": false,
+              "timeOfDay": ""
+            }
+          ],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 529,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "wo-chien",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 530,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "chien-pao",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 531,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "ting-lu",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 532,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "chi-yu",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 533,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "roaring-moon",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 534,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-valiant",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 535,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "koraidon",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 536,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "miraidon",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 537,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "walking-wake",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 538,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-leaves",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 539,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "poltchageist",
+      "evolutionDetails": [],
+      "evolvesTo": [
+        {
+          "isBaby": false,
+          "species": "sinistcha",
+          "evolutionDetails": [],
+          "evolvesTo": []
+        }
+      ]
+    }
+  },
+  {
+    "id": 540,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "okidogi",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 541,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "munkidori",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 542,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "fezandipiti",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 543,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "ogerpon",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 544,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "gouging-fire",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 545,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "raging-bolt",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 546,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-crown",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 547,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "iron-boulder",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 548,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "terapagos",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  },
+  {
+    "id": 549,
+    "babyTriggerItem": null,
+    "chain": {
+      "isBaby": false,
+      "species": "pecharunt",
+      "evolutionDetails": [],
+      "evolvesTo": []
+    }
+  }
+]

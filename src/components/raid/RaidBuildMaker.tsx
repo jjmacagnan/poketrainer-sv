@@ -5,12 +5,13 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import pokemonData from "@/data/generated/pokemon.json";
 import naturesData from "@/data/generated/natures.json";
 import movesData from "@/data/generated/moves.json";
+import moveMetaData from "@/data/generated/move-meta.json";
 import abilitiesData from "@/data/generated/abilities.json";
 import itemsData from "@/data/generated/items.json";
 import typesData from "@/data/generated/types.json";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
-import { RAID_TIER_LIST, TIER_COLORS, TIER_DESCRIPTIONS, type TierRank, type RaidRole, type RaidTierEntry, type RaidBuild } from "@/data/raid-tier-list";
+import { RAID_TIER_LIST, TAG_COLORS, TAG_NAMES, TAG_LABELS, type RaidTag, type RaidRole, type RaidTierEntry, type RaidBuild } from "@/data/raid-tier-list";
 import { STAT_NAMES, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
@@ -18,16 +19,38 @@ import { clampEVs } from "@/lib/ev-calculator";
 import { exportShowdown, parseShowdown } from "@/lib/showdown-parser";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { TypeBadge } from "@/components/ui/TypeBadge";
+import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
 import { useI18n } from "@/i18n";
 import { BuildExport } from "./BuildExport";
 
 interface Pokemon {
+  dexNumber: number;
   nationalDex: number;
   name: string;
   types: string[];
   baseStats: Record<string, number>;
+  evYield: { stat: string; amount: number }[];
   abilities: { name: string; isHidden: boolean }[];
   sprite: string;
+  artwork: string;
+  pokedex: string;
+  height?: number;
+  weight?: number;
+  heldItems?: string[];
+  isLegendary?: boolean;
+  isMythical?: boolean;
+  captureRate?: number;
+  genderRate?: number;
+  eggGroups?: string[];
+  habitat?: string | null;
+  generation?: string;
+  color?: string;
+  growthRate?: string;
+  baseHappiness?: number;
+  flavorText?: string;
+  evolutionChainId?: number;
+  baseExperience?: number | null;
+  formVariants?: { name: string; id: number }[];
 }
 
 interface Nature {
@@ -44,11 +67,34 @@ interface Move {
   power: number | null;
   pp: number | null;
   accuracy: number | null;
+  priority: number;
+  target: string;
+  tm: number | null;
+  effect?: string;
+}
+
+interface MoveMeta {
+  id: number;
+  name: string;
+  meta: {
+    ailment: string;
+    category: string;
+    minHits: number | null;
+    maxHits: number | null;
+    drain: number;
+    healing: number;
+    critRate: number;
+    ailmentChance: number;
+    flinchChance: number;
+    statChance: number;
+  } | null;
+  statChanges: { stat: string; change: number }[];
 }
 
 const allPokemon = pokemonData as Pokemon[];
 const natures = naturesData as Nature[];
 const allMoves = movesData as Move[];
+const allMoveMeta = moveMetaData as MoveMeta[];
 const abilities = abilitiesData as { name: string; effect: string; shortEffect: string; flavorText: string }[];
 const HELD_ITEMS = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
 const allTypesData = typesData as { name: string; weaknesses: string[]; resistances: string[]; immunities: string[] }[];
@@ -160,7 +206,7 @@ function SearchDropdown<T>({
 
 // ── Tier List Helpers ────────────────────────────────────────────────────────
 
-const TIERS: TierRank[] = ["SS", "S", "A", "B", "C"];
+const ALL_TAGS: RaidTag[] = ["Solo Viable", "Top Pick", "7★ Ready", "Budget Pick", "Support Star", "Niche Pick"];
 const ROLES: RaidRole[] = ["physical", "special", "support"];
 
 const ROLE_LABELS: Record<RaidRole, { pt: string; en: string; emoji: string }> = {
@@ -178,9 +224,16 @@ export function RaidBuildMaker() {
   const [importText, setImportText] = useState("");
   const [showExport, setShowExport] = useState(false);
   const [tab, setTab] = useState<"build" | "tierlist">("build");
-  const [tierFilter, setTierFilter] = useState<TierRank | "all">("all");
+  const [tagFilter, setTagFilter] = useState<RaidTag | "all">("all");
   const [roleFilter, setRoleFilter] = useState<RaidRole | "all">("all");
   const [selectedEntry, setSelectedEntry] = useState<RaidTierEntry | null>(null);
+
+  // Boss Finder state
+  const [bossFinderOpen, setBossFinderOpen] = useState(false);
+  const [bossPokemon, setBossPokemon] = useState<Pokemon | null>(null);
+  const [bossTeraType, setBossTeraType] = useState<PokemonType | null>(null);
+  const [bossStars, setBossStars] = useState<5 | 6 | 7 | null>(null);
+
 
   const totalEvs = Object.values(build.evs).reduce((a, b) => a + b, 0);
 
@@ -204,7 +257,7 @@ export function RaidBuildMaker() {
     const activeTypes = build.teraType ? [build.teraType] : (build.pokemon?.types || []);
     if (activeTypes.length === 0) return null;
 
-    let multiplierMap: Record<string, number> = {};
+    const multiplierMap: Record<string, number> = {};
     TYPES.forEach((t) => { multiplierMap[t] = 1; });
 
     activeTypes.forEach((t) => {
@@ -322,11 +375,48 @@ export function RaidBuildMaker() {
 
   const filteredTierList = useMemo(() => {
     return RAID_TIER_LIST.filter((entry) => {
-      if (tierFilter !== "all" && entry.tier !== tierFilter) return false;
+      if (tagFilter !== "all" && !entry.tags.includes(tagFilter)) return false;
       if (roleFilter !== "all" && entry.role !== roleFilter) return false;
       return true;
     });
-  }, [tierFilter, roleFilter]);
+  }, [tagFilter, roleFilter]);
+
+
+  // Boss Finder: score tier list entries by type effectiveness against boss tera type
+  const bossRecommendations = useMemo((): { entry: RaidTierEntry; score: number; seMovesForBoss: string[] }[] => {
+    if (!bossTeraType) return [];
+
+    const bossTypeData = allTypesData.find(
+      (td) => td.name.toLowerCase() === bossTeraType.toLowerCase()
+    );
+    const bossWeaknesses = new Set((bossTypeData?.weaknesses ?? []).map((w) => w.toLowerCase()));
+
+    return RAID_TIER_LIST
+      .map((entry) => {
+        const primaryBuild = entry.builds[0];
+        const seMovesForBoss: string[] = [];
+
+        for (const moveName of primaryBuild.moves) {
+          const moveData = allMoves.find(
+            (m) => m.name.toLowerCase() === moveName.toLowerCase()
+          );
+          if (moveData && bossWeaknesses.has(moveData.type.toLowerCase())) {
+            seMovesForBoss.push(moveName);
+          }
+        }
+
+        let score = seMovesForBoss.length * 2;
+        if (entry.tags.includes("Top Pick")) score += 1;
+        if (entry.tags.includes("Solo Viable")) score += 1;
+        if (entry.tags.includes("7★ Ready") && bossStars === 7) score += 1;
+        if (entry.tags.includes("Budget Pick")) score += 0.5;
+
+        return { entry, score, seMovesForBoss };
+      })
+      .filter((r) => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6);
+  }, [bossTeraType, bossStars]);
 
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
@@ -364,30 +454,270 @@ export function RaidBuildMaker() {
       {/* Tier List Tab */}
       {tab === "tierlist" && (
         <div>
+          {/* Boss Finder Panel */}
+          <div className="mb-5 rounded-xl border border-violet-500/30 bg-violet-500/5">
+            <button
+              onClick={() => setBossFinderOpen(!bossFinderOpen)}
+              className="flex w-full items-center justify-between px-4 py-3 text-left"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-base">🎯</span>
+                <div>
+                  <span className="text-sm font-bold text-violet-300">{t("raid.bossFinder")}</span>
+                  {!bossTeraType && (
+                    <span className="ml-2 text-xs text-gray-500">{t("raid.bossFinderSubtitle")}</span>
+                  )}
+                  {bossTeraType && (
+                    <span className="ml-2 text-xs text-violet-400">
+                      {bossPokemon ? `${bossPokemon.name} · ` : ""}{bossTeraType} Tera
+                      {bossStars ? ` · ${bossStars}★` : ""}
+                      {" "}· {bossRecommendations.length} builds
+                    </span>
+                  )}
+                </div>
+              </div>
+              <span className="text-xs text-gray-500">{bossFinderOpen ? "▲" : "▼"}</span>
+            </button>
+
+            {bossFinderOpen && (
+              <div className="border-t border-violet-500/20 px-4 pb-4 pt-3">
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {/* Boss Pokemon search */}
+                  <div>
+                    <div className="mb-1.5 text-[10px] font-bold uppercase text-gray-500">
+                      {locale === "pt" ? "Pokémon Boss (opcional)" : "Boss Pokémon (optional)"}
+                    </div>
+                    <SearchDropdown
+                      items={allPokemon}
+                      value={bossPokemon?.name || ""}
+                      onSelect={(p) => setBossPokemon(p)}
+                      renderItem={(p) => (
+                        <>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={p.sprite} alt={p.name} width={24} height={24} className="pixelated" />
+                          <span className="font-semibold text-gray-100">{p.name}</span>
+                          <span className="text-xs text-gray-500">#{p.nationalDex}</span>
+                        </>
+                      )}
+                      getLabel={(p) => p.name}
+                      placeholder={t("raid.searchBoss")}
+                      filterFn={pokemonFilter}
+                    />
+                    {bossPokemon && (
+                      <div className="mt-1.5 flex items-center gap-1.5">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={bossPokemon.sprite} alt={bossPokemon.name} width={28} height={28} className="pixelated" />
+                        <div className="flex flex-wrap gap-0.5">
+                          {bossPokemon.types.map((tp) => (
+                            <TypeBadge key={tp} type={tp as PokemonType} small />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Boss Tera Type */}
+                  <div>
+                    <div className="mb-1.5 text-[10px] font-bold uppercase text-gray-500">
+                      {t("raid.bossTeraType")}
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {TYPES.map((tp) => (
+                        <button
+                          key={tp}
+                          onClick={() => setBossTeraType(bossTeraType === tp ? null : tp)}
+                          className="rounded-full border px-2 py-0.5 text-[10px] font-bold text-white transition-all"
+                          style={{
+                            background: bossTeraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
+                            borderColor: bossTeraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.1)",
+                            opacity: bossTeraType === tp ? 1 : 0.5,
+                          }}
+                        >
+                          {tp}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Star level */}
+                  <div>
+                    <div className="mb-1.5 text-[10px] font-bold uppercase text-gray-500">
+                      {t("raid.starLevel")}
+                    </div>
+                    <div className="flex gap-1.5">
+                      {([5, 6, 7] as const).map((s) => (
+                        <button
+                          key={s}
+                          onClick={() => setBossStars(bossStars === s ? null : s)}
+                          className={`rounded-lg border px-3 py-1.5 text-sm font-bold transition-all ${
+                            bossStars === s
+                              ? "border-yellow-500/50 bg-yellow-500/15 text-yellow-300"
+                              : "border-white/10 bg-white/5 text-gray-400 hover:text-white"
+                          }`}
+                        >
+                          {s}★
+                        </button>
+                      ))}
+                    </div>
+                    {bossTeraType && (
+                      <button
+                        onClick={() => { setBossPokemon(null); setBossTeraType(null); setBossStars(null); }}
+                        className="mt-3 text-xs text-gray-500 underline hover:text-red-400"
+                      >
+                        {t("raid.clearBoss")}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Recommended builds section */}
+          {bossTeraType && (
+            <div className="mb-6">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="text-base">⭐</span>
+                <span className="text-sm font-bold text-yellow-300">{t("raid.recommended")}</span>
+                <span className="rounded-full bg-yellow-500/15 px-2 py-0.5 text-[10px] font-bold text-yellow-400">
+                  {t("raid.recommendedCount", { count: bossRecommendations.length })}
+                </span>
+                {bossTeraType && (
+                  <TypeBadge type={bossTeraType} small />
+                )}
+                {bossStars && (
+                  <span className="text-xs font-bold text-gray-400">{bossStars}★</span>
+                )}
+              </div>
+
+              {bossRecommendations.length === 0 ? (
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-gray-500">
+                  {t("raid.noBossRecommendations")}
+                </div>
+              ) : (
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {bossRecommendations.map(({ entry, seMovesForBoss }) => {
+                    const spriteNum = entry.spriteId ?? entry.nationalDex;
+                    const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
+                    const primaryBuild = entry.builds[0];
+                    const isSelected = selectedEntry?.name === entry.name && selectedEntry?.role === entry.role;
+                    return (
+                      <div key={`rec-${entry.name}-${entry.role}`} className="flex flex-col gap-1">
+                        <button
+                          onClick={() => setSelectedEntry(isSelected ? null : entry)}
+                          className={`group flex items-center gap-3 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+                            isSelected
+                              ? "border-yellow-500/50 bg-yellow-500/10"
+                              : "border-yellow-500/20 bg-yellow-500/5 hover:border-yellow-500/40"
+                          }`}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-sm font-bold text-gray-100">{entry.name}</span>
+                              {entry.tags.slice(0, 1).map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
+                                  style={{ background: TAG_COLORS[tag] + "CC" }}
+                                >
+                                  {locale === "pt" ? TAG_NAMES[tag].pt : TAG_NAMES[tag].en}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="mt-1 flex items-center gap-1.5">
+                              <TypeBadge type={primaryBuild.teraType as PokemonType} small />
+                              <span className="text-[10px] text-gray-500">{primaryBuild.nature} · {primaryBuild.ability}</span>
+                            </div>
+                            {seMovesForBoss.length > 0 && (
+                              <div className="mt-1 flex flex-wrap items-center gap-0.5">
+                                <span className="text-[9px] font-bold text-green-400">{t("raid.coverageLabel")}</span>
+                                {seMovesForBoss.map((mv) => {
+                                  const moveData = allMoves.find((m) => m.name.toLowerCase() === mv.toLowerCase());
+                                  return (
+                                    <span
+                                      key={mv}
+                                      className="rounded px-1 py-0.5 text-[9px] font-bold"
+                                      style={{
+                                        background: (TYPE_COLORS[moveData?.type as PokemonType] || "#888") + "33",
+                                        color: TYPE_COLORS[moveData?.type as PokemonType] || "#aaa",
+                                      }}
+                                    >
+                                      {mv} <span className="text-green-400">SE</span>
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        </button>
+
+                        {/* Build picker — same pattern as main tier list */}
+                        {isSelected && (
+                          <div className="rounded-xl border border-yellow-500/30 bg-gray-900/80 p-2">
+                            <div className="mb-1.5 px-1 text-[10px] font-semibold text-gray-500">
+                              {locale === "pt" ? "Selecione uma build:" : "Select a build:"}
+                            </div>
+                            {entry.builds.map((buildOption, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => loadTierBuild(entry, buildOption)}
+                                className="mb-1 w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-left transition-all hover:border-yellow-500/30 hover:bg-yellow-500/10 last:mb-0"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-semibold text-gray-200">{buildOption.name}</span>
+                                  <TypeBadge type={buildOption.teraType as PokemonType} small />
+                                </div>
+                                <div className="mt-0.5 text-[10px] text-gray-500">
+                                  {buildOption.nature} · {buildOption.ability} · {buildOption.item}
+                                </div>
+                                <div className="mt-0.5 text-[10px] text-gray-600">
+                                  {buildOption.moves.join(" · ")}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="mt-4 border-t border-white/5 pt-4">
+                <div className="mb-2 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                  {locale === "pt" ? "Guia Completo" : "Full Guide"}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Filters */}
           <div className="mb-4 flex flex-wrap items-center gap-3">
-            {/* Tier filter */}
+            {/* Tag filter */}
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-gray-500">Tier</span>
-              <div className="flex gap-0.5 rounded-lg border border-white/10 bg-white/5 p-0.5">
+              <span className="text-xs font-semibold text-gray-500">Tag</span>
+              <div className="flex flex-wrap gap-0.5 rounded-lg border border-white/10 bg-white/5 p-0.5">
                 <button
-                  onClick={() => setTierFilter("all")}
+                  onClick={() => setTagFilter("all")}
                   className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
-                    tierFilter === "all" ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
+                    tagFilter === "all" ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
                   }`}
                 >
                   {t("common.all")}
                 </button>
-                {TIERS.map((tier) => (
+                {ALL_TAGS.map((tag) => (
                   <button
-                    key={tier}
-                    onClick={() => setTierFilter(tierFilter === tier ? "all" : tier)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-black transition-all ${
-                      tierFilter === tier ? "text-white" : "text-gray-500 hover:text-gray-300"
+                    key={tag}
+                    onClick={() => setTagFilter(tagFilter === tag ? "all" : tag)}
+                    className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
+                      tagFilter === tag ? "text-white" : "text-gray-500 hover:text-gray-300"
                     }`}
-                    style={tierFilter === tier ? { background: TIER_COLORS[tier] + "33" } : undefined}
+                    style={tagFilter === tag ? { background: TAG_COLORS[tag] + "33" } : undefined}
+                    title={locale === "pt" ? TAG_LABELS[tag].pt : TAG_LABELS[tag].en}
                   >
-                    {tier}
+                    {locale === "pt" ? TAG_NAMES[tag].pt : TAG_NAMES[tag].en}
                   </button>
                 ))}
               </div>
@@ -420,27 +750,23 @@ export function RaidBuildMaker() {
             </div>
           </div>
 
-          {/* Tier groups */}
-          {TIERS.map((tier) => {
-            const entriesInTier = filteredTierList.filter((e) => e.tier === tier);
-            if (entriesInTier.length === 0) return null;
+          {/* Role groups */}
+          {ROLES.map((role) => {
+            const entriesInRole = filteredTierList.filter((e) => e.role === role);
+            if (entriesInRole.length === 0) return null;
 
             return (
-              <div key={tier} className="mb-6">
+              <div key={role} className="mb-6">
                 <div className="mb-3 flex items-center gap-2">
-                  <span
-                    className="rounded-lg px-3 py-1 text-sm font-black text-white"
-                    style={{ background: TIER_COLORS[tier] }}
-                  >
-                    {tier}
+                  <span className="text-lg">{ROLE_LABELS[role].emoji}</span>
+                  <span className="text-sm font-bold text-gray-200">
+                    {locale === "pt" ? ROLE_LABELS[role].pt : ROLE_LABELS[role].en}
                   </span>
-                  <span className="text-xs text-gray-500">
-                    {locale === "pt" ? TIER_DESCRIPTIONS[tier].pt : TIER_DESCRIPTIONS[tier].en}
-                  </span>
+                  <span className="text-xs text-gray-600">({entriesInRole.length})</span>
                 </div>
 
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {entriesInTier.map((entry) => {
+                  {entriesInRole.map((entry) => {
                     const spriteNum = entry.spriteId ?? entry.nationalDex;
                     const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
                     const primaryBuild = entry.builds[0];
@@ -458,21 +784,22 @@ export function RaidBuildMaker() {
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5">
                               <span className="text-sm font-bold text-gray-100">{entry.name}</span>
-                              <span
-                                className="rounded px-1.5 py-0.5 text-[10px] font-black text-white"
-                                style={{ background: TIER_COLORS[entry.tier] + "AA" }}
-                              >
-                                {entry.tier}
-                              </span>
+                              {entry.tags.map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
+                                  style={{ background: TAG_COLORS[tag] + "CC" }}
+                                  title={locale === "pt" ? TAG_LABELS[tag].pt : TAG_LABELS[tag].en}
+                                >
+                                  {locale === "pt" ? TAG_NAMES[tag].pt : TAG_NAMES[tag].en}
+                                </span>
+                              ))}
                             </div>
                             <div className="mt-1 flex items-center gap-1.5">
-                              <span className="text-[10px] text-gray-500">
-                                {ROLE_LABELS[entry.role].emoji} {locale === "pt" ? ROLE_LABELS[entry.role].pt : ROLE_LABELS[entry.role].en}
-                              </span>
-                              <span className="text-gray-700">·</span>
                               <TypeBadge type={primaryBuild.teraType as PokemonType} small />
+                              <span className="text-[10px] text-gray-500">{primaryBuild.nature} · {primaryBuild.ability}</span>
                             </div>
                             <div className="mt-1 flex items-center justify-between text-[10px] text-gray-600">
                               <span>{primaryBuild.item}</span>
@@ -617,11 +944,29 @@ export function RaidBuildMaker() {
               {build.pokemon && (
                 <div className="mt-2 flex items-center gap-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={build.pokemon.sprite} alt={build.pokemon.name} width={40} height={40} className="pixelated" />
-                  <div className="flex gap-1">
-                    {build.pokemon.types.map((tp) => (
-                      <TypeBadge key={tp} type={tp as PokemonType} small />
-                    ))}
+                  <img src={build.pokemon.artwork} alt={build.pokemon.name} width={48} height={48} className="object-contain" />
+                  <div>
+                    <div className="flex flex-wrap gap-1 mb-1">
+                      {build.pokemon.types.map((tp) => (
+                        <TypeBadge key={tp} type={tp as PokemonType} small />
+                      ))}
+                      {build.pokemon.isLegendary && (
+                        <span className="rounded-full bg-yellow-500/15 px-1.5 py-0.5 text-[9px] font-bold text-yellow-300">★ Legendary</span>
+                      )}
+                      {build.pokemon.isMythical && (
+                        <span className="rounded-full bg-pink-500/15 px-1.5 py-0.5 text-[9px] font-bold text-pink-300">✦ Mythical</span>
+                      )}
+                    </div>
+                    <div className="text-[10px] text-gray-500">
+                      #{build.pokemon.nationalDex}
+                      {build.pokemon.height ? ` · ${(build.pokemon.height / 10).toFixed(1)}m` : ""}
+                      {build.pokemon.weight ? ` · ${(build.pokemon.weight / 10).toFixed(1)}kg` : ""}
+                    </div>
+                    {build.pokemon.flavorText && (
+                      <p className="mt-1 text-[10px] italic leading-relaxed text-gray-500 line-clamp-2">
+                        {build.pokemon.flavorText}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -786,8 +1131,8 @@ export function RaidBuildMaker() {
             <div className="mb-3 text-xs font-bold text-gray-400">{t("raid.moves")}</div>
             <div className="grid gap-2 sm:grid-cols-2">
               {build.moves.map((move, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <span className="w-4 text-center text-xs font-bold text-gray-500">
+                <div key={i} className="flex items-start gap-2">
+                  <span className="mt-2 w-4 text-center text-xs font-bold text-gray-500">
                     {i + 1}
                   </span>
                   <div className="flex-1">
@@ -800,21 +1145,111 @@ export function RaidBuildMaker() {
                         return { ...prev, moves };
                       })}
                       renderItem={(m) => (
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="h-2 w-2 rounded-full"
-                            style={{ background: TYPE_COLORS[m.type as PokemonType] || "#888" }}
-                          />
-                          <span className="font-semibold text-gray-100">{m.name}</span>
-                          <span className="text-[10px] text-gray-500">
-                            {m.category} {m.power ? `· ${m.power}bp` : ""}
-                          </span>
+                        <div className="flex w-full flex-col items-start">
+                          <div className="flex w-full items-center gap-2">
+                            <span
+                              className="h-2 w-2 shrink-0 rounded-full"
+                              style={{ background: TYPE_COLORS[m.type as PokemonType] || "#888" }}
+                            />
+                            <span className="flex-1 truncate font-semibold text-gray-100">{m.name}</span>
+                            <div className="flex shrink-0 items-center gap-1">
+                              {m.tm !== null && (
+                                <span className="rounded bg-yellow-500/20 px-1 py-0.5 text-[9px] font-bold text-yellow-400">
+                                  TM{String(m.tm).padStart(3, "0")}
+                                </span>
+                              )}
+                              <span className="text-[10px] text-gray-500">
+                                {m.category} {m.power ? `· ${m.power}bp` : ""}
+                              </span>
+                            </div>
+                          </div>
+                          {m.effect && (
+                            <span className="mt-1 w-full truncate text-[10px] text-gray-500">
+                              {m.effect}
+                            </span>
+                          )}
                         </div>
                       )}
                       getLabel={(m) => m.name}
                       placeholder={`Move ${i + 1}...`}
                       filterFn={moveFilter}
                     />
+                    {move && (() => {
+                      const selectedMove = allMoves.find((m) => m.name === move);
+                      const moveKey = move.toLowerCase().replace(/ /g, "-");
+                      const meta = allMoveMeta.find((m) => m.name === moveKey);
+                      if (!selectedMove) return null;
+                      return (
+                        <div className="mt-1.5 space-y-1.5">
+                          {selectedMove.effect && (
+                            <div className="flex items-start gap-1.5 rounded bg-black/20 p-2">
+                              <span className="text-[10px] text-blue-400/80">ⓘ</span>
+                              <div className="flex-1 text-[10px] leading-relaxed text-blue-400/80">
+                                {selectedMove.effect}
+                              </div>
+                            </div>
+                          )}
+                          {meta && (() => {
+                            const tags: { label: string; color: string }[] = [];
+                            // TM badge
+                            if (selectedMove.tm !== null) tags.push({ label: `TM${String(selectedMove.tm).padStart(3, "0")}`, color: "#EAB308" });
+                            // Priority
+                            if (selectedMove.priority > 0) tags.push({ label: `Priority +${selectedMove.priority}`, color: "#06B6D4" });
+                            if (selectedMove.priority < 0) tags.push({ label: `Priority ${selectedMove.priority}`, color: "#6B7280" });
+                            // Target
+                            const TARGET_LABELS: Record<string, string> = {
+                              "all-opponents": "Hits all foes",
+                              "all-other-pokemon": "Hits all others",
+                              "entire-field": "Affects field",
+                              "users-field": "User's field",
+                              "opponents-field": "Foe's field",
+                              "random-opponent": "Random foe",
+                              "all-allies": "Hits all allies",
+                              "ally": "Hits ally",
+                              "all-pokemon": "Hits everyone",
+                              "user-and-allies": "User + allies",
+                            };
+                            if (TARGET_LABELS[selectedMove.target]) {
+                              tags.push({ label: TARGET_LABELS[selectedMove.target], color: "#818CF8" });
+                            }
+                            // Move meta
+                            if (meta.meta) {
+                              if (meta.meta.drain > 0) tags.push({ label: `Drain ${meta.meta.drain}%`, color: "#10B981" });
+                              if (meta.meta.drain < 0) tags.push({ label: `Recoil ${Math.abs(meta.meta.drain)}%`, color: "#EF4444" });
+                              if (meta.meta.healing > 0) tags.push({ label: `Heal ${meta.meta.healing}%`, color: "#34D399" });
+                              if (meta.meta.critRate > 0) tags.push({ label: `Crit +${meta.meta.critRate}`, color: "#F59E0B" });
+                              if (meta.meta.flinchChance > 0) tags.push({ label: `Flinch ${meta.meta.flinchChance}%`, color: "#8B5CF6" });
+                              if (meta.meta.ailment !== "none" && meta.meta.ailmentChance > 0) tags.push({ label: `${meta.meta.ailment} ${meta.meta.ailmentChance}%`, color: "#EC4899" });
+                              if (meta.meta.ailment !== "none" && meta.meta.ailmentChance === 0 && meta.meta.category !== "damage") tags.push({ label: meta.meta.ailment, color: "#EC4899" });
+                              if (meta.meta.minHits && meta.meta.maxHits) {
+                                const hitsLabel = meta.meta.minHits === meta.meta.maxHits
+                                  ? `${meta.meta.minHits} hits`
+                                  : `${meta.meta.minHits}–${meta.meta.maxHits} hits`;
+                                tags.push({ label: hitsLabel, color: "#60A5FA" });
+                              }
+                            }
+                            for (const sc of (meta.statChanges ?? [])) {
+                              const sign = sc.change > 0 ? "+" : "";
+                              tags.push({ label: `${sc.stat.toUpperCase()} ${sign}${sc.change}`, color: sc.change > 0 ? "#A3E635" : "#F87171" });
+                            }
+                            if (tags.length === 0) return null;
+                            return (
+                              <div className="flex flex-wrap gap-1">
+                                {tags.map((tag, ti) => (
+                                  <span
+                                    key={ti}
+                                    className="rounded px-1.5 py-0.5 text-[9px] font-bold text-white/90"
+                                    style={{ background: tag.color + "33", border: `1px solid ${tag.color}55`, color: tag.color }}
+                                  >
+                                    {tag.label}
+                                  </span>
+                                ))}
+                              </div>
+                            );
+                          })()}
+                        </div>
+                      );
+                    })()}
                   </div>
                   {move && (
                     <button
@@ -823,7 +1258,7 @@ export function RaidBuildMaker() {
                         moves[i] = null;
                         return { ...prev, moves };
                       })}
-                      className="text-xs text-gray-500 hover:text-red-400"
+                      className="mt-2 text-xs text-gray-500 hover:text-red-400"
                     >
                       ✕
                     </button>
@@ -974,6 +1409,15 @@ export function RaidBuildMaker() {
           )}
         </div>
       )}
+
+      <ToolDisclaimer
+        toolName={t("nav.raidBuilder")}
+        note={t("raid.disclaimerNote")}
+        sources={[
+          { label: "Serebii.net (Tera Raids)", url: "https://www.serebii.net/scarletviolet/teraraidbattles.shtml" },
+          { label: "PokéAPI", url: "https://pokeapi.co/docs/v2#info" },
+        ]}
+      />
     </div>
   );
 }

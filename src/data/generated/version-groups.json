@@ -1,0 +1,654 @@
+[
+  {
+    "id": 1,
+    "name": "red-blue",
+    "order": 3,
+    "generation": "generation-i",
+    "moveLearnMethods": [
+      "Level Up",
+      "Machine",
+      "Stadium Surfing Pikachu"
+    ],
+    "pokedexes": [
+      "Kanto"
+    ],
+    "regions": [
+      "Kanto"
+    ],
+    "versions": [
+      "Red",
+      "Blue"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "yellow",
+    "order": 4,
+    "generation": "generation-i",
+    "moveLearnMethods": [
+      "Level Up",
+      "Machine",
+      "Stadium Surfing Pikachu"
+    ],
+    "pokedexes": [
+      "Kanto"
+    ],
+    "regions": [
+      "Kanto"
+    ],
+    "versions": [
+      "Yellow"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "gold-silver",
+    "order": 5,
+    "generation": "generation-ii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Machine"
+    ],
+    "pokedexes": [
+      "Original Johto"
+    ],
+    "regions": [
+      "Kanto",
+      "Johto"
+    ],
+    "versions": [
+      "Gold",
+      "Silver"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "crystal",
+    "order": 6,
+    "generation": "generation-ii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine"
+    ],
+    "pokedexes": [
+      "Original Johto"
+    ],
+    "regions": [
+      "Kanto",
+      "Johto"
+    ],
+    "versions": [
+      "Crystal"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "ruby-sapphire",
+    "order": 7,
+    "generation": "generation-iii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Machine"
+    ],
+    "pokedexes": [
+      "Hoenn"
+    ],
+    "regions": [
+      "Hoenn"
+    ],
+    "versions": [
+      "Ruby",
+      "Sapphire"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "emerald",
+    "order": 8,
+    "generation": "generation-iii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg"
+    ],
+    "pokedexes": [
+      "Hoenn"
+    ],
+    "regions": [
+      "Hoenn"
+    ],
+    "versions": [
+      "Emerald"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "firered-leafgreen",
+    "order": 11,
+    "generation": "generation-iii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine"
+    ],
+    "pokedexes": [
+      "Kanto"
+    ],
+    "regions": [
+      "Kanto"
+    ],
+    "versions": [
+      "Firered",
+      "Leafgreen"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "diamond-pearl",
+    "order": 12,
+    "generation": "generation-iv",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg"
+    ],
+    "pokedexes": [
+      "Original Sinnoh"
+    ],
+    "regions": [
+      "Sinnoh"
+    ],
+    "versions": [
+      "Diamond",
+      "Pearl"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "platinum",
+    "order": 13,
+    "generation": "generation-iv",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg",
+      "Form Change"
+    ],
+    "pokedexes": [
+      "Extended Sinnoh"
+    ],
+    "regions": [
+      "Sinnoh"
+    ],
+    "versions": [
+      "Platinum"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "heartgold-soulsilver",
+    "order": 14,
+    "generation": "generation-iv",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg",
+      "Form Change"
+    ],
+    "pokedexes": [
+      "Updated Johto"
+    ],
+    "regions": [
+      "Kanto",
+      "Johto"
+    ],
+    "versions": [
+      "Heartgold",
+      "Soulsilver"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "black-white",
+    "order": 15,
+    "generation": "generation-v",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg",
+      "Form Change"
+    ],
+    "pokedexes": [
+      "Original Unova"
+    ],
+    "regions": [
+      "Unova"
+    ],
+    "versions": [
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "colosseum",
+    "order": 9,
+    "generation": "generation-iii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Machine"
+    ],
+    "pokedexes": [],
+    "regions": [],
+    "versions": [
+      "Colosseum"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "xd",
+    "order": 10,
+    "generation": "generation-iii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Tutor",
+      "Machine"
+    ],
+    "pokedexes": [],
+    "regions": [],
+    "versions": [
+      "Xd"
+    ]
+  },
+  {
+    "id": 14,
+    "name": "black-2-white-2",
+    "order": 16,
+    "generation": "generation-v",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg",
+      "Form Change"
+    ],
+    "pokedexes": [
+      "Updated Unova"
+    ],
+    "regions": [
+      "Unova"
+    ],
+    "versions": [
+      "Black 2",
+      "White 2"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "x-y",
+    "order": 17,
+    "generation": "generation-vi",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg",
+      "Form Change"
+    ],
+    "pokedexes": [
+      "Kalos Central",
+      "Kalos Coastal",
+      "Kalos Mountain"
+    ],
+    "regions": [
+      "Kalos"
+    ],
+    "versions": [
+      "X",
+      "Y"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "omega-ruby-alpha-sapphire",
+    "order": 18,
+    "generation": "generation-vi",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg",
+      "Form Change"
+    ],
+    "pokedexes": [
+      "Updated Hoenn"
+    ],
+    "regions": [
+      "Hoenn"
+    ],
+    "versions": [
+      "Omega Ruby",
+      "Alpha Sapphire"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "sun-moon",
+    "order": 19,
+    "generation": "generation-vii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg",
+      "Form Change",
+      "Zygarde Cube"
+    ],
+    "pokedexes": [
+      "Original Alola",
+      "Original Melemele",
+      "Original Akala",
+      "Original Ulaula",
+      "Original Poni"
+    ],
+    "regions": [
+      "Alola"
+    ],
+    "versions": [
+      "Sun",
+      "Moon"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "ultra-sun-ultra-moon",
+    "order": 20,
+    "generation": "generation-vii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Light Ball Egg",
+      "Form Change",
+      "Zygarde Cube"
+    ],
+    "pokedexes": [
+      "Updated Alola",
+      "Updated Melemele",
+      "Updated Akala",
+      "Updated Ulaula",
+      "Updated Poni"
+    ],
+    "regions": [
+      "Alola"
+    ],
+    "versions": [
+      "Ultra Sun",
+      "Ultra Moon"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "lets-go-pikachu-lets-go-eevee",
+    "order": 21,
+    "generation": "generation-vii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Tutor",
+      "Machine"
+    ],
+    "pokedexes": [
+      "Letsgo Kanto"
+    ],
+    "regions": [
+      "Kanto"
+    ],
+    "versions": [
+      "Lets Go Pikachu",
+      "Lets Go Eevee"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "sword-shield",
+    "order": 22,
+    "generation": "generation-viii",
+    "moveLearnMethods": [
+      "Level Up",
+      "Egg",
+      "Tutor",
+      "Machine",
+      "Form Change"
+    ],
+    "pokedexes": [
+      "Galar",
+      "Isle Of Armor",
+      "Crown Tundra"
+    ],
+    "regions": [
+      "Galar"
+    ],
+    "versions": [
+      "Sword",
+      "Shield"
+    ]
+  },
+  {
+    "id": 21,
+    "name": "the-isle-of-armor",
+    "order": 23,
+    "generation": "generation-viii",
+    "moveLearnMethods": [],
+    "pokedexes": [
+      "Isle Of Armor"
+    ],
+    "regions": [
+      "Galar"
+    ],
+    "versions": [
+      "The Isle Of Armor"
+    ]
+  },
+  {
+    "id": 22,
+    "name": "the-crown-tundra",
+    "order": 24,
+    "generation": "generation-viii",
+    "moveLearnMethods": [],
+    "pokedexes": [
+      "Crown Tundra"
+    ],
+    "regions": [
+      "Galar"
+    ],
+    "versions": [
+      "The Crown Tundra"
+    ]
+  },
+  {
+    "id": 23,
+    "name": "brilliant-diamond-shining-pearl",
+    "order": 25,
+    "generation": "generation-viii",
+    "moveLearnMethods": [],
+    "pokedexes": [
+      "Original Sinnoh"
+    ],
+    "regions": [
+      "Sinnoh"
+    ],
+    "versions": [
+      "Brilliant Diamond",
+      "Shining Pearl"
+    ]
+  },
+  {
+    "id": 24,
+    "name": "legends-arceus",
+    "order": 26,
+    "generation": "generation-viii",
+    "moveLearnMethods": [],
+    "pokedexes": [
+      "Hisui"
+    ],
+    "regions": [
+      "Hisui"
+    ],
+    "versions": [
+      "Legends Arceus"
+    ]
+  },
+  {
+    "id": 25,
+    "name": "scarlet-violet",
+    "order": 27,
+    "generation": "generation-ix",
+    "moveLearnMethods": [],
+    "pokedexes": [
+      "Paldea",
+      "Kitakami",
+      "Blueberry"
+    ],
+    "regions": [
+      "Paldea"
+    ],
+    "versions": [
+      "Scarlet",
+      "Violet"
+    ]
+  },
+  {
+    "id": 26,
+    "name": "the-teal-mask",
+    "order": 28,
+    "generation": "generation-ix",
+    "moveLearnMethods": [],
+    "pokedexes": [
+      "Kitakami"
+    ],
+    "regions": [
+      "Paldea"
+    ],
+    "versions": [
+      "The Teal Mask"
+    ]
+  },
+  {
+    "id": 27,
+    "name": "the-indigo-disk",
+    "order": 29,
+    "generation": "generation-ix",
+    "moveLearnMethods": [],
+    "pokedexes": [
+      "Blueberry"
+    ],
+    "regions": [
+      "Paldea"
+    ],
+    "versions": [
+      "The Indigo Disk"
+    ]
+  },
+  {
+    "id": 28,
+    "name": "red-green-japan",
+    "order": 1,
+    "generation": "generation-i",
+    "moveLearnMethods": [
+      "Level Up",
+      "Machine",
+      "Stadium Surfing Pikachu"
+    ],
+    "pokedexes": [
+      "Kanto"
+    ],
+    "regions": [
+      "Kanto"
+    ],
+    "versions": [
+      "Red Japan",
+      "Green Japan"
+    ]
+  },
+  {
+    "id": 29,
+    "name": "blue-japan",
+    "order": 2,
+    "generation": "generation-i",
+    "moveLearnMethods": [
+      "Level Up",
+      "Machine",
+      "Stadium Surfing Pikachu"
+    ],
+    "pokedexes": [
+      "Kanto"
+    ],
+    "regions": [
+      "Kanto"
+    ],
+    "versions": [
+      "Blue Japan"
+    ]
+  },
+  {
+    "id": 30,
+    "name": "legends-za",
+    "order": 30,
+    "generation": "generation-ix",
+    "moveLearnMethods": [],
+    "pokedexes": [
+      "Lumiose City",
+      "Hyperspace"
+    ],
+    "regions": [],
+    "versions": [
+      "Legends Za"
+    ]
+  },
+  {
+    "id": 31,
+    "name": "mega-dimension",
+    "order": 31,
+    "generation": "generation-ix",
+    "moveLearnMethods": [],
+    "pokedexes": [
+      "Hyperspace"
+    ],
+    "regions": [],
+    "versions": [
+      "Mega Dimension"
+    ]
+  },
+  {
+    "id": 32,
+    "name": "champions",
+    "order": 32,
+    "generation": "generation-ix",
+    "moveLearnMethods": [],
+    "pokedexes": [],
+    "regions": [],
+    "versions": [
+      "Champions"
+    ]
+  }
+]

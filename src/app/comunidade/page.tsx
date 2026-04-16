@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useI18n } from "@/i18n";
+import type { YouTubeVideo } from "@/app/api/youtube/route";
 
 function YouTubeIcon() {
   return (
@@ -19,8 +21,45 @@ function DiscordIcon() {
   );
 }
 
+function formatRelativeDate(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime();
+  const days = Math.floor(diff / 86_400_000);
+  if (days === 0) return "hoje";
+  if (days === 1) return "ontem";
+  if (days < 7) return `${days} dias atrás`;
+  if (days < 30) return `${Math.floor(days / 7)} sem. atrás`;
+  if (days < 365) return `${Math.floor(days / 30)} meses atrás`;
+  return `${Math.floor(days / 365)} anos atrás`;
+}
+
+function VideoSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5 animate-pulse">
+      <div className="aspect-video bg-white/5" />
+      <div className="p-3 space-y-2">
+        <div className="h-3 bg-white/10 rounded w-3/4" />
+        <div className="h-3 bg-white/10 rounded w-1/2" />
+      </div>
+    </div>
+  );
+}
+
 export default function ComunidadePage() {
   const { t } = useI18n();
+  const [videos, setVideos] = useState<YouTubeVideo[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [configured, setConfigured] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/youtube?maxResults=8")
+      .then((r) => r.json())
+      .then((data) => {
+        setVideos(data.videos ?? []);
+        setConfigured(data.configured ?? false);
+      })
+      .catch(() => setVideos([]))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
@@ -92,21 +131,89 @@ export default function ComunidadePage() {
         </div>
       </div>
 
-      {/* Vídeos em destaque — placeholder */}
+      {/* Vídeos */}
       <div>
         <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-gray-500">
           {t("comunidade.videosTitle")}
         </h3>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="flex aspect-video items-center justify-center rounded-xl border border-dashed border-white/10 bg-white/5 text-sm text-gray-600"
+
+        {loading && (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <VideoSkeleton key={i} />
+            ))}
+          </div>
+        )}
+
+        {!loading && !configured && (
+          <div className="rounded-xl border border-dashed border-white/10 bg-white/5 p-8 text-center text-sm text-gray-500">
+            Configure <code className="text-gray-400">YOUTUBE_API_KEY</code> e{" "}
+            <code className="text-gray-400">YOUTUBE_CHANNEL_ID</code> no{" "}
+            <code className="text-gray-400">.env.local</code> para exibir vídeos.
+          </div>
+        )}
+
+        {!loading && configured && videos.length === 0 && (
+          <div className="rounded-xl border border-dashed border-white/10 bg-white/5 p-8 text-center text-sm text-gray-500">
+            Nenhum vídeo encontrado.
+          </div>
+        )}
+
+        {!loading && videos.length > 0 && (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {videos.map((video) => (
+              <a
+                key={video.id}
+                href={video.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-colors hover:border-red-500/40 hover:bg-white/10"
+              >
+                {/* Thumbnail */}
+                <div className="relative aspect-video overflow-hidden bg-black">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  {/* Play overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-600/90 text-white shadow-lg">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Info */}
+                <div className="p-3">
+                  <p className="line-clamp-2 text-sm font-semibold text-gray-100 group-hover:text-white">
+                    {video.title}
+                  </p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    {formatRelativeDate(video.publishedAt)}
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+
+        {!loading && videos.length > 0 && (
+          <div className="mt-4 text-center">
+            <a
+              href="https://www.youtube.com/@JJBit-games"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-gray-300 transition-colors hover:border-white/20 hover:text-white"
             >
-              {t("comunidade.videoPlaceholder")}
-            </div>
-          ))}
-        </div>
+              <YouTubeIcon />
+              {t("comunidade.viewAllVideos")}
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );

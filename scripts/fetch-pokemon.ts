@@ -3,7 +3,10 @@
  * Outputs: src/data/generated/pokemon.json
  *
  * Data per Pokémon: dexNumber, nationalDex, name, types, baseStats, evYield,
- *   abilities, sprite, artwork, pokedex, height, weight, heldItems
+ *   abilities, sprite, artwork, pokedex, height, weight, heldItems,
+ *   isLegendary, isMythical, captureRate, genderRate, eggGroups, habitat,
+ *   generation, color, growthRate, baseHappiness, flavorText,
+ *   evolutionChainId, baseExperience, formVariants
  */
 
 import { fetchApi, fetchBatch, writeJsonFile } from "./api-helper";
@@ -41,14 +44,15 @@ const EXTRA_RAID_POKEMON: {
   { name: "enamorus",  displayName: "Enamorus",   nationalDex: 905 },
   { name: "perrserker",displayName: "Perrserker", nationalDex: 863 },
   // Alternate / regional forms (fetched directly by form name)
-  { name: "samurott-hisui",  displayName: "Hisuian Samurott",    nationalDex: 503, isForm: true },
-  { name: "typhlosion-hisui",displayName: "Hisuian Typhlosion",  nationalDex: 157, isForm: true },
-  { name: "zapdos-galar",    displayName: "Galarian Zapdos",     nationalDex: 145, isForm: true },
-  { name: "moltres-galar",   displayName: "Galarian Moltres",    nationalDex: 146, isForm: true },
-  { name: "ninetales-alola", displayName: "Alolan Ninetales",    nationalDex: 38,  isForm: true },
-  { name: "calyrex-ice",     displayName: "Calyrex (Ice Rider)", nationalDex: 898, isForm: true },
-  { name: "calyrex-shadow",  displayName: "Calyrex-Shadow",      nationalDex: 898, isForm: true },
-  { name: "mimikyu",         displayName: "Mimikyu",             nationalDex: 778, isForm: false },
+  { name: "samurott-hisui",        displayName: "Hisuian Samurott",    nationalDex: 503, isForm: true },
+  { name: "typhlosion-hisui",      displayName: "Hisuian Typhlosion",  nationalDex: 157, isForm: true },
+  { name: "zapdos-galar",          displayName: "Galarian Zapdos",     nationalDex: 145, isForm: true },
+  { name: "moltres-galar",         displayName: "Galarian Moltres",    nationalDex: 146, isForm: true },
+  { name: "ninetales-alola",       displayName: "Alolan Ninetales",    nationalDex: 38,  isForm: true },
+  { name: "calyrex-ice",           displayName: "Calyrex (Ice Rider)", nationalDex: 898, isForm: true },
+  { name: "calyrex-shadow",        displayName: "Calyrex-Shadow",      nationalDex: 898, isForm: true },
+  { name: "urshifu-rapid-strike",  displayName: "Urshifu Rapid Strike",nationalDex: 892, isForm: true },
+  { name: "mimikyu",               displayName: "Mimikyu",             nationalDex: 778, isForm: false },
 ];
 
 interface PokedexResponse {
@@ -60,6 +64,22 @@ interface PokedexResponse {
 
 interface SpeciesResponse {
   id: number;
+  is_legendary: boolean;
+  is_mythical: boolean;
+  capture_rate: number;
+  gender_rate: number;
+  egg_groups: { name: string }[];
+  habitat: { name: string } | null;
+  generation: { name: string };
+  color: { name: string };
+  growth_rate: { name: string };
+  base_happiness: number | null;
+  flavor_text_entries: {
+    flavor_text: string;
+    language: { name: string };
+    version: { name: string };
+  }[];
+  evolution_chain: { url: string };
   varieties: { is_default: boolean; pokemon: { name: string; url: string } }[];
 }
 
@@ -68,6 +88,7 @@ interface PokemonResponse {
   name: string;
   height: number;
   weight: number;
+  base_experience: number | null;
   types: { slot: number; type: { name: string } }[];
   stats: { base_stat: number; effort: number; stat: { name: string } }[];
   abilities: { ability: { name: string }; is_hidden: boolean; slot: number }[];
@@ -89,6 +110,17 @@ const STAT_NAME_MAP: Record<string, string> = {
   speed: "Spe",
 };
 
+// Preferred game versions for flavor text (newest first)
+const FLAVOR_TEXT_VERSION_PRIORITY = [
+  "scarlet", "violet",
+  "sword", "shield",
+  "sun", "moon",
+  "ultra-sun", "ultra-moon",
+  "x", "y",
+  "black-2", "white-2",
+  "black", "white",
+];
+
 interface OutputPokemon {
   dexNumber: number;
   nationalDex: number;
@@ -103,6 +135,80 @@ interface OutputPokemon {
   height: number;
   weight: number;
   heldItems: string[];
+  // Species data (pre-cached from pokemon-species endpoint)
+  isLegendary: boolean;
+  isMythical: boolean;
+  captureRate: number;
+  genderRate: number;
+  eggGroups: string[];
+  habitat: string | null;
+  generation: string;
+  color: string;
+  growthRate: string;
+  baseHappiness: number;
+  flavorText: string;
+  evolutionChainId: number;
+  // Pokemon data
+  baseExperience: number | null;
+  // Alternate forms (sprites use pokemonId)
+  formVariants: { name: string; id: number }[];
+}
+
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function formatName(name: string): string {
+  return name
+    .split("-")
+    .map((part) => capitalize(part))
+    .join(" ");
+}
+
+function extractChainId(url: string): number {
+  const m = url.match(/\/(\d+)\/?$/);
+  return m ? parseInt(m[1]) : 0;
+}
+
+function getBestFlavorText(entries: SpeciesResponse["flavor_text_entries"]): string {
+  const en = entries.filter((e) => e.language.name === "en");
+  for (const version of FLAVOR_TEXT_VERSION_PRIORITY) {
+    const entry = en.find((e) => e.version.name === version);
+    if (entry) {
+      return entry.flavor_text
+        .replace(/\f/g, " ")
+        .replace(/\u00ad/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+  }
+  return en[0]?.flavor_text
+    .replace(/\f/g, " ")
+    .replace(/\u00ad/g, "")
+    .replace(/\s+/g, " ")
+    .trim() ?? "";
+}
+
+/** Fetch IDs for non-default form varieties (up to 8 forms). */
+async function fetchFormVariants(
+  varieties: SpeciesResponse["varieties"]
+): Promise<{ name: string; id: number }[]> {
+  const nonDefault = varieties.filter((v) => !v.is_default).slice(0, 8);
+  const results: { name: string; id: number }[] = [];
+  for (const v of nonDefault) {
+    try {
+      const pokemon = await fetchApi<PokemonResponse>(v.pokemon.url);
+      const displayName = v.pokemon.name
+        .split("-")
+        .slice(1)
+        .map(capitalize)
+        .join(" ") || v.pokemon.name;
+      results.push({ name: displayName, id: pokemon.id });
+    } catch {
+      // skip if form fetch fails
+    }
+  }
+  return results;
 }
 
 async function fetchPokedex(id: number): Promise<PokedexResponse> {
@@ -118,6 +224,14 @@ async function fetchPokemonByForm(
 ): Promise<OutputPokemon | null> {
   try {
     const pokemon = await fetchApi<PokemonResponse>(`/pokemon/${formName}/`);
+
+    // Also fetch species data using the nationalDex
+    let speciesData: SpeciesResponse | null = null;
+    try {
+      speciesData = await fetchApi<SpeciesResponse>(`/pokemon-species/${nationalDex}/`);
+    } catch {
+      // species might not be available for all forms
+    }
 
     const baseStats: Record<string, number> = {};
     const evYield: { stat: string; amount: number }[] = [];
@@ -151,6 +265,21 @@ async function fetchPokemonByForm(
       height: pokemon.height,
       weight: pokemon.weight,
       heldItems: pokemon.held_items.map((h) => formatName(h.item.name)),
+      // Species data (from species endpoint if available)
+      isLegendary: speciesData?.is_legendary ?? false,
+      isMythical: speciesData?.is_mythical ?? false,
+      captureRate: speciesData?.capture_rate ?? 0,
+      genderRate: speciesData?.gender_rate ?? -1,
+      eggGroups: speciesData?.egg_groups.map((eg) => capitalize(eg.name)) ?? [],
+      habitat: speciesData?.habitat?.name ?? null,
+      generation: speciesData?.generation.name.replace("generation-", "").toUpperCase() ?? "",
+      color: speciesData?.color.name ?? "",
+      growthRate: speciesData?.growth_rate.name ?? "",
+      baseHappiness: speciesData?.base_happiness ?? 0,
+      flavorText: speciesData ? getBestFlavorText(speciesData.flavor_text_entries) : "",
+      evolutionChainId: speciesData ? extractChainId(speciesData.evolution_chain.url) : 0,
+      baseExperience: pokemon.base_experience,
+      formVariants: speciesData ? await fetchFormVariants(speciesData.varieties) : [],
     };
   } catch (err) {
     console.error(`\n  ⚠ Failed to fetch form ${formName}: ${err}`);
@@ -203,22 +332,26 @@ async function fetchPokemonData(
       height: pokemon.height,
       weight: pokemon.weight,
       heldItems: pokemon.held_items.map((h) => formatName(h.item.name)),
+      // Species data
+      isLegendary: species.is_legendary,
+      isMythical: species.is_mythical,
+      captureRate: species.capture_rate,
+      genderRate: species.gender_rate,
+      eggGroups: species.egg_groups.map((eg) => capitalize(eg.name)),
+      habitat: species.habitat?.name ?? null,
+      generation: species.generation.name.replace("generation-", "").toUpperCase(),
+      color: species.color.name,
+      growthRate: species.growth_rate.name,
+      baseHappiness: species.base_happiness ?? 0,
+      flavorText: getBestFlavorText(species.flavor_text_entries),
+      evolutionChainId: extractChainId(species.evolution_chain.url),
+      baseExperience: pokemon.base_experience,
+      formVariants: await fetchFormVariants(species.varieties),
     };
   } catch (err) {
     console.error(`\n  ⚠ Failed to fetch ${speciesName}: ${err}`);
     return null;
   }
-}
-
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-function formatName(name: string): string {
-  return name
-    .split("-")
-    .map((part) => capitalize(part))
-    .join(" ");
 }
 
 async function main() {
@@ -276,12 +409,19 @@ async function main() {
     }
   }
 
-  allPokemon.sort((a, b) => a.nationalDex - b.nationalDex);
+  // Deduplicate by name (forms share nationalDex but are distinct entries)
+  const seenNames = new Set<string>();
+  const uniquePokemon = allPokemon.filter((p) => {
+    if (seenNames.has(p.name)) return false;
+    seenNames.add(p.name);
+    return true;
+  });
+  uniquePokemon.sort((a, b) => a.nationalDex - b.nationalDex);
 
   const outPath = path.join(__dirname, "../src/data/generated/pokemon.json");
-  writeJsonFile(outPath, allPokemon);
+  writeJsonFile(outPath, uniquePokemon);
 
-  console.log(`\n✅ Total: ${allPokemon.length} Pokémon fetched`);
+  console.log(`\n✅ Total: ${uniquePokemon.length} Pokémon fetched`);
 }
 
 main().catch(console.error);
