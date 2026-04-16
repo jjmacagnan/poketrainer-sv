@@ -11,13 +11,13 @@ export function PageHeader({
   emoji,
   title,
   subtitle,
-  gradient = "linear-gradient(135deg, #FFD700, #FF6B6B, #8B5CF6)",
+  gradient = "linear-gradient(135deg, #FB923C, #FBBF24, #A78BFA)",
 }: PageHeaderProps) {
   return (
     <div className="mb-8 text-center">
       <div className="mb-2 text-5xl">{emoji}</div>
       <h1
-        className="mb-1.5 text-3xl font-black tracking-tight"
+        className="mb-1.5 text-3xl font-[family-name:var(--font-syne)] font-extrabold tracking-tight"
         style={{
           background: gradient,
           WebkitBackgroundClip: "text",
