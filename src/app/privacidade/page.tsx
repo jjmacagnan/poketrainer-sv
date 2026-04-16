@@ -1,6 +1,7 @@
 "use client";
 
-import { useI18n, type Locale } from "@/i18n";
+import { LegalPageTemplate, type LegalMeta, type LegalSection } from "@/components/legal/LegalPageTemplate";
+import { type Locale } from "@/i18n";
 
 const GITHUB_ISSUES = "https://github.com/jjmacagnan/poketrainer-sv/issues";
 
@@ -17,9 +18,12 @@ function GithubLink() {
   );
 }
 
-type Section = { title: string; body: React.ReactNode };
+const meta: LegalMeta = {
+  pt: { title: "Política de Privacidade", updated: "Última atualização: abril de 2025" },
+  en: { title: "Privacy Policy", updated: "Last updated: April 2025" },
+};
 
-function getSections(locale: Locale): Section[] {
+function getSections(locale: Locale): LegalSection[] {
   if (locale === "en") {
     return [
       {
@@ -201,28 +205,6 @@ function getSections(locale: Locale): Section[] {
   ];
 }
 
-const meta = {
-  pt: { title: "Política de Privacidade", updated: "Última atualização: abril de 2025" },
-  en: { title: "Privacy Policy", updated: "Last updated: April 2025" },
-};
-
 export default function PrivacidadePage() {
-  const { locale } = useI18n();
-  const { title, updated } = meta[locale];
-  const sections = getSections(locale);
-
-  return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="mb-2 text-3xl font-black text-white">{title}</h1>
-      <p className="mb-10 text-sm text-gray-500">{updated}</p>
-      <div className="flex flex-col gap-8 text-gray-300">
-        {sections.map((s) => (
-          <section key={s.title}>
-            <h2 className="mb-3 text-lg font-bold text-white">{s.title}</h2>
-            {s.body}
-          </section>
-        ))}
-      </div>
-    </div>
-  );
+  return <LegalPageTemplate meta={meta} getSections={getSections} />;
 }
