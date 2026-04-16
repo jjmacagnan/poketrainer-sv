@@ -247,6 +247,33 @@
     "terms": "Terms of Use",
     "privacy": "Privacy Policy",
     "legalNotice": "Legal Notice",
-    "disclaimer": "This project is an unofficial fan tool and is not affiliated with or endorsed by Nintendo, Game Freak, or The Pokémon Company."
+    "disclaimer": "This project is an unofficial fan tool and is not affiliated with or endorsed by Nintendo, Game Freak, or The Pokémon Company.",
+    "feedback": "Feedback"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "subtitle": "Found a bug? Have a suggestion? Let us know.",
+    "category": "Category",
+    "category_bug": "Bug",
+    "category_suggestion": "Suggestion",
+    "category_improvement": "Improvement",
+    "category_other": "Other",
+    "tool": "Tool",
+    "tool_general": "General",
+    "tool_sandwich-builder": "Sandwich Builder",
+    "tool_ev-pokedex": "EV Pokédex",
+    "tool_ev-tracker": "EV Tracker",
+    "tool_raid-builder": "Raid Builder",
+    "tool_nature-calc": "Nature Calc",
+    "message": "Message",
+    "messagePlaceholder": "Describe the issue or suggestion in as much detail as possible...",
+    "email": "Email (optional)",
+    "emailPlaceholder": "so we can reply",
+    "submit": "Send",
+    "submitting": "Sending...",
+    "successTitle": "Message sent!",
+    "successBody": "Thanks for the feedback. We'll review it and reply if you provided an email.",
+    "errorBody": "Could not send. Please try again or open an issue on GitHub.",
+    "sendAnother": "Send another message"
   }
 }
