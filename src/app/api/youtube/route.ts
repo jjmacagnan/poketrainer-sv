@@ -17,7 +17,8 @@ export async function GET(request: Request) {
   }
 
   const { searchParams } = new URL(request.url);
-  const maxResults = Math.min(Number(searchParams.get("maxResults") ?? "8"), 24);
+  const rawMax = parseInt(searchParams.get("maxResults") ?? "8", 10);
+  const maxResults = Number.isFinite(rawMax) && rawMax > 0 ? Math.min(rawMax, 24) : 8;
 
   try {
     const url =
@@ -34,8 +35,6 @@ export async function GET(request: Request) {
     });
 
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      console.error("[youtube/route] API error:", res.status, err);
       return NextResponse.json({ videos: [], configured: true, error: res.status });
     }
 
@@ -67,8 +66,7 @@ export async function GET(request: Request) {
     );
 
     return NextResponse.json({ videos, configured: true });
-  } catch (err) {
-    console.error("[youtube/route] fetch error:", err);
+  } catch {
     return NextResponse.json({ videos: [], configured: true, error: "fetch_failed" });
   }
 }

@@ -24,11 +24,19 @@ interface OutputFlavor {
 }
 
 function capitalize(s: string): string {
+  if (!s) throw new Error("capitalize called with empty string");
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 async function fetchFlavor(id: number): Promise<OutputFlavor> {
   const data = await fetchApi<FlavorResponse>(`/berry-flavor/${id}/`);
+
+  if (!data.contest_type?.name) {
+    throw new Error(`Berry flavor ${id} missing contest_type`);
+  }
+  if (!Array.isArray(data.berries)) {
+    throw new Error(`Berry flavor ${id} has invalid berries field`);
+  }
 
   const enName =
     data.names?.find((n) => n.language.name === "en")?.name || capitalize(data.name);

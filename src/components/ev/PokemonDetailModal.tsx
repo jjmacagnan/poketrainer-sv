@@ -510,7 +510,7 @@ export function PokemonDetailModal({
             {/* Pokédex entry */}
             {flavorText && (
               <p className="mb-3 text-sm italic leading-relaxed text-gray-400">
-                "{flavorText}"
+                &ldquo;{flavorText}&rdquo;
               </p>
             )}
 

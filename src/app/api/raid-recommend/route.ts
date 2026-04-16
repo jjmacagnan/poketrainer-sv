@@ -104,8 +104,7 @@ Pick TOP 5 for this raid. Return ONLY valid JSON, no markdown:
 
     const parsed = JSON.parse(json) as { recommendations: AIRecommendation[] };
     return NextResponse.json(parsed);
-  } catch (err) {
-    console.error("Anthropic error:", err);
+  } catch {
     return NextResponse.json({ error: "Failed to get AI recommendations" }, { status: 500 });
   }
 }

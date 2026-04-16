@@ -409,12 +409,19 @@ async function main() {
     }
   }
 
-  allPokemon.sort((a, b) => a.nationalDex - b.nationalDex);
+  // Deduplicate by name (forms share nationalDex but are distinct entries)
+  const seen = new Set<string>();
+  const uniquePokemon = allPokemon.filter((p) => {
+    if (seen.has(p.name)) return false;
+    seen.add(p.name);
+    return true;
+  });
+  uniquePokemon.sort((a, b) => a.nationalDex - b.nationalDex);
 
   const outPath = path.join(__dirname, "../src/data/generated/pokemon.json");
-  writeJsonFile(outPath, allPokemon);
+  writeJsonFile(outPath, uniquePokemon);
 
-  console.log(`\n✅ Total: ${allPokemon.length} Pokémon fetched`);
+  console.log(`\n✅ Total: ${uniquePokemon.length} Pokémon fetched`);
 }
 
 main().catch(console.error);

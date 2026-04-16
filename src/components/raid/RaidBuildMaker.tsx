@@ -257,7 +257,7 @@ export function RaidBuildMaker() {
     const activeTypes = build.teraType ? [build.teraType] : (build.pokemon?.types || []);
     if (activeTypes.length === 0) return null;
 
-    let multiplierMap: Record<string, number> = {};
+    const multiplierMap: Record<string, number> = {};
     TYPES.forEach((t) => { multiplierMap[t] = 1; });
 
     activeTypes.forEach((t) => {
@@ -1228,7 +1228,7 @@ export function RaidBuildMaker() {
                                 tags.push({ label: hitsLabel, color: "#60A5FA" });
                               }
                             }
-                            for (const sc of meta.statChanges) {
+                            for (const sc of (meta.statChanges ?? [])) {
                               const sign = sc.change > 0 ? "+" : "";
                               tags.push({ label: `${sc.stat.toUpperCase()} ${sign}${sc.change}`, color: sc.change > 0 ? "#A3E635" : "#F87171" });
                             }

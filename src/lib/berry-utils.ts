@@ -49,11 +49,11 @@ export function getBerriesByFlavor(
   if (!flavor) return [];
   return flavor.berries
     .filter((b) => b.potency >= minPotency)
-    .map((b) => ({
-      berry: berries.find((br) => br.name === b.berry)!,
-      potency: b.potency,
-    }))
-    .filter((x) => x.berry)
+    .reduce<{ berry: Berry; potency: number }[]>((acc, b) => {
+      const berry = berries.find((br) => br.name === b.berry);
+      if (berry) acc.push({ berry, potency: b.potency });
+      return acc;
+    }, [])
     .sort((a, b) => b.potency - a.potency);
 }
 

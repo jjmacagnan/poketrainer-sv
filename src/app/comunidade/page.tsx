@@ -48,7 +48,7 @@ export default function ComunidadePage() {
   const { t } = useI18n();
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
-  const [configured, setConfigured] = useState(true);
+  const [configured, setConfigured] = useState(false);
 
   useEffect(() => {
     fetch("/api/youtube?maxResults=8")

@@ -110,6 +110,11 @@ export function NatureCalc() {
     return allPokemon.filter((p) => p.name.toLowerCase().includes(q)).slice(0, 20);
   }, [compSearch]);
 
+  const natureBerryInfoMap = useMemo(
+    () => new Map(natures.map((n) => [n.name, getNatureBerryInfo(n)])),
+    []
+  );
+
   const tabs: { id: Tab; label: string }[] = [
     { id: "table", label: t("natureCalc.tabTable") },
     { id: "calculator", label: t("natureCalc.tabCalc") },
@@ -229,7 +234,7 @@ export function NatureCalc() {
                     })}
                     <td className="px-3 py-2 text-center text-xs">
                       {(() => {
-                        const berryInfo = getNatureBerryInfo(nature);
+                        const berryInfo = natureBerryInfoMap.get(nature.name) ?? getNatureBerryInfo(nature);
                         if (!berryInfo.likeFlavor || !berryInfo.dislikeFlavor) {
                           return <span className="text-gray-500">—</span>;
                         }
