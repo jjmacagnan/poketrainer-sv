@@ -242,7 +242,10 @@
   "footer": {
     "tagline": "Tools for Pokémon Scarlet & Violet players.",
     "tools": "Tools",
-    "about": "About",
+    "about": "Legal",
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "legalNotice": "Legal Notice",
     "disclaimer": "This project is an unofficial fan tool and is not affiliated with or endorsed by Nintendo, Game Freak, or The Pokémon Company."
   }
 }

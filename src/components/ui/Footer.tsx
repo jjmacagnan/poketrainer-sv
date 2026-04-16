@@ -141,14 +141,31 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Game / Disclaimer */}
+          {/* Legal */}
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
               {t("footer.about")}
             </p>
-            <ul className="flex flex-col gap-2 text-sm text-gray-500">
-              <li>{t("footer.disclaimer")}</li>
+            <ul className="flex flex-col gap-2">
+              <li>
+                <Link href="/termos" className="text-sm text-gray-400 transition-colors hover:text-white">
+                  {t("footer.terms")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacidade" className="text-sm text-gray-400 transition-colors hover:text-white">
+                  {t("footer.privacy")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/aviso-legal" className="text-sm text-gray-400 transition-colors hover:text-white">
+                  {t("footer.legalNotice")}
+                </Link>
+              </li>
             </ul>
+            <p className="mt-4 text-xs leading-relaxed text-gray-600">
+              {t("footer.disclaimer")}
+            </p>
           </div>
         </div>
 
