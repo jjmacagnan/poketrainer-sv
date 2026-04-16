@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useI18n } from "@/i18n";
+import { BuyMeCoffeeLink } from '@/components/ui/BuyMeCoffeeLink';
 
 const TOOLS = [
   {
@@ -116,7 +117,7 @@ export default function Home() {
       </div>
 
       <p className="text-sm text-gray-500 text-center py-6">
-        {t("kofi.cta")} <a href="https://buymeacoffee.com/jjmacagnan" target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 underline">Buy Me a Coffee</a>
+        {t("kofi.cta")} <BuyMeCoffeeLink variant="inline" />
       </p>
     </div>
   );

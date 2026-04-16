@@ -248,6 +248,7 @@
     "privacy": "Privacy Policy",
     "legalNotice": "Legal Notice",
     "disclaimer": "This project is an unofficial fan tool and is not affiliated with or endorsed by Nintendo, Game Freak, or The Pokémon Company.",
+    "buyMeCoffee": "Buy Me a Coffee",
     "feedback": "Feedback"
   },
   "feedback": {
@@ -277,6 +278,6 @@
     "sendAnother": "Send another message"
   },
   "kofi": {
-    "cta": "☕ If these tools help you, consider supporting on Buy Me a Coffee →"
+    "cta": "☕ If these tools help you, consider supporting on →"
   }
 }
