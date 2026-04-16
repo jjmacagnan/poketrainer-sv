@@ -275,5 +275,8 @@
     "successBody": "Obrigado pelo feedback. Vamos analisar e responder se você informou um email.",
     "errorBody": "Não foi possível enviar. Tente novamente ou abra uma issue no GitHub.",
     "sendAnother": "Enviar outra mensagem"
+  },
+  "kofi": {
+    "cta": "☕ Se as ferramentas te ajudam, considere apoiar no Buy Me a Coffee →"
   }
 }

@@ -119,6 +119,17 @@ export function Footer() {
                 <DiscordIcon />
                 Discord
               </a>
+              <a
+                href="https://buymeacoffee.com/jjmacagnan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-gray-400 transition-colors hover:border-yellow-500/30 hover:text-yellow-400"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M18 3H5a1 1 0 0 0-1 1v9a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V8a3 3 0 0 0-2-2.83V4a1 1 0 0 0-1-1zM18 9h1a1 1 0 1 1 0 2h-1V9zM5 5h12v2H5V5z" />
+                </svg>
+                Buy Me a Coffee
+              </a>
             </div>
           </div>
 
