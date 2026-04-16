@@ -229,4 +229,4 @@ This is an unofficial fan project not affiliated with or endorsed by Nintendo, G
 
 ## License
 
-MIT
+[MIT](LICENSE)

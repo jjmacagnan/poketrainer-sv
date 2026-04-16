@@ -229,4 +229,4 @@ Este é um projeto de fãs não oficial, sem afiliação ou endosso da Nintendo,
 
 ## Licença
 
-MIT
+[MIT](LICENSE)
