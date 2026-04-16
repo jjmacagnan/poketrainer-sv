@@ -22,6 +22,7 @@ export function PageHeader({
           background: gradient,
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
+          paddingBottom: "0.1em",
         }}
       >
         {title}

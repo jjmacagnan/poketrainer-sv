@@ -162,6 +162,11 @@ export function Footer() {
                   {t("footer.legalNotice")}
                 </Link>
               </li>
+              <li>
+                <Link href="/feedback" className="text-sm text-gray-400 transition-colors hover:text-white">
+                  {t("footer.feedback")}
+                </Link>
+              </li>
             </ul>
             <p className="mt-4 text-xs leading-relaxed text-gray-600">
               {t("footer.disclaimer")}

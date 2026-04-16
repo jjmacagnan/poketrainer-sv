@@ -62,6 +62,7 @@ export default function Home() {
             background: "linear-gradient(135deg, #FB923C 0%, #FBBF24 40%, #A78BFA 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
+            paddingBottom: "0.1em",
           }}
         >
           PokéTrainer SV

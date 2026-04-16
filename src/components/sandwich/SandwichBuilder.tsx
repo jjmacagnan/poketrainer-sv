@@ -251,6 +251,7 @@ export function SandwichBuilder() {
             background: "linear-gradient(135deg, #F59E0B, #F97316, #EF4444)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
+            paddingBottom: "0.1em",
           }}
         >
           {t("sandwich.title")}
