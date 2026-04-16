@@ -25,6 +25,12 @@ export default function FeedbackPage() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+
+    if (!process.env.NEXT_PUBLIC_WEB3FORMS_KEY) {
+      setStatus("error");
+      return;
+    }
+
     setStatus("submitting");
 
     try {
