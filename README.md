@@ -1,4 +1,4 @@
-# PokéTrainer SV
+# PokéTrainer SV &nbsp;·&nbsp; [🇺🇸 English](README.en.md)
 
 Ferramentas práticas para jogadores de **Pokémon Scarlet & Violet**. Consulte receitas de sanduíche, treine EVs, monte builds para Tera Raids e muito mais — tudo direto do celular enquanto joga.
 
@@ -145,7 +145,10 @@ src/
 │   ├── ev-tracker/                   # EV Training Tracker
 │   ├── raid-builder/                 # Tera Raid Build Maker
 │   ├── nature-calc/                  # Nature/Stats Calculator
-│   └── comunidade/                   # Página da Comunidade (YouTube + Discord)
+│   ├── comunidade/                   # Página da Comunidade (YouTube + Discord)
+│   ├── termos/                       # Termos de Uso
+│   ├── privacidade/                  # Política de Privacidade
+│   └── aviso-legal/                  # Aviso Legal
 ├── components/
 │   ├── ui/                           # TypeBadge, StatBar, Navbar, Footer, PowerTag
 │   ├── sandwich/                     # RecipeCard, RecipeDetail, SandwichBuilder
@@ -194,9 +197,8 @@ src/
 ## Fontes de Dados
 
 - **PokéAPI** — base stats, types, EV yields, moves, abilities, berries, evolution chains, species data
-- **Serebii.net** — mecânicas de Tera Raids, receitas de sanduíche, dados in-game
+- **Serebii.net** — localizações in-game, mecânicas de Tera Raids, receitas de sanduíche, raid bosses
 - **Smogon / Reddit** — tier list e builds baseadas em consenso da comunidade
-- **Serebii.net** — localizações in-game, raid bosses
 
 Sprites via GitHub:
 ```
@@ -212,6 +214,16 @@ O projeto é otimizado para deploy na **Vercel**:
 
 1. Importe o repo na [Vercel](https://vercel.com)
 2. Configure seu domínio customizado em Settings > Domains
+
+---
+
+## Legal
+
+Este é um projeto de fãs não oficial, sem afiliação ou endosso da Nintendo, Game Freak ou The Pokémon Company. Pokémon e todos os nomes relacionados são marcas registradas de seus respectivos proprietários.
+
+- [Termos de Uso](https://poketrainer.jbit.app.br/termos)
+- [Política de Privacidade](https://poketrainer.jbit.app.br/privacidade)
+- [Aviso Legal](https://poketrainer.jbit.app.br/aviso-legal)
 
 ---
 
