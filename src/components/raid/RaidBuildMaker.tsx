@@ -11,7 +11,7 @@ import itemsData from "@/data/generated/items.json";
 import typesData from "@/data/generated/types.json";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
-import { RAID_TIER_LIST, TIER_COLORS, TIER_DESCRIPTIONS, type TierRank, type RaidRole, type RaidTierEntry, type RaidBuild } from "@/data/raid-tier-list";
+import { RAID_TIER_LIST, TAG_COLORS, TAG_NAMES, TAG_LABELS, type RaidTag, type RaidRole, type RaidTierEntry, type RaidBuild } from "@/data/raid-tier-list";
 import { STAT_NAMES, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
@@ -206,7 +206,7 @@ function SearchDropdown<T>({
 
 // ── Tier List Helpers ────────────────────────────────────────────────────────
 
-const TIERS: TierRank[] = ["SS", "S", "A", "B", "C"];
+const ALL_TAGS: RaidTag[] = ["Solo Viable", "Top Pick", "7★ Ready", "Budget Pick", "Support Star", "Niche Pick"];
 const ROLES: RaidRole[] = ["physical", "special", "support"];
 
 const ROLE_LABELS: Record<RaidRole, { pt: string; en: string; emoji: string }> = {
@@ -224,7 +224,7 @@ export function RaidBuildMaker() {
   const [importText, setImportText] = useState("");
   const [showExport, setShowExport] = useState(false);
   const [tab, setTab] = useState<"build" | "tierlist">("build");
-  const [tierFilter, setTierFilter] = useState<TierRank | "all">("all");
+  const [tagFilter, setTagFilter] = useState<RaidTag | "all">("all");
   const [roleFilter, setRoleFilter] = useState<RaidRole | "all">("all");
   const [selectedEntry, setSelectedEntry] = useState<RaidTierEntry | null>(null);
 
@@ -368,11 +368,11 @@ export function RaidBuildMaker() {
 
   const filteredTierList = useMemo(() => {
     return RAID_TIER_LIST.filter((entry) => {
-      if (tierFilter !== "all" && entry.tier !== tierFilter) return false;
+      if (tagFilter !== "all" && !entry.tags.includes(tagFilter)) return false;
       if (roleFilter !== "all" && entry.role !== roleFilter) return false;
       return true;
     });
-  }, [tierFilter, roleFilter]);
+  }, [tagFilter, roleFilter]);
 
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
@@ -412,28 +412,29 @@ export function RaidBuildMaker() {
         <div>
           {/* Filters */}
           <div className="mb-4 flex flex-wrap items-center gap-3">
-            {/* Tier filter */}
+            {/* Tag filter */}
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-gray-500">Tier</span>
-              <div className="flex gap-0.5 rounded-lg border border-white/10 bg-white/5 p-0.5">
+              <span className="text-xs font-semibold text-gray-500">Tag</span>
+              <div className="flex flex-wrap gap-0.5 rounded-lg border border-white/10 bg-white/5 p-0.5">
                 <button
-                  onClick={() => setTierFilter("all")}
+                  onClick={() => setTagFilter("all")}
                   className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
-                    tierFilter === "all" ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
+                    tagFilter === "all" ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
                   }`}
                 >
                   {t("common.all")}
                 </button>
-                {TIERS.map((tier) => (
+                {ALL_TAGS.map((tag) => (
                   <button
-                    key={tier}
-                    onClick={() => setTierFilter(tierFilter === tier ? "all" : tier)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-black transition-all ${
-                      tierFilter === tier ? "text-white" : "text-gray-500 hover:text-gray-300"
+                    key={tag}
+                    onClick={() => setTagFilter(tagFilter === tag ? "all" : tag)}
+                    className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
+                      tagFilter === tag ? "text-white" : "text-gray-500 hover:text-gray-300"
                     }`}
-                    style={tierFilter === tier ? { background: TIER_COLORS[tier] + "33" } : undefined}
+                    style={tagFilter === tag ? { background: TAG_COLORS[tag] + "33" } : undefined}
+                    title={locale === "pt" ? TAG_LABELS[tag].pt : TAG_LABELS[tag].en}
                   >
-                    {tier}
+                    {locale === "pt" ? TAG_NAMES[tag].pt : TAG_NAMES[tag].en}
                   </button>
                 ))}
               </div>
@@ -466,27 +467,23 @@ export function RaidBuildMaker() {
             </div>
           </div>
 
-          {/* Tier groups */}
-          {TIERS.map((tier) => {
-            const entriesInTier = filteredTierList.filter((e) => e.tier === tier);
-            if (entriesInTier.length === 0) return null;
+          {/* Role groups */}
+          {ROLES.map((role) => {
+            const entriesInRole = filteredTierList.filter((e) => e.role === role);
+            if (entriesInRole.length === 0) return null;
 
             return (
-              <div key={tier} className="mb-6">
+              <div key={role} className="mb-6">
                 <div className="mb-3 flex items-center gap-2">
-                  <span
-                    className="rounded-lg px-3 py-1 text-sm font-black text-white"
-                    style={{ background: TIER_COLORS[tier] }}
-                  >
-                    {tier}
+                  <span className="text-lg">{ROLE_LABELS[role].emoji}</span>
+                  <span className="text-sm font-bold text-gray-200">
+                    {locale === "pt" ? ROLE_LABELS[role].pt : ROLE_LABELS[role].en}
                   </span>
-                  <span className="text-xs text-gray-500">
-                    {locale === "pt" ? TIER_DESCRIPTIONS[tier].pt : TIER_DESCRIPTIONS[tier].en}
-                  </span>
+                  <span className="text-xs text-gray-600">({entriesInRole.length})</span>
                 </div>
 
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {entriesInTier.map((entry) => {
+                  {entriesInRole.map((entry) => {
                     const spriteNum = entry.spriteId ?? entry.nationalDex;
                     const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
                     const primaryBuild = entry.builds[0];
@@ -504,21 +501,22 @@ export function RaidBuildMaker() {
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5">
                               <span className="text-sm font-bold text-gray-100">{entry.name}</span>
-                              <span
-                                className="rounded px-1.5 py-0.5 text-[10px] font-black text-white"
-                                style={{ background: TIER_COLORS[entry.tier] + "AA" }}
-                              >
-                                {entry.tier}
-                              </span>
+                              {entry.tags.map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
+                                  style={{ background: TAG_COLORS[tag] + "CC" }}
+                                  title={locale === "pt" ? TAG_LABELS[tag].pt : TAG_LABELS[tag].en}
+                                >
+                                  {locale === "pt" ? TAG_NAMES[tag].pt : TAG_NAMES[tag].en}
+                                </span>
+                              ))}
                             </div>
                             <div className="mt-1 flex items-center gap-1.5">
-                              <span className="text-[10px] text-gray-500">
-                                {ROLE_LABELS[entry.role].emoji} {locale === "pt" ? ROLE_LABELS[entry.role].pt : ROLE_LABELS[entry.role].en}
-                              </span>
-                              <span className="text-gray-700">·</span>
                               <TypeBadge type={primaryBuild.teraType as PokemonType} small />
+                              <span className="text-[10px] text-gray-500">{primaryBuild.nature} · {primaryBuild.ability}</span>
                             </div>
                             <div className="mt-1 flex items-center justify-between text-[10px] text-gray-600">
                               <span>{primaryBuild.item}</span>
@@ -1133,7 +1131,7 @@ export function RaidBuildMaker() {
         toolName={t("nav.raidBuilder")}
         note={t("raid.disclaimerNote")}
         sources={[
-          { label: "game8.co (Tier List)", url: "https://game8.co/games/Pokemon-Scarlet-Violet/archives/397713" },
+          { label: "Serebii.net (Tera Raids)", url: "https://www.serebii.net/scarletviolet/teraraidbattles.shtml" },
           { label: "PokéAPI", url: "https://pokeapi.co/docs/v2#info" },
         ]}
       />

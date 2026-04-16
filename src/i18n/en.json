@@ -88,7 +88,7 @@
     "berryAltNote": "Berries with similar flavor to the Herba Mystica used in the recipe",
     "footer": "Sandwich Builder v1.0",
     "footerNote": "Data based on community-verified recipes",
-    "footerSource": "game8.co"
+    "footerSource": "Serebii.net"
   },
   "evPokedex": {
     "title": "EV Yield Pokédex",
@@ -187,7 +187,7 @@
     "title": "Tera Raid Build Maker",
     "subtitle": "Build and share optimized builds for 5★/6★/7★ Tera Raids",
     "tabBuild": "🛠️ Build Maker",
-    "tabTierList": "🏆 Tier List",
+    "tabTierList": "🏆 Pokémon Guide",
     "importShowdown": "📥 Import Showdown",
     "exportShowdown": "📤 Export Showdown",
     "pasteShowdown": "Paste Pokémon Showdown set:",
@@ -209,7 +209,7 @@
     "starRaids": "{stars}-Star Raids",
     "statsUnavailable": "stats unavailable",
     "defensiveMatchup": "Defensive Matchups",
-    "disclaimerNote": "Tier list based on game8.co. Stats and moves from PokéAPI"
+    "disclaimerNote": "Pokémon guide based on community consensus. Stats and moves from PokéAPI"
   },
   "comunidade": {
     "title": "Community",

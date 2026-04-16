@@ -465,7 +465,7 @@ export function SandwichBuilder() {
         toolName={t("sandwich.footer")}
         note={t("sandwich.footerNote")}
         sources={[
-          { label: t("sandwich.footerSource"), url: "https://game8.co/games/Pokemon-Scarlet-Violet/archives/397743" },
+          { label: t("sandwich.footerSource"), url: "https://www.serebii.net/scarletviolet/sandwich.shtml" },
         ]}
       />
     </div>

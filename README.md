@@ -55,7 +55,7 @@ Monte e compartilhe builds otimizadas para Tera Raids 5★/6★/7★.
 - Efeitos de habilidades e itens no card
 - Import/export formato Pokémon Showdown
 - Export como imagem PNG (otimizado para Discord)
-- Tier list SS/S/A/B/C de Pokémon para Tera Raids (fonte: game8.co)
+- Guia de Pokémon para Tera Raids com tags (Solo Viable, Top Pick, 7★ Ready, Budget Pick, etc.)
 
 ### 🧮 Nature Calculator
 Calculadora rápida de natures e stats finais.
@@ -194,7 +194,8 @@ src/
 ## Fontes de Dados
 
 - **PokéAPI** — base stats, types, EV yields, moves, abilities, berries, evolution chains, species data
-- **game8.co** — tier list de Tera Raids, receitas de sanduíche verificadas
+- **Serebii.net** — mecânicas de Tera Raids, receitas de sanduíche, dados in-game
+- **Smogon / Reddit** — tier list e builds baseadas em consenso da comunidade
 - **Serebii.net** — localizações in-game, raid bosses
 
 Sprites via GitHub:
