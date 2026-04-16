@@ -410,10 +410,10 @@ async function main() {
   }
 
   // Deduplicate by name (forms share nationalDex but are distinct entries)
-  const seen = new Set<string>();
+  const seenNames = new Set<string>();
   const uniquePokemon = allPokemon.filter((p) => {
-    if (seen.has(p.name)) return false;
-    seen.add(p.name);
+    if (seenNames.has(p.name)) return false;
+    seenNames.add(p.name);
     return true;
   });
   uniquePokemon.sort((a, b) => a.nationalDex - b.nationalDex);
