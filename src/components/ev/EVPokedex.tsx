@@ -14,6 +14,7 @@ import { FilterBar } from "@/components/shared/FilterBar";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { StatBar } from "@/components/ui/StatBar";
 import { PokemonDetailModal } from "./PokemonDetailModal";
+import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
 
 interface Pokemon {
   dexNumber: number;
@@ -273,6 +274,14 @@ export function EVPokedex() {
           onClose={() => setSelectedPokemon(null)}
         />
       )}
+
+      <ToolDisclaimer
+        toolName={t("nav.evPokedex")}
+        note={t("evPokedex.disclaimerNote")}
+        sources={[
+          { label: "PokéAPI", url: "https://pokeapi.co/docs/v2#info" },
+        ]}
+      />
     </div>
   );
 }
@@ -298,11 +307,23 @@ function PokemonCard({
       onClick={onClick}
       className="relative cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:border-violet-500/40 hover:bg-white/8"
     >
-      {isBest && (
-        <div className="absolute right-2 top-2 rounded-full bg-yellow-500/20 px-2 py-0.5 text-[10px] font-bold text-yellow-300">
-          {t("evPokedex.best")}
-        </div>
-      )}
+      <div className="absolute right-2 top-2 flex flex-col items-end gap-0.5">
+        {isBest && (
+          <div className="rounded-full bg-yellow-500/20 px-2 py-0.5 text-[10px] font-bold text-yellow-300">
+            {t("evPokedex.best")}
+          </div>
+        )}
+        {(pokemon as { isLegendary?: boolean }).isLegendary && (
+          <div className="rounded-full bg-yellow-500/10 px-2 py-0.5 text-[10px] font-bold text-yellow-400/70">
+            ★
+          </div>
+        )}
+        {(pokemon as { isMythical?: boolean }).isMythical && (
+          <div className="rounded-full bg-pink-500/10 px-2 py-0.5 text-[10px] font-bold text-pink-400/70">
+            ✦
+          </div>
+        )}
+      </div>
 
       <div className="mb-3 flex items-center gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}

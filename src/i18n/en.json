@@ -82,8 +82,13 @@
     "herba.Sour": "5★ & 6★ Tera Raids — most common in Poison, Ground, Fighting type raids",
     "herba.Bitter": "5★ & 6★ Tera Raids — most common in Dragon, Psychic, Ghost type raids",
     "herba.Spicy": "5★ & 6★ Tera Raids — most common in Fire, Electric, Dark type raids",
-    "footer": "PokéTrainer SV Tools — Sandwich Builder v1.0",
-    "footerNote": "Data based on community-verified recipes"
+    "showFlavors": "🧪 Show flavors",
+    "hideFlavors": "✕ Hide flavors",
+    "berryAlternatives": "🫐 Equivalent berries",
+    "berryAltNote": "Berries with similar flavor to the Herba Mystica used in the recipe",
+    "footer": "Sandwich Builder v1.0",
+    "footerNote": "Data based on community-verified recipes",
+    "footerSource": "Serebii.net"
   },
   "evPokedex": {
     "title": "EV Yield Pokédex",
@@ -110,7 +115,13 @@
     "eggMoves": "Egg",
     "tutorMoves": "Tutor",
     "showAll": "Show all {count} moves",
-    "showLess": "Show less"
+    "showLess": "Show less",
+    "trainingTitle": "Training Areas (Paldea)",
+    "trainingDungeon": "Farm Tip",
+    "trainingLocation": "Location",
+    "trainingTarget": "Main Target",
+    "sandwichTip": "Sandwich Tip",
+    "disclaimerNote": "Data from PokéAPI"
   },
   "evTracker": {
     "title": "EV Training Tracker",
@@ -132,7 +143,8 @@
     "templates": "📋 Templates:",
     "templatesDesc": "Popular pre-defined distributions",
     "limits": "Limits:",
-    "limitsDesc": "252/stat, 510 total"
+    "limitsDesc": "252/stat, 510 total",
+    "disclaimerNote": "Data from PokéAPI"
   },
   "pokemonSlot": {
     "selectPokemon": "Select Pokémon...",
@@ -142,7 +154,11 @@
     "templatesDrop": "📋 Templates...",
     "pokerus": "🦠 Pokérus",
     "machoBrace": "💪 Macho Brace",
-    "powerItemDrop": "⚡ Power Item..."
+    "powerItemDrop": "⚡ Power Item...",
+    "whereToTrain": "📍 Where to train {stat}?",
+    "farmingSpot": "Farming Spot",
+    "target": "Target",
+    "sandwich": "Recommended Sandwich"
   },
   "natureCalc": {
     "title": "Nature Calculator",
@@ -160,13 +176,18 @@
     "natureB": "Nature B",
     "diff": "Diff",
     "compareNote": "Comparison with IVs 31, EVs 252 on all stats, Level 100",
-    "selectToComparePrompt": "Select a Pokémon to compare natures"
+    "selectToComparePrompt": "Select a Pokémon to compare natures",
+    "berryPreferences": "🫐 Berry Preferences",
+    "likesFlavor": "Likes:",
+    "dislikesFlavor": "Dislikes:",
+    "berryNote": "Feeding berries the nature likes increases friendship faster. Feeding disliked berries reduces friendship.",
+    "disclaimerNote": "Data from PokéAPI"
   },
   "raid": {
     "title": "Tera Raid Build Maker",
     "subtitle": "Build and share optimized builds for 5★/6★/7★ Tera Raids",
     "tabBuild": "🛠️ Build Maker",
-    "tabTierList": "🏆 Tier List",
+    "tabTierList": "🏆 Pokémon Guide",
     "importShowdown": "📥 Import Showdown",
     "exportShowdown": "📤 Export Showdown",
     "pasteShowdown": "Paste Pokémon Showdown set:",
@@ -187,7 +208,24 @@
     "exportError": "Error exporting image",
     "starRaids": "{stars}-Star Raids",
     "statsUnavailable": "stats unavailable",
-    "defensiveMatchup": "Defensive Matchups"
+    "defensiveMatchup": "Defensive Matchups",
+    "disclaimerNote": "Pokémon guide based on community consensus. Stats and moves from PokéAPI",
+    "bossFinder": "Boss Finder",
+    "bossFinderSubtitle": "Find the best builds for a specific raid",
+    "searchBoss": "Search boss Pokémon...",
+    "bossTeraType": "Boss Tera Type",
+    "starLevel": "Star Level",
+    "recommended": "Recommended for this Raid",
+    "recommendedCount": "{count} builds found",
+    "superEffective": "SE",
+    "clearBoss": "Clear",
+    "noBossRecommendations": "No builds with super effective moves found. Check the full guide below.",
+    "coverageLabel": "Coverage:",
+    "aiRecommend": "AI Recommendations",
+    "aiLoading": "Analyzing builds...",
+    "aiError": "Failed to get recommendations. Try again.",
+    "aiTierLabel": "Tier",
+    "aiPoweredBy": "Powered by Gemini"
   },
   "comunidade": {
     "title": "Community",
@@ -198,7 +236,8 @@
     "discordDesc": "Join the server to share tips, builds and chat with the community.",
     "discordBtn": "Join Discord",
     "videosTitle": "Featured videos",
-    "videoPlaceholder": "Coming soon"
+    "videoPlaceholder": "Coming soon",
+    "viewAllVideos": "View all videos on YouTube"
   },
   "footer": {
     "tagline": "Tools for Pokémon Scarlet & Violet players.",

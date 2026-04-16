@@ -4,12 +4,132 @@ import { useEffect, useState, useCallback } from "react";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { StatBar } from "@/components/ui/StatBar";
 import type { PokemonType } from "@/data/types";
+import { TYPE_COLORS } from "@/data/types";
 import { STAT_NAMES } from "@/lib/constants";
 import abilitiesData from "@/data/generated/abilities.json";
 import itemsData from "@/data/generated/items.json";
+import evolutionChainsData from "@/data/generated/evolution-chains.json";
+import pokemonJsonData from "@/data/generated/pokemon.json";
+import movesJsonData from "@/data/generated/moves.json";
 
 const abilitiesList = abilitiesData as { name: string; effect: string; shortEffect: string; flavorText: string }[];
 const itemsList = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
+
+interface MoveData {
+  id: number;
+  name: string;
+  type: string;
+  category: string;
+  power: number | null;
+  pp: number | null;
+  accuracy: number | null;
+  priority: number;
+  target: string;
+  tm: number | null;
+  effect: string;
+}
+
+const movesLookup = (movesJsonData as MoveData[]).reduce<Record<string, MoveData>>(
+  (acc, m) => {
+    // key by normalized name: "Iron Defense" → "iron-defense"
+    acc[m.name.toLowerCase().replace(/ /g, "-")] = m;
+    return acc;
+  },
+  {}
+);
+
+function getMoveData(apiName: string): MoveData | undefined {
+  return movesLookup[apiName.toLowerCase()];
+}
+
+// ── Static Evolution Chain Types ──────────────────────────────────────────────
+
+interface StaticEvoDetail {
+  trigger: string;
+  minLevel: number | null;
+  item: string | null;
+  heldItem: string | null;
+  knownMove: string | null;
+  minHappiness: number | null;
+  location: string | null;
+  timeOfDay: string;
+  needsOverworldRain: boolean;
+}
+
+interface StaticEvoNode {
+  isBaby: boolean;
+  species: string;
+  evolutionDetails: StaticEvoDetail[];
+  evolvesTo: StaticEvoNode[];
+}
+
+interface StaticEvoChain {
+  id: number;
+  babyTriggerItem: string | null;
+  chain: StaticEvoNode;
+}
+
+const evolutionChains = evolutionChainsData as StaticEvoChain[];
+const allPokemonForEvo = pokemonJsonData as { nationalDex: number; name: string }[];
+
+function getSpeciesId(speciesName: string): number {
+  const found = allPokemonForEvo.find(
+    (p) => p.name.toLowerCase() === speciesName.toLowerCase()
+  );
+  return found?.nationalDex ?? 0;
+}
+
+function findEvolutionChain(speciesName: string): StaticEvoNode | null {
+  const lower = speciesName.toLowerCase();
+  function containsSpecies(node: StaticEvoNode): boolean {
+    if (node.species === lower) return true;
+    return node.evolvesTo.some(containsSpecies);
+  }
+  const chain = evolutionChains.find((c) => containsSpecies(c.chain));
+  return chain ? chain.chain : null;
+}
+
+function formatStaticTrigger(detail: StaticEvoDetail): string {
+  const { trigger, minLevel, item, heldItem, knownMove, minHappiness, location, timeOfDay } = detail;
+  if (trigger === "level-up") {
+    if (minLevel) return `Lv. ${minLevel}`;
+    if (minHappiness) return "Friendship";
+    if (knownMove) return `Know ${formatItemName(knownMove)}`;
+    if (location) return `Level up at ${formatItemName(location)}`;
+    if (timeOfDay) return `Level up (${timeOfDay})`;
+    return "Level up";
+  }
+  if (trigger === "use-item" && item) return formatItemName(item);
+  if (trigger === "use-move" && knownMove) return `Use ${formatItemName(knownMove)}`;
+  if (trigger === "trade") {
+    if (heldItem) return `Trade w/ ${formatItemName(heldItem)}`;
+    return "Trade";
+  }
+  if (trigger === "shed") return "Shed";
+  if (trigger === "spin") return "Spin";
+  if (trigger === "three-critical-hits") return "3 Critical Hits";
+  if (trigger === "take-damage") return "Take Damage";
+  return capitalize(trigger ?? "");
+}
+
+function flattenStaticChain(root: StaticEvoNode): EvoStep[] {
+  const steps: EvoStep[] = [];
+  function walk(node: StaticEvoNode) {
+    for (const child of node.evolvesTo) {
+      steps.push({
+        from: { name: node.species, id: getSpeciesId(node.species) },
+        to: { name: child.species, id: getSpeciesId(child.species) },
+        trigger: child.evolutionDetails.length > 0 ? formatStaticTrigger(child.evolutionDetails[0]) : "",
+      });
+      walk(child);
+    }
+  }
+  walk(root);
+  return steps;
+}
+
+import { TRAINING_LOCATIONS } from "@/data/training-locations";
+import { useI18n } from "@/i18n";
 
 export interface PokemonEntry {
   dexNumber: number;
@@ -25,28 +145,24 @@ export interface PokemonEntry {
   height?: number;
   weight?: number;
   heldItems?: string[];
+  // Pre-cached species data (from pokemon-species endpoint)
+  isLegendary?: boolean;
+  isMythical?: boolean;
+  captureRate?: number;
+  genderRate?: number;
+  eggGroups?: string[];
+  habitat?: string | null;
+  generation?: string;
+  color?: string;
+  growthRate?: string;
+  baseHappiness?: number;
+  flavorText?: string;
+  evolutionChainId?: number;
+  baseExperience?: number | null;
+  formVariants?: { name: string; id: number }[];
 }
 
 // ── PokéAPI types ─────────────────────────────────────────────────────────────
-
-interface SpeciesData {
-  habitat: { name: string } | null;
-  egg_groups: { name: string }[];
-  gender_rate: number;
-  is_legendary: boolean;
-  is_mythical: boolean;
-  color: { name: string };
-  generation: { name: string };
-  capture_rate: number;
-  growth_rate: { name: string };
-  flavor_text_entries: {
-    flavor_text: string;
-    language: { name: string };
-    version: { name: string };
-  }[];
-  evolution_chain: { url: string };
-  varieties: { is_default: boolean; pokemon: { name: string; url: string } }[];
-}
 
 interface PokemonApiData {
   base_experience: number | null;
@@ -61,42 +177,10 @@ interface PokemonApiData {
   }[];
 }
 
-interface EncounterData {
-  location_area: { name: string; url: string };
-  version_details: {
-    version: { name: string };
-    max_chance: number;
-    encounter_details: {
-      min_level: number;
-      max_level: number;
-      method: { name: string };
-    }[];
-  }[];
-}
-
 interface SVMove {
   name: string;
   level: number;
   method: string;
-}
-
-interface EvoNode {
-  species: { name: string; url: string };
-  evolution_details: {
-    trigger: { name: string };
-    min_level: number | null;
-    item: { name: string } | null;
-    held_item: { name: string } | null;
-    happiness: number | null;
-    time_of_day: string;
-    known_move?: { name: string } | null;
-    location?: { name: string } | null;
-  }[];
-  evolves_to: EvoNode[];
-}
-
-interface EvoChain {
-  chain: EvoNode;
 }
 
 interface EvoStage {
@@ -125,12 +209,29 @@ function formatItemName(name: string) {
   return name.split("-").map(capitalize).join(" ");
 }
 
-function formatTrigger(detail: EvoNode["evolution_details"][0]): string {
+// ── Live chain fallback (for non-Gen9 Pokémon not in static data) ─────────────
+
+interface LiveEvoNode {
+  species: { name: string; url: string };
+  evolution_details: {
+    trigger: { name: string };
+    min_level: number | null;
+    item: { name: string } | null;
+    held_item: { name: string } | null;
+    happiness: number | null;
+    time_of_day: string;
+    known_move?: { name: string } | null;
+    location?: { name: string } | null;
+  }[];
+  evolves_to: LiveEvoNode[];
+}
+
+function formatLiveTrigger(detail: LiveEvoNode["evolution_details"][0]): string {
   if (!detail) return "";
   const trigger = detail.trigger?.name;
   if (trigger === "level-up") {
     if (detail.min_level) return `Lv. ${detail.min_level}`;
-    if (detail.happiness) return `Friendship`;
+    if (detail.happiness) return "Friendship";
     if (detail.known_move) return `Know ${formatItemName(detail.known_move.name)}`;
     if (detail.location) return `Level up at ${formatItemName(detail.location.name)}`;
     if (detail.time_of_day) return `Level up (${detail.time_of_day})`;
@@ -143,39 +244,25 @@ function formatTrigger(detail: EvoNode["evolution_details"][0]): string {
   }
   if (trigger === "shed") return "Shed";
   if (trigger === "spin") return "Spin";
-  if (trigger === "tower-of-darkness") return "Tower of Darkness";
-  if (trigger === "tower-of-waters") return "Tower of Waters";
   if (trigger === "three-critical-hits") return "3 Critical Hits";
   if (trigger === "take-damage") return "Take Damage";
   return capitalize(trigger ?? "");
 }
 
-function flattenChain(node: EvoNode): EvoStep[] {
+function flattenLiveChain(node: LiveEvoNode): EvoStep[] {
   const steps: EvoStep[] = [];
-  function walk(n: EvoNode) {
+  function walk(n: LiveEvoNode) {
     for (const child of n.evolves_to) {
       steps.push({
         from: { name: n.species.name, id: extractId(n.species.url) },
         to: { name: child.species.name, id: extractId(child.species.url) },
-        trigger: formatTrigger(child.evolution_details[0]),
+        trigger: formatLiveTrigger(child.evolution_details[0]),
       });
       walk(child);
     }
   }
   walk(node);
   return steps;
-}
-
-function formatLocationName(name: string): string {
-  return name
-    .replace(/-area$/, "")
-    .split("-")
-    .map(capitalize)
-    .join(" ");
-}
-
-function formatMethodName(name: string): string {
-  return name.split("-").map(capitalize).join(" ");
 }
 
 function formatGrowthRate(name: string): string {
@@ -193,41 +280,41 @@ function genderLabel(rate: number): string {
 // ── Game availability map ──────────────────────────────────────────────────────
 
 const GAME_META: Record<string, { label: string; name: string; color: string }> = {
-  "red":                { label: "RD",  name: "Pokémon Red",             color: "#CC0000" },
-  "blue":               { label: "BL",  name: "Pokémon Blue",            color: "#0000AA" },
-  "yellow":             { label: "YW",  name: "Pokémon Yellow",          color: "#FFD700" },
-  "gold":               { label: "GD",  name: "Pokémon Gold",            color: "#B8860B" },
-  "silver":             { label: "SV",  name: "Pokémon Silver",          color: "#C0C0C0" },
-  "crystal":            { label: "CY",  name: "Pokémon Crystal",         color: "#4FC3F7" },
-  "ruby":               { label: "RB",  name: "Pokémon Ruby",            color: "#B22222" },
-  "sapphire":           { label: "SP",  name: "Pokémon Sapphire",        color: "#1565C0" },
-  "emerald":            { label: "EM",  name: "Pokémon Emerald",         color: "#2E7D32" },
-  "firered":            { label: "FR",  name: "Pokémon FireRed",         color: "#FF6F00" },
-  "leafgreen":          { label: "LG",  name: "Pokémon LeafGreen",       color: "#388E3C" },
-  "diamond":            { label: "DM",  name: "Pokémon Diamond",         color: "#5C6BC0" },
-  "pearl":              { label: "PL",  name: "Pokémon Pearl",           color: "#EC407A" },
-  "platinum":           { label: "PT",  name: "Pokémon Platinum",        color: "#78909C" },
-  "heartgold":          { label: "HG",  name: "Pokémon HeartGold",       color: "#FFB300" },
-  "soulsilver":         { label: "SS",  name: "Pokémon SoulSilver",      color: "#90A4AE" },
-  "black":              { label: "BK",  name: "Pokémon Black",           color: "#212121" },
-  "white":              { label: "WT",  name: "Pokémon White",           color: "#EEEEEE" },
-  "black-2":            { label: "B2",  name: "Pokémon Black 2",         color: "#37474F" },
-  "white-2":            { label: "W2",  name: "Pokémon White 2",         color: "#CFD8DC" },
-  "x":                  { label: "X",   name: "Pokémon X",               color: "#1565C0" },
-  "y":                  { label: "Y",   name: "Pokémon Y",               color: "#C62828" },
-  "omega-ruby":         { label: "OR",  name: "Pokémon Omega Ruby",      color: "#B71C1C" },
-  "alpha-sapphire":     { label: "AS",  name: "Pokémon Alpha Sapphire",  color: "#1A237E" },
-  "sun":                { label: "SN",  name: "Pokémon Sun",             color: "#FF8F00" },
-  "moon":               { label: "MN",  name: "Pokémon Moon",            color: "#283593" },
-  "ultra-sun":          { label: "US",  name: "Pokémon Ultra Sun",       color: "#E65100" },
-  "ultra-moon":         { label: "UM",  name: "Pokémon Ultra Moon",      color: "#1A237E" },
-  "sword":              { label: "SW",  name: "Pokémon Sword",           color: "#1E88E5" },
-  "shield":             { label: "SH",  name: "Pokémon Shield",          color: "#E53935" },
-  "brilliant-diamond":  { label: "BD",  name: "Brilliant Diamond",       color: "#5E35B1" },
-  "shining-pearl":      { label: "SP2", name: "Shining Pearl",           color: "#F06292" },
-  "legends-arceus":     { label: "LA",  name: "Legends: Arceus",         color: "#6D4C41" },
-  "scarlet":            { label: "SC",  name: "Pokémon Scarlet",         color: "#E53935" },
-  "violet":             { label: "VT",  name: "Pokémon Violet",          color: "#7B1FA2" },
+  "red": { label: "RD", name: "Pokémon Red", color: "#CC0000" },
+  "blue": { label: "BL", name: "Pokémon Blue", color: "#0000AA" },
+  "yellow": { label: "YW", name: "Pokémon Yellow", color: "#FFD700" },
+  "gold": { label: "GD", name: "Pokémon Gold", color: "#B8860B" },
+  "silver": { label: "SV", name: "Pokémon Silver", color: "#C0C0C0" },
+  "crystal": { label: "CY", name: "Pokémon Crystal", color: "#4FC3F7" },
+  "ruby": { label: "RB", name: "Pokémon Ruby", color: "#B22222" },
+  "sapphire": { label: "SP", name: "Pokémon Sapphire", color: "#1565C0" },
+  "emerald": { label: "EM", name: "Pokémon Emerald", color: "#2E7D32" },
+  "firered": { label: "FR", name: "Pokémon FireRed", color: "#FF6F00" },
+  "leafgreen": { label: "LG", name: "Pokémon LeafGreen", color: "#388E3C" },
+  "diamond": { label: "DM", name: "Pokémon Diamond", color: "#5C6BC0" },
+  "pearl": { label: "PL", name: "Pokémon Pearl", color: "#EC407A" },
+  "platinum": { label: "PT", name: "Pokémon Platinum", color: "#78909C" },
+  "heartgold": { label: "HG", name: "Pokémon HeartGold", color: "#FFB300" },
+  "soulsilver": { label: "SS", name: "Pokémon SoulSilver", color: "#90A4AE" },
+  "black": { label: "BK", name: "Pokémon Black", color: "#212121" },
+  "white": { label: "WT", name: "Pokémon White", color: "#EEEEEE" },
+  "black-2": { label: "B2", name: "Pokémon Black 2", color: "#37474F" },
+  "white-2": { label: "W2", name: "Pokémon White 2", color: "#CFD8DC" },
+  "x": { label: "X", name: "Pokémon X", color: "#1565C0" },
+  "y": { label: "Y", name: "Pokémon Y", color: "#C62828" },
+  "omega-ruby": { label: "OR", name: "Pokémon Omega Ruby", color: "#B71C1C" },
+  "alpha-sapphire": { label: "AS", name: "Pokémon Alpha Sapphire", color: "#1A237E" },
+  "sun": { label: "SN", name: "Pokémon Sun", color: "#FF8F00" },
+  "moon": { label: "MN", name: "Pokémon Moon", color: "#283593" },
+  "ultra-sun": { label: "US", name: "Pokémon Ultra Sun", color: "#E65100" },
+  "ultra-moon": { label: "UM", name: "Pokémon Ultra Moon", color: "#1A237E" },
+  "sword": { label: "SW", name: "Pokémon Sword", color: "#1E88E5" },
+  "shield": { label: "SH", name: "Pokémon Shield", color: "#E53935" },
+  "brilliant-diamond": { label: "BD", name: "Brilliant Diamond", color: "#5E35B1" },
+  "shining-pearl": { label: "SP2", name: "Shining Pearl", color: "#F06292" },
+  "legends-arceus": { label: "LA", name: "Legends: Arceus", color: "#6D4C41" },
+  "scarlet": { label: "SC", name: "Pokémon Scarlet", color: "#E53935" },
+  "violet": { label: "VT", name: "Pokémon Violet", color: "#7B1FA2" },
 };
 
 function spriteUrl(id: number) {
@@ -270,26 +357,25 @@ export function PokemonDetailModal({
   pokemon: PokemonEntry;
   onClose: () => void;
 }) {
-  const [species, setSpecies] = useState<SpeciesData | null>(null);
   const [evoSteps, setEvoSteps] = useState<EvoStep[]>([]);
   const [gameVersions, setGameVersions] = useState<string[]>([]);
   const [baseExperience, setBaseExperience] = useState<number | null>(null);
   const [svMoves, setSvMoves] = useState<SVMove[]>([]);
-  const [encounters, setEncounters] = useState<{ location: string; versions: string[]; levels: string; method: string }[]>([]);
   const [showAllMoves, setShowAllMoves] = useState(false);
+  const { t, locale } = useI18n();
   const [loading, setLoading] = useState(true);
   const [shiny, setShiny] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [sp, pkm, enc] = await Promise.all([
-        fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.nationalDex}/`).then((r) => r.json()) as Promise<SpeciesData>,
-        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.nationalDex}/`).then((r) => r.json()) as Promise<PokemonApiData>,
-        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.nationalDex}/encounters`).then((r) => r.json()).catch(() => []) as Promise<EncounterData[]>,
-      ]);
-      setSpecies(sp);
-      setBaseExperience(pkm.base_experience);
+      // Species data is now pre-cached in pokemon.json — only fetch pokemon
+      // endpoint for moves + game availability (too large to pre-cache per pokemon)
+      const pkm = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${pokemon.nationalDex}/`
+      ).then((r) => r.json()) as PokemonApiData;
+
+      setBaseExperience(pokemon.baseExperience ?? pkm.base_experience);
       setGameVersions(pkm.game_indices.map((g) => g.version.name));
 
       // Filter moves for Scarlet/Violet
@@ -315,37 +401,23 @@ export function PokemonDetailModal({
       });
       setSvMoves(moves);
 
-      // Filter encounters for SV
-      const svEncounters: typeof encounters = [];
-      for (const e of enc) {
-        const svVersions = e.version_details.filter(
-          (vd) => vd.version.name === "scarlet" || vd.version.name === "violet"
-        );
-        if (svVersions.length > 0) {
-          const details = svVersions[0].encounter_details[0];
-          const levelRange = details
-            ? details.min_level === details.max_level
-              ? `Lv. ${details.min_level}`
-              : `Lv. ${details.min_level}–${details.max_level}`
-            : "";
-          svEncounters.push({
-            location: formatLocationName(e.location_area.name),
-            versions: svVersions.map((v) => capitalize(v.version.name)),
-            levels: levelRange,
-            method: details ? formatMethodName(details.method.name) : "",
-          });
-        }
+      // Try static evolution chain first (Gen 9), fall back to live fetch
+      // using pre-cached evolutionChainId (avoids fetching species just for this)
+      const staticChain = findEvolutionChain(pokemon.name);
+      if (staticChain) {
+        setEvoSteps(flattenStaticChain(staticChain));
+      } else if (pokemon.evolutionChainId) {
+        const chain = await fetch(
+          `https://pokeapi.co/api/v2/evolution-chain/${pokemon.evolutionChainId}/`
+        ).then((r) => r.json());
+        setEvoSteps(flattenLiveChain(chain.chain));
       }
-      setEncounters(svEncounters);
-
-      const chain: EvoChain = await fetch(sp.evolution_chain.url).then((r) => r.json());
-      setEvoSteps(flattenChain(chain.chain));
     } catch {
       // silently fail — data might just not be available
     } finally {
       setLoading(false);
     }
-  }, [pokemon.nationalDex]);
+  }, [pokemon.nationalDex, pokemon.name, pokemon.evolutionChainId, pokemon.baseExperience]);
 
   useEffect(() => {
     fetchData();
@@ -358,18 +430,10 @@ export function PokemonDetailModal({
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  const flavorText = species?.flavor_text_entries
-    .filter((e) => e.language.name === "en")
-    .reverse()
-    .find((e) => ["scarlet", "violet", "sword", "shield"].includes(e.version.name))
-    ?.flavor_text?.replace(/\f/g, " ")
-    .replace(/\u00ad/g, "")
-    ?? species?.flavor_text_entries.find((e) => e.language.name === "en")?.flavor_text?.replace(/\f/g, " ") ?? "";
+  // Use pre-cached data; fall back to species live data for backward compat
+  const flavorText = pokemon.flavorText ?? "";
 
   const totalStats = STAT_NAMES.reduce((s, stat) => s + (pokemon.baseStats[stat] ?? 0), 0);
-
-  // All forms from varieties (excluding default)
-  const forms = (species?.varieties ?? []).filter((v) => !v.is_default);
 
   return (
     <div
@@ -390,7 +454,7 @@ export function PokemonDetailModal({
           className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-1.5 text-gray-400 hover:bg-white/20 hover:text-white"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-            <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </button>
 
@@ -408,11 +472,10 @@ export function PokemonDetailModal({
             />
             <button
               onClick={() => setShiny(!shiny)}
-              className={`rounded-full border px-3 py-1 text-[11px] font-bold transition-all ${
-                shiny
+              className={`rounded-full border px-3 py-1 text-[11px] font-bold transition-all ${shiny
                   ? "border-yellow-400/50 bg-yellow-500/20 text-yellow-300"
                   : "border-white/10 bg-white/5 text-gray-500 hover:text-gray-300"
-              }`}
+                }`}
             >
               ✨ Shiny
             </button>
@@ -424,12 +487,12 @@ export function PokemonDetailModal({
               <span className="font-mono">#{String(pokemon.nationalDex).padStart(4, "0")}</span>
               <span>·</span>
               <span className="capitalize">{pokemon.pokedex}</span>
-              {species?.is_legendary && (
+              {pokemon.isLegendary && (
                 <span className="rounded-full bg-yellow-500/15 px-2 py-0.5 text-[10px] font-bold text-yellow-300">
                   Legendary
                 </span>
               )}
-              {species?.is_mythical && (
+              {pokemon.isMythical && (
                 <span className="rounded-full bg-pink-500/15 px-2 py-0.5 text-[10px] font-bold text-pink-300">
                   Mythical
                 </span>
@@ -447,7 +510,7 @@ export function PokemonDetailModal({
             {/* Pokédex entry */}
             {flavorText && (
               <p className="mb-3 text-sm italic leading-relaxed text-gray-400">
-                "{flavorText}"
+                &ldquo;{flavorText}&rdquo;
               </p>
             )}
 
@@ -459,33 +522,30 @@ export function PokemonDetailModal({
               {pokemon.weight !== undefined && (
                 <InfoRow label="Weight" value={`${(pokemon.weight / 10).toFixed(2)} kg`} />
               )}
-              {species?.color && (
-                <InfoRow label="Color" value={capitalize(species.color.name)} />
+              {pokemon.color && (
+                <InfoRow label="Color" value={capitalize(pokemon.color)} />
               )}
-              {species && (
-                <InfoRow label="Gender" value={genderLabel(species.gender_rate)} />
+              {pokemon.genderRate !== undefined && (
+                <InfoRow label="Gender" value={genderLabel(pokemon.genderRate)} />
               )}
-              {species?.habitat && (
-                <InfoRow label="Habitat" value={capitalize(species.habitat.name)} />
+              {pokemon.habitat && (
+                <InfoRow label="Habitat" value={capitalize(pokemon.habitat)} />
               )}
-              {species?.generation && (
+              {pokemon.generation && (
                 <InfoRow
                   label="Generation"
-                  value={species.generation.name
-                    .replace("generation-", "Gen ")
-                    .toUpperCase()
-                    .replace("GEN ", "Gen ")}
+                  value={`Gen ${pokemon.generation}`}
                 />
               )}
               <InfoRow label="Region" value={capitalize(pokemon.pokedex)} />
               {baseExperience !== null && (
                 <InfoRow label="Base EXP" value={String(baseExperience)} />
               )}
-              {species?.capture_rate !== undefined && (
-                <InfoRow label="Catch Rate" value={String(species.capture_rate)} />
+              {pokemon.captureRate !== undefined && (
+                <InfoRow label="Catch Rate" value={String(pokemon.captureRate)} />
               )}
-              {species?.growth_rate && (
-                <InfoRow label="Growth" value={formatGrowthRate(species.growth_rate.name)} />
+              {pokemon.growthRate && (
+                <InfoRow label="Growth" value={formatGrowthRate(pokemon.growthRate)} />
               )}
               {pokemon.abilities.length > 0 && (
                 <div className="col-span-2">
@@ -536,7 +596,7 @@ export function PokemonDetailModal({
           </Section>
 
           {/* Encounter Locations (SV) */}
-          <Section title="Encounter Locations (Scarlet / Violet)">
+          {/* <Section title="Encounter Locations (Scarlet / Violet)">
             {loading ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
             ) : encounters.length === 0 ? (
@@ -564,7 +624,34 @@ export function PokemonDetailModal({
                 ))}
               </div>
             )}
-          </Section>
+          </Section> */}
+
+          {/* Training Habitat (Best Spots) */}
+          {(() => {
+            const trainingSpot = TRAINING_LOCATIONS[pokemon.name];
+            if (!trainingSpot) return null;
+            return (
+              <Section title={t("evPokedex.trainingTitle")}>
+                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="text-xl">📍</span>
+                    <span className="text-sm font-bold text-emerald-300">{t("evPokedex.trainingDungeon")}</span>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <div className="text-[10px] font-bold text-emerald-500/70 uppercase">{t("evPokedex.trainingLocation")}</div>
+                      <div className="text-xs font-semibold text-gray-200">{trainingSpot.location[locale as "pt" | "en"]}</div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-emerald-500/70 uppercase">{t("evPokedex.sandwichTip")}</div>
+                      <div className="text-xs font-semibold text-gray-200">{trainingSpot.sandwich[locale as "pt" | "en"]}</div>
+                      <div className="text-[9px] text-emerald-500/60">{trainingSpot.sandwich.effect}</div>
+                    </div>
+                  </div>
+                </div>
+              </Section>
+            );
+          })()}
 
           {/* Abilities */}
           <Section title="Abilities">
@@ -574,11 +661,10 @@ export function PokemonDetailModal({
                 return (
                   <div
                     key={a.name}
-                    className={`flex flex-col rounded-lg border px-3 py-2 ${
-                      a.isHidden
+                    className={`flex flex-col rounded-lg border px-3 py-2 ${a.isHidden
                         ? "border-violet-400/30 bg-violet-500/10"
                         : "border-white/10 bg-white/5"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center">
                       <span className={`text-sm font-bold ${a.isHidden ? "text-violet-300" : "text-gray-200"}`}>
@@ -648,17 +734,30 @@ export function PokemonDetailModal({
                     <div>
                       <p className="mb-1.5 text-xs font-semibold text-emerald-400">Level Up ({levelUp.length})</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {levelUp.slice(0, visibleLimit).map((m) => (
-                          <span
-                            key={`lu-${m.name}`}
-                            className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
-                          >
-                            <span className="font-mono text-[10px] text-emerald-400/70">
-                              {m.level > 0 ? m.level : "—"}
+                        {levelUp.slice(0, visibleLimit).map((m) => {
+                          const md = getMoveData(m.name);
+                          return (
+                            <span
+                              key={`lu-${m.name}`}
+                              className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                              title={md?.effect ?? ""}
+                            >
+                              <span className="font-mono text-[10px] text-emerald-400/70 w-4 text-center">
+                                {m.level > 0 ? m.level : "—"}
+                              </span>
+                              {md && (
+                                <span
+                                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                  style={{ background: TYPE_COLORS[md.type as PokemonType] ?? "#888" }}
+                                />
+                              )}
+                              <span>{formatItemName(m.name)}</span>
+                              {md?.power && (
+                                <span className="text-[9px] text-gray-500">{md.power}</span>
+                              )}
                             </span>
-                            {formatItemName(m.name)}
-                          </span>
-                        ))}
+                          );
+                        })}
                         {!showAllMoves && levelUp.length > visibleLimit && (
                           <span className="text-xs text-gray-600">+{levelUp.length - visibleLimit} more</span>
                         )}
@@ -671,14 +770,32 @@ export function PokemonDetailModal({
                     <div>
                       <p className="mb-1.5 text-xs font-semibold text-blue-400">TM ({tm.length})</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {tm.slice(0, visibleLimit).map((m) => (
-                          <span
-                            key={`tm-${m.name}`}
-                            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
-                          >
-                            {formatItemName(m.name)}
-                          </span>
-                        ))}
+                        {tm.slice(0, visibleLimit).map((m) => {
+                          const md = getMoveData(m.name);
+                          return (
+                            <span
+                              key={`tm-${m.name}`}
+                              className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                              title={md?.effect ?? ""}
+                            >
+                              {md?.tm !== null && md?.tm !== undefined && (
+                                <span className="font-mono text-[9px] font-bold text-yellow-500/80">
+                                  TM{String(md.tm).padStart(3, "0")}
+                                </span>
+                              )}
+                              {md && (
+                                <span
+                                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                  style={{ background: TYPE_COLORS[md.type as PokemonType] ?? "#888" }}
+                                />
+                              )}
+                              <span>{formatItemName(m.name)}</span>
+                              {md?.power && (
+                                <span className="text-[9px] text-gray-500">{md.power}</span>
+                              )}
+                            </span>
+                          );
+                        })}
                         {!showAllMoves && tm.length > visibleLimit && (
                           <span className="text-xs text-gray-600">+{tm.length - visibleLimit} more</span>
                         )}
@@ -691,14 +808,27 @@ export function PokemonDetailModal({
                     <div>
                       <p className="mb-1.5 text-xs font-semibold text-pink-400">Egg ({egg.length})</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {egg.map((m) => (
-                          <span
-                            key={`egg-${m.name}`}
-                            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
-                          >
-                            {formatItemName(m.name)}
-                          </span>
-                        ))}
+                        {egg.map((m) => {
+                          const md = getMoveData(m.name);
+                          return (
+                            <span
+                              key={`egg-${m.name}`}
+                              className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                              title={md?.effect ?? ""}
+                            >
+                              {md && (
+                                <span
+                                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                  style={{ background: TYPE_COLORS[md.type as PokemonType] ?? "#888" }}
+                                />
+                              )}
+                              <span>{formatItemName(m.name)}</span>
+                              {md?.power && (
+                                <span className="text-[9px] text-gray-500">{md.power}</span>
+                              )}
+                            </span>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -708,14 +838,27 @@ export function PokemonDetailModal({
                     <div>
                       <p className="mb-1.5 text-xs font-semibold text-amber-400">Tutor ({tutor.length})</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {tutor.map((m) => (
-                          <span
-                            key={`tut-${m.name}`}
-                            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
-                          >
-                            {formatItemName(m.name)}
-                          </span>
-                        ))}
+                        {tutor.map((m) => {
+                          const md = getMoveData(m.name);
+                          return (
+                            <span
+                              key={`tut-${m.name}`}
+                              className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-gray-300"
+                              title={md?.effect ?? ""}
+                            >
+                              {md && (
+                                <span
+                                  className="h-1.5 w-1.5 shrink-0 rounded-full"
+                                  style={{ background: TYPE_COLORS[md.type as PokemonType] ?? "#888" }}
+                                />
+                              )}
+                              <span>{formatItemName(m.name)}</span>
+                              {md?.power && (
+                                <span className="text-[9px] text-gray-500">{md.power}</span>
+                              )}
+                            </span>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -735,15 +878,15 @@ export function PokemonDetailModal({
           </Section>
 
           {/* Egg Groups */}
-          {species?.egg_groups && species.egg_groups.length > 0 && (
+          {pokemon.eggGroups && pokemon.eggGroups.length > 0 && (
             <Section title="Egg Groups">
               <div className="flex gap-2">
-                {species.egg_groups.map((eg) => (
+                {pokemon.eggGroups.map((eg) => (
                   <span
-                    key={eg.name}
+                    key={eg}
                     className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-gray-300"
                   >
-                    {capitalize(eg.name)}
+                    {eg}
                   </span>
                 ))}
               </div>
@@ -840,32 +983,22 @@ export function PokemonDetailModal({
           </Section>
 
           {/* Alternate Forms */}
-          {forms.length > 0 && (
+          {pokemon.formVariants && pokemon.formVariants.length > 0 && (
             <Section title="Other Forms">
               <div className="flex flex-wrap gap-3">
-                {forms.map((v) => {
-                  const formId = extractId(v.pokemon.url.replace("pokemon/", "pokemon-species/"));
-                  const displayName = v.pokemon.name
-                    .split("-")
-                    .slice(1)
-                    .map(capitalize)
-                    .join(" ") || v.pokemon.name;
-                  // For forms, use the pokemon endpoint ID directly from URL
-                  const pokemonId = extractId(v.pokemon.url);
-                  return (
-                    <div key={v.pokemon.name} className="flex flex-col items-center gap-1">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`}
-                        alt={v.pokemon.name}
-                        width={56}
-                        height={56}
-                        className="pixelated"
-                      />
-                      <span className="text-[10px] text-gray-500">{displayName}</span>
-                    </div>
-                  );
-                })}
+                {pokemon.formVariants.map((v) => (
+                  <div key={v.name} className="flex flex-col items-center gap-1">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${v.id}.png`}
+                      alt={v.name}
+                      width={56}
+                      height={56}
+                      className="pixelated"
+                    />
+                    <span className="text-[10px] text-gray-500">{v.name}</span>
+                  </div>
+                ))}
               </div>
             </Section>
           )}
@@ -893,11 +1026,10 @@ export function PokemonDetailModal({
 
 function EvoSprite({ id, name, active }: { id: number; name: string; active: boolean }) {
   return (
-    <div className={`flex flex-col items-center gap-1 rounded-xl border p-2 ${
-      active
+    <div className={`flex flex-col items-center gap-1 rounded-xl border p-2 ${active
         ? "border-violet-500/40 bg-violet-500/10"
         : "border-white/10 bg-white/5"
-    }`}>
+      }`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={spriteUrl(id)}

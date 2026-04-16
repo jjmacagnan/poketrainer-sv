@@ -1,6 +1,6 @@
 /**
- * Sandwich Guide — multi-recipe entries per type, sourced from game8.co
- * https://game8.co/games/Pokemon-Scarlet-Violet/archives/397743
+ * Sandwich Guide — multi-recipe entries per type, based on community-verified recipes
+ * Sources: Serebii.net, Smogon, Reddit r/PokemonScarletViolet
  *
  * Structure mirrors raid-tier-list.ts: each TypeEntry has at least one recipe
  * (index 0 = recommended), plus optional alternatives.
@@ -16,7 +16,7 @@ export interface SandwichGuideEntry {
 }
 
 // ─── Shiny Hunting (Sparkling Power Lv.3) ────────────────────────────────────
-// Primary recipes are the "optimal" (fewest ingredients) from game8.
+// Primary recipes are the "optimal" (fewest ingredients) from community sources.
 // Alternatives use different Herba Mystica combos for flexibility.
 
 export const SHINY_GUIDE: SandwichGuideEntry[] = [

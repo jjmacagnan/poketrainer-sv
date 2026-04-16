@@ -82,8 +82,13 @@
     "herba.Sour": "5★ & 6★ Tera Raids — mais comum em raids de tipo Poison, Ground, Fighting",
     "herba.Bitter": "5★ & 6★ Tera Raids — mais comum em raids de tipo Dragon, Psychic, Ghost",
     "herba.Spicy": "5★ & 6★ Tera Raids — mais comum em raids de tipo Fire, Electric, Dark",
-    "footer": "PokéTrainer SV Tools — Sandwich Builder v1.0",
-    "footerNote": "Dados baseados em receitas verificadas pela comunidade"
+    "showFlavors": "🧪 Ver flavors",
+    "hideFlavors": "✕ Esconder flavors",
+    "berryAlternatives": "🫐 Berries equivalentes",
+    "berryAltNote": "Berries com flavor similar ao Herba Mystica usado na receita",
+    "footer": "Sandwich Builder v1.0",
+    "footerNote": "Dados baseados em receitas verificadas pela comunidade",
+    "footerSource": "Serebii.net"
   },
   "evPokedex": {
     "title": "EV Yield Pokédex",
@@ -110,7 +115,13 @@
     "eggMoves": "Egg",
     "tutorMoves": "Tutor",
     "showAll": "Mostrar todos os {count} movimentos",
-    "showLess": "Mostrar menos"
+    "showLess": "Mostrar menos",
+    "trainingTitle": "Áreas de Treino (Paldea)",
+    "trainingDungeon": "Dica de Farm",
+    "trainingLocation": "Localização",
+    "trainingTarget": "Alvo principal",
+    "sandwichTip": "Dica de Sanduíche",
+    "disclaimerNote": "Dados da PokéAPI"
   },
   "evTracker": {
     "title": "EV Training Tracker",
@@ -132,7 +143,8 @@
     "templates": "📋 Templates:",
     "templatesDesc": "Distribuições populares pré-definidas",
     "limits": "Limites:",
-    "limitsDesc": "252/stat, 510 total"
+    "limitsDesc": "252/stat, 510 total",
+    "disclaimerNote": "Dados da PokéAPI"
   },
   "pokemonSlot": {
     "selectPokemon": "Selecionar Pokémon...",
@@ -142,7 +154,11 @@
     "templatesDrop": "📋 Templates...",
     "pokerus": "🦠 Pokérus",
     "machoBrace": "💪 Macho Brace",
-    "powerItemDrop": "⚡ Power Item..."
+    "powerItemDrop": "⚡ Power Item...",
+    "whereToTrain": "📍 Onde treinar {stat}?",
+    "farmingSpot": "Ponto de Treino",
+    "target": "Alvo",
+    "sandwich": "Sanduíche Recomendado"
   },
   "natureCalc": {
     "title": "Nature Calculator",
@@ -160,13 +176,18 @@
     "natureB": "Nature B",
     "diff": "Diff",
     "compareNote": "Comparação com IVs 31, EVs 252 em todos os stats, Level 100",
-    "selectToComparePrompt": "Selecione um Pokémon para comparar as natures"
+    "selectToComparePrompt": "Selecione um Pokémon para comparar as natures",
+    "berryPreferences": "🫐 Preferências de Berry",
+    "likesFlavor": "Gosta:",
+    "dislikesFlavor": "Não gosta:",
+    "berryNote": "Dar berries que a nature gosta aumenta a amizade mais rápido. Dar berries que ela não gosta reduz a amizade.",
+    "disclaimerNote": "Dados da PokéAPI"
   },
   "raid": {
     "title": "Tera Raid Build Maker",
     "subtitle": "Monte e compartilhe builds otimizadas para Tera Raids 5★/6★/7★",
     "tabBuild": "🛠️ Build Maker",
-    "tabTierList": "🏆 Tier List",
+    "tabTierList": "🏆 Guia de Pokémon",
     "importShowdown": "📥 Import Showdown",
     "exportShowdown": "📤 Export Showdown",
     "pasteShowdown": "Colar set do Pokémon Showdown:",
@@ -187,7 +208,24 @@
     "exportError": "Erro ao exportar imagem",
     "starRaids": "{stars}-Star Raids",
     "statsUnavailable": "stats indisponíveis",
-    "defensiveMatchup": "Multiplicadores de Defesa"
+    "defensiveMatchup": "Multiplicadores de Defesa",
+    "disclaimerNote": "Guia de Pokémon baseado em consenso da comunidade. Stats e moves da PokéAPI",
+    "bossFinder": "Busca por Boss",
+    "bossFinderSubtitle": "Encontre as melhores builds para uma raid específica",
+    "searchBoss": "Buscar Pokémon boss...",
+    "bossTeraType": "Tera Type do Boss",
+    "starLevel": "Nível de Estrelas",
+    "recommended": "Recomendado para esta Raid",
+    "recommendedCount": "{count} builds encontradas",
+    "superEffective": "SE",
+    "clearBoss": "Limpar",
+    "noBossRecommendations": "Nenhuma build com moves super efetivos encontrada. Veja o guia completo abaixo.",
+    "coverageLabel": "Cobertura:",
+    "aiRecommend": "Recomendação por IA",
+    "aiLoading": "Analisando builds...",
+    "aiError": "Falha ao obter recomendações. Tente novamente.",
+    "aiTierLabel": "Tier",
+    "aiPoweredBy": "Powered by Gemini"
   },
   "comunidade": {
     "title": "Comunidade",
@@ -198,7 +236,8 @@
     "discordDesc": "Entre no servidor para trocar dicas, builds e tirar dúvidas com a comunidade.",
     "discordBtn": "Entrar no Discord",
     "videosTitle": "Vídeos em destaque",
-    "videoPlaceholder": "Em breve"
+    "videoPlaceholder": "Em breve",
+    "viewAllVideos": "Ver todos os vídeos no YouTube"
   },
   "footer": {
     "tagline": "Ferramentas para jogadores de Pokémon Scarlet & Violet.",

@@ -14,7 +14,12 @@
     "fetch-abilities": "tsx scripts/fetch-abilities.ts",
     "fetch-items": "tsx scripts/fetch-items.ts",
     "fetch-types": "tsx scripts/fetch-types.ts",
-    "fetch-all": "npm run fetch-pokemon && npm run fetch-natures && npm run fetch-moves && npm run fetch-abilities && npm run fetch-items && npm run fetch-types"
+    "fetch-berries": "tsx scripts/fetch-berries.ts",
+    "fetch-berry-flavors": "tsx scripts/fetch-berry-flavors.ts",
+    "fetch-evolution-chains": "tsx scripts/fetch-evolution-chains.ts",
+    "fetch-move-meta": "tsx scripts/fetch-move-meta.ts",
+    "fetch-version-groups": "tsx scripts/fetch-version-groups.ts",
+    "fetch-all": "npm run fetch-pokemon && npm run fetch-natures && npm run fetch-moves && npm run fetch-abilities && npm run fetch-items && npm run fetch-types && npm run fetch-berries && npm run fetch-berry-flavors && npm run fetch-evolution-chains && npm run fetch-move-meta && npm run fetch-version-groups"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.87.0",

@@ -21,6 +21,15 @@ interface MoveResponse {
   pp: number | null;
   accuracy: number | null;
   priority: number;
+  effect_chance: number | null;
+  target: { name: string };
+  machines: { machine: { url: string }; version_group: { name: string } }[];
+  effect_entries: { short_effect: string; effect: string; language: { name: string } }[];
+  flavor_text_entries: { flavor_text: string; language: { name: string } }[];
+}
+
+interface MachineResponse {
+  item: { name: string };
 }
 
 interface OutputMove {
@@ -32,6 +41,9 @@ interface OutputMove {
   pp: number | null;
   accuracy: number | null;
   priority: number;
+  target: string;
+  tm: number | null;
+  effect: string;
 }
 
 function capitalize(s: string): string {
@@ -50,6 +62,38 @@ async function fetchMove(moveRef: {
   url: string;
 }): Promise<OutputMove> {
   const data = await fetchApi<MoveResponse>(moveRef.url);
+  
+  let effect = "";
+  const enEffect = data.effect_entries?.find((e) => e.language.name === "en");
+  if (enEffect) {
+    effect = enEffect.short_effect || enEffect.effect || "";
+  } else {
+    const enFlavor = data.flavor_text_entries?.find((e) => e.language.name === "en");
+    if (enFlavor) {
+      effect = enFlavor.flavor_text.replace(/\n|\f/g, " ");
+    }
+  }
+
+  if (effect && data.effect_chance) {
+    effect = effect.replace(/\$effect_chance/g, data.effect_chance.toString());
+  }
+
+  // TM number for Scarlet/Violet
+  let tm: number | null = null;
+  const svMachine = data.machines?.find(
+    (m) => m.version_group.name === "scarlet-violet"
+  );
+  if (svMachine) {
+    try {
+      const machine = await fetchApi<MachineResponse>(svMachine.machine.url);
+      // item.name is like "tm-001" or "tm001"
+      const tmMatch = machine.item.name.match(/(\d+)$/);
+      if (tmMatch) tm = parseInt(tmMatch[1]);
+    } catch {
+      // silently skip if machine fetch fails
+    }
+  }
+
   return {
     id: data.id,
     name: formatName(data.name),
@@ -59,6 +103,9 @@ async function fetchMove(moveRef: {
     pp: data.pp,
     accuracy: data.accuracy,
     priority: data.priority,
+    target: data.target?.name ?? "selected-pokemon",
+    tm,
+    effect: effect,
   };
 }
 
