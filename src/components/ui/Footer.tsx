@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useI18n } from "@/i18n";
+import { BuyMeCoffeeLink } from './BuyMeCoffeeLink';
 
 const TOOLS = [
   { href: "/sandwich-builder", key: "sandwich" },
@@ -119,6 +120,7 @@ export function Footer() {
                 <DiscordIcon />
                 Discord
               </a>
+              <BuyMeCoffeeLink variant="footer" />
             </div>
           </div>
 

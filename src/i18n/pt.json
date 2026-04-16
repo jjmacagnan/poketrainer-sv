@@ -248,6 +248,7 @@
     "privacy": "Política de Privacidade",
     "legalNotice": "Aviso Legal",
     "disclaimer": "Este projeto é uma ferramenta de fã não oficial e não é afiliado ou endossado pela Nintendo, Game Freak ou The Pokémon Company.",
+    "buyMeCoffee": "Buy Me a Coffee",
     "feedback": "Feedback"
   },
   "feedback": {
@@ -275,5 +276,8 @@
     "successBody": "Obrigado pelo feedback. Vamos analisar e responder se você informou um email.",
     "errorBody": "Não foi possível enviar. Tente novamente ou abra uma issue no GitHub.",
     "sendAnother": "Enviar outra mensagem"
+  },
+  "kofi": {
+    "cta": "☕ Se as ferramentas te ajudam, considere apoiar no →"
   }
 }

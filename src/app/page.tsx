@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useI18n } from "@/i18n";
+import { BuyMeCoffeeLink } from '@/components/ui/BuyMeCoffeeLink';
 
 const TOOLS = [
   {
@@ -114,6 +115,10 @@ export default function Home() {
           </Link>
         ))}
       </div>
+
+      <p className="text-sm text-gray-500 text-center py-6">
+        {t("kofi.cta")} <BuyMeCoffeeLink variant="inline" />
+      </p>
     </div>
   );
 }
