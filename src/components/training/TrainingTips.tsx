@@ -219,7 +219,7 @@ export function TrainingTips() {
                         {STAT_LABELS[berry.stat]}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-400">−10 EVs</td>
+                    <td className="px-4 py-3 text-gray-400">−{berry.reduction} EVs</td>
                   </tr>
                 ))}
               </tbody>
