@@ -39,6 +39,7 @@ export function calcBattles(
   const powerBonus = powerItem ? 8 : 0;
   const machoMultiplier = machoBrace && !powerItem ? 2 : 1;
   const evsPerBattle = (baseYield + powerBonus) * machoMultiplier;
+  if (evsPerBattle === 0) return { evsPerBattle: 0, battles252: 0, battles152: 0 };
   return {
     evsPerBattle,
     battles252: Math.ceil(252 / evsPerBattle),
