@@ -30,17 +30,19 @@
   "home": {
     "tagline": "Ferramentas práticas para Pokémon Scarlet & Violet",
     "sandwichTitle": "Sandwich Builder",
-    "evPokedexTitle": "Pokédex de EV Yield",
-    "evTrackerTitle": "EV Training Tracker",
-    "raidBuilderTitle": "Montador de Raids",
-    "natureCalcTitle": "Calculadora de Naturezas",
+    "evPokedexTitle": "Pokédex de EVs",
+    "evTrackerTitle": "Tracker de EVs",
+    "raidBuilderTitle": "Raid Builder",
+    "natureCalcTitle": "Calc. de Naturezas",
     "trainingTipsTitle": "Dicas de Treino",
+    "comunidadeTitle": "Comunidade",
     "sandwichDesc": "Receitas para Shiny Hunt com Sparkling Power Lv.3 e Encounter Power",
     "evPokedexDesc": "Lista pesquisável de todos os Pokémon com EV yields e localizações",
     "evTrackerDesc": "Rastreie o progresso de EV training do seu time com Power Items e Macho Brace",
     "raidBuilderDesc": "Monte e compartilhe builds otimizadas para Tera Raids 5★/6★/7★",
     "natureCalcDesc": "Calculadora de natures, stats e sugestão de Mints por role",
     "trainingTipsDesc": "Guia de Power Items, frutas para resetar EVs e como trocar Tera Type",
+    "comunidadeDesc": "Canal no YouTube, servidor Discord e conteúdo sobre Pokémon SV",
     "openTool": "Acessar"
   },
   "sandwich": {

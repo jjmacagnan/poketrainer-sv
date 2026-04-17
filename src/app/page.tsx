@@ -53,6 +53,14 @@ const TOOLS = [
     color: "#34D399",
     colorEnd: "#06B6D4",
   },
+  {
+    href: "/comunidade",
+    emoji: "🌐",
+    titleKey: "home.comunidadeTitle",
+    descKey: "home.comunidadeDesc",
+    color: "#818CF8",
+    colorEnd: "#6366F1",
+  },
 ];
 
 export default function Home() {
