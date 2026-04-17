@@ -185,7 +185,44 @@ export function TrainingTips() {
           id="berries"
           ref={(el) => { sectionRefs.current["berries"] = el; }}
         >
-          <p className="text-gray-400 text-sm">{t("trainingTips.berriesTitle")}</p>
+          <h2 className="mb-1 text-xl font-bold text-white">{t("trainingTips.berriesTitle")}</h2>
+          <p className="mb-4 text-sm text-gray-400">{t("trainingTips.berriesDesc")}</p>
+
+          <div className="overflow-hidden rounded-xl border border-white/[0.08]">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/[0.08] bg-white/[0.03]">
+                  <th className="px-4 py-3 text-left font-semibold text-gray-400">Berry</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-400">{t("trainingTips.berriesStat")}</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-400">{t("trainingTips.berriesEffect")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {EV_BERRIES_DATA.map((berry, i) => (
+                  <tr
+                    key={berry.name}
+                    className={i % 2 === 0 ? "bg-white/[0.01]" : ""}
+                  >
+                    <td className="px-4 py-3 font-medium text-white">{berry.name}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className="rounded px-2 py-0.5 text-xs font-bold"
+                        style={{
+                          background: STAT_COLORS[berry.stat] + "33",
+                          color: STAT_COLORS[berry.stat],
+                        }}
+                      >
+                        {STAT_LABELS[berry.stat]}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-gray-400">−10 EVs</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-3 text-xs text-gray-500">{t("trainingTips.berriesWhere")}</p>
         </section>
 
         <section
