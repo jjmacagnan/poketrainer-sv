@@ -155,8 +155,42 @@ Follows existing design system:
 
 ---
 
+## i18n
+
+Follows existing pattern: `useI18n()` hook, keys added to both `src/i18n/pt.json` and `src/i18n/en.json`.
+
+New key namespace: `trainingTips.*`
+
+| Key | PT | EN |
+|-----|----|----|
+| `trainingTips.title` | Dicas de Treino | Training Tips |
+| `trainingTips.subtitle` | Guia rápido de treino para Pokémon SV | Quick training guide for Pokémon SV |
+| `trainingTips.navPowerItems` | Power Items | Power Items |
+| `trainingTips.navBerries` | Frutas | Berries |
+| `trainingTips.navTeraType` | Tera Type | Tera Type |
+| `trainingTips.powerItemsTitle` | Power Items — Maximize seus EVs | Power Items — Maximize your EVs |
+| `trainingTips.powerItemsDesc` | Cada Power Item adiciona +8 EVs fixos no stat correspondente por batalha | Each Power Item adds +8 fixed EVs to the matching stat per battle |
+| `trainingTips.calcTitle` | Calculadora de Batalhas | Battle Calculator |
+| `trainingTips.calcYield` | EV yield base do Pokémon | Pokémon base EV yield |
+| `trainingTips.calcPowerItem` | Power Item equipado? | Power Item equipped? |
+| `trainingTips.calcPokerus` | Pokérus ativo? | Pokérus active? |
+| `trainingTips.calcMacho` | Macho Brace? | Macho Brace? |
+| `trainingTips.calcEvsPerBattle` | EVs por batalha | EVs per battle |
+| `trainingTips.calcBattles252` | Batalhas para 252 | Battles to reach 252 |
+| `trainingTips.calcBattlesVitamins` | Batalhas (com vitaminas até 100) | Battles (starting from 100 via vitamins) |
+| `trainingTips.berriesTitle` | Frutas para Resetar EVs | Berries to Reset EVs |
+| `trainingTips.berriesDesc` | Use várias vezes até zerar o stat | Use multiple times to fully reset a stat |
+| `trainingTips.berriesWhere` | Onde encontrar: brilhando no chão, leilões de Porto Marinada, drops aleatórios | Where to find: shining on ground, Porto Marinada auctions, random drops |
+| `trainingTips.teraTypeTitle` | Onde Trocar o Tera Type | Where to Change Tera Type |
+| `trainingTips.teraTypeLocation` | Restaurante Treasure Eatery — Medali | Treasure Eatery Restaurant — Medali |
+| `trainingTips.teraTypeReq` | Derrote o líder Larry + 50 Tera Shards do tipo desejado | Defeat gym leader Larry + 50 Tera Shards of the desired type |
+| `trainingTips.teraTypeTip` | Tera Shards são obtidos principalmente em Tera Raids — pode demorar juntar 50 de um tipo específico | Tera Shards drop mainly from Tera Raids — collecting 50 of a specific type takes time |
+| `home.trainingTipsDesc` | Guia de Power Items, frutas para resetar EVs e como trocar Tera Type | Guide to Power Items, EV-resetting berries, and how to change Tera Type |
+| `nav.trainingTips` | Dicas de Treino | Training Tips |
+
+---
+
 ## Out of Scope
 
 - No persistence (localStorage) — pure reference, no state to save
-- No i18n in this iteration
 - No Macho Brace + Power Item combination (game mechanic: they don't stack)
