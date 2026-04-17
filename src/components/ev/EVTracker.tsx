@@ -210,10 +210,6 @@ export function EVTracker() {
         </h3>
         <div className="grid gap-2 text-xs text-gray-400 sm:grid-cols-2">
           <div>
-            <strong className="text-gray-300">{t("evTracker.pokerus")}</strong>{" "}
-            {t("evTracker.pokerusDesc")}
-          </div>
-          <div>
             <strong className="text-gray-300">{t("evTracker.machoBrace")}</strong>{" "}
             {t("evTracker.machoBraceDesc")}
           </div>

@@ -2,7 +2,6 @@ import { MAX_EV_PER_STAT, MAX_EV_TOTAL } from "./constants";
 import type { StatName } from "./constants";
 
 export interface EVModifiers {
-  pokerus: boolean;
   powerItem: StatName | null; // which stat the Power Item boosts
   machoBrace: boolean;
 }
@@ -16,9 +15,8 @@ const VITAMIN_AMOUNT = 10;
  * Formula:
  *   EVs = (base_yield + power_item_bonus) × multiplier
  *
- * - Power Item: +8 to the corresponding stat (stacks with Pokérus)
- * - Macho Brace: 2× total (stacks with Pokérus for 4×, but NOT used with Power Items)
- * - Pokérus: 2× total
+ * - Power Item: +8 to the corresponding stat
+ * - Macho Brace: 2× total (NOT used with Power Items)
  */
 export function calculateEVGain(
   baseYield: { stat: StatName; amount: number }[],
@@ -29,32 +27,21 @@ export function calculateEVGain(
   for (const { stat, amount } of baseYield) {
     let total = amount;
 
-    // Power Item adds +8 to its specific stat
     if (modifiers.powerItem === stat) {
       total += POWER_ITEM_BONUS;
     }
 
-    // Macho Brace doubles (only when NOT using a Power Item)
     if (modifiers.machoBrace && !modifiers.powerItem) {
-      total *= 2;
-    }
-
-    // Pokérus doubles everything
-    if (modifiers.pokerus) {
       total *= 2;
     }
 
     gains.push({ stat, amount: total });
   }
 
-  // Power Item also gives EVs for its stat even if the defeated Pokémon
-  // doesn't yield that stat
   if (modifiers.powerItem) {
     const alreadyHasStat = gains.some((g) => g.stat === modifiers.powerItem);
     if (!alreadyHasStat) {
-      let bonus = POWER_ITEM_BONUS;
-      if (modifiers.pokerus) bonus *= 2;
-      gains.push({ stat: modifiers.powerItem, amount: bonus });
+      gains.push({ stat: modifiers.powerItem, amount: POWER_ITEM_BONUS });
     }
   }
 

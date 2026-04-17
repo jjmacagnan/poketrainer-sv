@@ -8,7 +8,7 @@ const TOOLS = [
   {
     href: "/sandwich-builder",
     emoji: "🥪",
-    title: "Sandwich Builder",
+    titleKey: "home.sandwichTitle",
     descKey: "home.sandwichDesc",
     color: "#F59E0B",
     colorEnd: "#F97316",
@@ -16,7 +16,7 @@ const TOOLS = [
   {
     href: "/ev-pokedex",
     emoji: "📖",
-    title: "EV Yield Pokédex",
+    titleKey: "home.evPokedexTitle",
     descKey: "home.evPokedexDesc",
     color: "#22D3EE",
     colorEnd: "#3B82F6",
@@ -24,7 +24,7 @@ const TOOLS = [
   {
     href: "/ev-tracker",
     emoji: "📊",
-    title: "EV Training Tracker",
+    titleKey: "home.evTrackerTitle",
     descKey: "home.evTrackerDesc",
     color: "#34D399",
     colorEnd: "#10B981",
@@ -32,7 +32,7 @@ const TOOLS = [
   {
     href: "/raid-builder",
     emoji: "⚔️",
-    title: "Tera Raid Build Maker",
+    titleKey: "home.raidBuilderTitle",
     descKey: "home.raidBuilderDesc",
     color: "#F87171",
     colorEnd: "#8B5CF6",
@@ -40,10 +40,26 @@ const TOOLS = [
   {
     href: "/nature-calc",
     emoji: "🧮",
-    title: "Nature Calculator",
+    titleKey: "home.natureCalcTitle",
     descKey: "home.natureCalcDesc",
     color: "#F472B6",
     colorEnd: "#EC4899",
+  },
+  {
+    href: "/training-tips",
+    emoji: "💡",
+    titleKey: "home.trainingTipsTitle",
+    descKey: "home.trainingTipsDesc",
+    color: "#34D399",
+    colorEnd: "#06B6D4",
+  },
+  {
+    href: "/comunidade",
+    emoji: "🌐",
+    titleKey: "home.comunidadeTitle",
+    descKey: "home.comunidadeDesc",
+    color: "#818CF8",
+    colorEnd: "#6366F1",
   },
 ];
 
@@ -102,7 +118,7 @@ export default function Home() {
               {tool.emoji}
             </div>
 
-            <h2 className="mb-1.5 text-base font-bold text-white">{tool.title}</h2>
+            <h2 className="mb-1.5 text-base font-bold text-white">{t(tool.titleKey)}</h2>
             <p className="text-sm leading-relaxed text-gray-500">{t(tool.descKey)}</p>
 
             {/* Arrow on hover */}
