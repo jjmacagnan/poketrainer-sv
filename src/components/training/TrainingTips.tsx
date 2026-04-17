@@ -229,7 +229,47 @@ export function TrainingTips() {
           id="tera-type"
           ref={(el) => { sectionRefs.current["tera-type"] = el; }}
         >
-          <p className="text-gray-400 text-sm">{t("trainingTips.teraTypeTitle")}</p>
+          <h2 className="mb-1 text-xl font-bold text-white">{t("trainingTips.teraTypeTitle")}</h2>
+          <p className="mb-4 text-sm text-gray-400">{t("trainingTips.teraTypeLocation")}</p>
+
+          <div className="rounded-xl border bg-white/[0.03] p-5" style={{ borderColor: "#FFD70033" }}>
+            <div className="mb-5 flex flex-col gap-3">
+              {[
+                t("trainingTips.teraTypeStep1"),
+                t("trainingTips.teraTypeStep2"),
+                t("trainingTips.teraTypeStep3"),
+              ].map((step, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <span
+                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-black"
+                    style={{ background: "#FFD70033", color: "#FFD700" }}
+                  >
+                    {i + 1}
+                  </span>
+                  <span className="text-sm text-gray-300">{step}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mb-4 rounded-lg border border-white/[0.06] bg-white/[0.03] p-4">
+              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-500">
+                {t("trainingTips.teraTypeReq")}
+              </p>
+              <ul className="flex flex-col gap-1">
+                {[
+                  t("trainingTips.teraTypeReqDefeated"),
+                  t("trainingTips.teraTypeReqShards"),
+                ].map((req) => (
+                  <li key={req} className="flex items-start gap-2 text-sm text-gray-300">
+                    <span style={{ color: "#FFD700" }}>✓</span>
+                    {req}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <p className="text-xs text-gray-500 italic">{t("trainingTips.teraTypeTip")}</p>
+          </div>
         </section>
       </div>
     </div>
