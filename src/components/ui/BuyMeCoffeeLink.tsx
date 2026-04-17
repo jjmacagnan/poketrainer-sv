@@ -1,9 +1,9 @@
 import { useI18n } from '@/i18n';
 
-export function BuyMeCoffeeLink({ variant = 'footer' }: { variant?: 'footer' | 'inline' }) {
+export function BuyMeCoffeeLink({ variant = 'footer' }: { variant?: 'footer' | 'footer-link' | 'inline' }) {
   const href = 'https://buymeacoffee.com/jjmacagnan';
   const { t } = useI18n();
-  
+
   if (variant === 'inline') {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 underline">
@@ -11,7 +11,15 @@ export function BuyMeCoffeeLink({ variant = 'footer' }: { variant?: 'footer' | '
       </a>
     );
   }
-  
+
+  if (variant === 'footer-link') {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 transition-colors hover:text-yellow-400">
+        {t('footer.buyMeCoffee')}
+      </a>
+    );
+  }
+
   return (
     <a
       href={href}

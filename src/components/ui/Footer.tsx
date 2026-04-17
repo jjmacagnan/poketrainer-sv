@@ -65,7 +65,7 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t border-white/10 bg-gray-950">
       <div className="mx-auto max-w-5xl px-4 py-10">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-4">
           {/* Brand */}
           <div className="flex flex-col gap-4">
             {/* Linha 1: Logo Jbit */}
@@ -122,7 +122,6 @@ export function Footer() {
                 <DiscordIcon />
                 Discord
               </a>
-              <BuyMeCoffeeLink variant="footer" />
             </div>
           </div>
 
@@ -145,6 +144,34 @@ export function Footer() {
             </ul>
           </div>
 
+          {/* Contributing */}
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
+              {t("footer.contributing")}
+            </p>
+            <ul className="flex flex-col gap-2">
+              <li>
+                <a
+                  href="https://github.com/jjmacagnan/poketrainer-sv"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  <GitHubIcon />
+                  {t("footer.sourceCode")}
+                </a>
+              </li>
+              <li>
+                <BuyMeCoffeeLink variant="footer-link" />
+              </li>
+              <li>
+                <Link href="/feedback" className="text-sm text-gray-400 transition-colors hover:text-white">
+                  {t("footer.feedback")}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Legal */}
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">
@@ -164,11 +191,6 @@ export function Footer() {
               <li>
                 <Link href="/aviso-legal" className="text-sm text-gray-400 transition-colors hover:text-white">
                   {t("footer.legalNotice")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/feedback" className="text-sm text-gray-400 transition-colors hover:text-white">
-                  {t("footer.feedback")}
                 </Link>
               </li>
             </ul>
