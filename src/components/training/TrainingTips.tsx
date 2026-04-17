@@ -50,6 +50,13 @@ export function TrainingTips() {
     sectionRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const [calcYield, setCalcYield] = useState(1);
+  const [calcPowerItem, setCalcPowerItem] = useState(false);
+  const [calcPokerus, setCalcPokerus] = useState(false);
+  const [calcMacho, setCalcMacho] = useState(false);
+
+  const calcResult = calcBattles(calcYield, calcPowerItem, calcPokerus, calcMacho);
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <PageHeader
@@ -85,7 +92,93 @@ export function TrainingTips() {
           id="power-items"
           ref={(el) => { sectionRefs.current["power-items"] = el; }}
         >
-          <p className="text-gray-400 text-sm">{t("trainingTips.powerItemsTitle")}</p>
+          <h2 className="mb-1 text-xl font-bold text-white">{t("trainingTips.powerItemsTitle")}</h2>
+          <p className="mb-6 text-sm text-gray-400">{t("trainingTips.powerItemsDesc")}</p>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 mb-8">
+            {POWER_ITEMS_DATA.map((item) => (
+              <div
+                key={item.name}
+                className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <span
+                    className="rounded-lg px-2 py-0.5 text-xs font-bold"
+                    style={{ background: STAT_COLORS[item.stat] + "33", color: STAT_COLORS[item.stat] }}
+                  >
+                    {STAT_LABELS[item.stat]}
+                  </span>
+                  <span
+                    className="ml-auto text-xs font-bold"
+                    style={{ color: STAT_COLORS[item.stat] }}
+                  >
+                    +8 EVs
+                  </span>
+                </div>
+                <p className="font-semibold text-white text-sm mb-1">{item.name}</p>
+                <p className="text-xs text-gray-500">
+                  {t("trainingTips.powerItemsWhere")}: {item.where}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Battle Calculator */}
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-5">
+            <h3 className="mb-4 font-bold text-white">{t("trainingTips.calcTitle")}</h3>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-1 block text-xs text-gray-400">{t("trainingTips.calcYield")}</label>
+                <select
+                  value={calcYield}
+                  onChange={(e) => setCalcYield(Number(e.target.value))}
+                  className="w-full rounded-lg border border-white/10 bg-gray-900 px-3 py-2 text-sm text-white focus:outline-none"
+                >
+                  <option value={1}>1 EV</option>
+                  <option value={2}>2 EVs</option>
+                  <option value={3}>3 EVs</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                {[
+                  { key: "calcPowerItem", value: calcPowerItem, set: setCalcPowerItem, label: t("trainingTips.calcPowerItem") },
+                  { key: "calcPokerus",   value: calcPokerus,   set: setCalcPokerus,   label: t("trainingTips.calcPokerus") },
+                  ...(!calcPowerItem
+                    ? [{ key: "calcMacho", value: calcMacho, set: setCalcMacho, label: t("trainingTips.calcMacho") }]
+                    : []),
+                ].map(({ key, value, set, label }) => (
+                  <button
+                    key={key}
+                    onClick={() => set(!value)}
+                    className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors"
+                    style={{
+                      borderColor: value ? "#34D399" : "rgba(255,255,255,0.08)",
+                      background: value ? "#34D39911" : "transparent",
+                      color: value ? "#34D399" : "#9CA3AF",
+                    }}
+                  >
+                    {label}
+                    <span className="font-bold">{value ? "ON" : "OFF"}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-5 grid grid-cols-3 gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-4">
+              {[
+                { label: t("trainingTips.calcEvsPerBattle"),    value: calcResult.evsPerBattle },
+                { label: t("trainingTips.calcBattles252"),       value: `~${calcResult.battles252}` },
+                { label: t("trainingTips.calcBattlesVitamins"),  value: `~${calcResult.battles152}` },
+              ].map(({ label, value }) => (
+                <div key={label} className="text-center">
+                  <div className="text-2xl font-black text-white">{value}</div>
+                  <div className="mt-1 text-[11px] text-gray-500 leading-tight">{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
         <section
