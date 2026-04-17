@@ -302,6 +302,7 @@
     "berriesTitle": "Frutas para Resetar EVs",
     "berriesDesc": "Cada fruta reduz 10 EVs do stat correspondente e aumenta amizade. Use várias vezes até zerar.",
     "berriesWhere": "Onde encontrar: brilhando no chão, leilões de Porto Marinada, drops aleatórios.",
+    "berriesName": "Fruta",
     "berriesStat": "Stat",
     "berriesEffect": "Efeito",
     "teraTypeTitle": "Onde Trocar o Tera Type",

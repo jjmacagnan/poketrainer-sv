@@ -302,6 +302,7 @@
     "berriesTitle": "Berries to Reset EVs",
     "berriesDesc": "Each berry reduces 10 EVs from the matching stat and raises friendship. Use multiple times to fully reset.",
     "berriesWhere": "Where to find: shining on ground, Porto Marinada auctions, random drops.",
+    "berriesName": "Berry",
     "berriesStat": "Stat",
     "berriesEffect": "Effect",
     "teraTypeTitle": "Where to Change Tera Type",

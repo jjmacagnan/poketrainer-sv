@@ -29,6 +29,11 @@ export function TrainingTips() {
   const [activeSection, setActiveSection] = useState<SectionId>("power-items");
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
+  const [calcYield, setCalcYield] = useState(1);
+  const [calcPowerItem, setCalcPowerItem] = useState(false);
+  const [calcPokerus, setCalcPokerus] = useState(false);
+  const [calcMacho, setCalcMacho] = useState(false);
+
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
 
@@ -49,11 +54,6 @@ export function TrainingTips() {
   const scrollTo = (id: string) => {
     sectionRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-
-  const [calcYield, setCalcYield] = useState(1);
-  const [calcPowerItem, setCalcPowerItem] = useState(false);
-  const [calcPokerus, setCalcPokerus] = useState(false);
-  const [calcMacho, setCalcMacho] = useState(false);
 
   const calcResult = calcBattles(calcYield, calcPowerItem, calcPokerus, calcMacho);
 
@@ -151,7 +151,11 @@ export function TrainingTips() {
                 ].map(({ key, value, set, label }) => (
                   <button
                     key={key}
-                    onClick={() => set(!value)}
+                    onClick={() => {
+                      set(!value);
+                      if (key === "calcPowerItem" && !value) setCalcMacho(false);
+                    }}
+                    aria-pressed={value}
                     className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors"
                     style={{
                       borderColor: value ? "#34D399" : "rgba(255,255,255,0.08)",
@@ -192,7 +196,7 @@ export function TrainingTips() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/[0.08] bg-white/[0.03]">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-400">Berry</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-400">{t("trainingTips.berriesName")}</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-400">{t("trainingTips.berriesStat")}</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-400">{t("trainingTips.berriesEffect")}</th>
                 </tr>
