@@ -14,7 +14,10 @@ export function BuyMeCoffeeLink({ variant = 'footer' }: { variant?: 'footer' | '
 
   if (variant === 'footer-link') {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 transition-colors hover:text-yellow-400">
+      <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-gray-400 transition-colors hover:text-yellow-400">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M18 3H5a1 1 0 0 0-1 1v9a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V8a3 3 0 0 0-2-2.83V4a1 1 0 0 0-1-1zM18 9h1a1 1 0 1 1 0 2h-1V9zM5 5h12v2H5V5z" />
+        </svg>
         {t('footer.buyMeCoffee')}
       </a>
     );
