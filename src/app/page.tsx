@@ -45,6 +45,14 @@ const TOOLS = [
     color: "#F472B6",
     colorEnd: "#EC4899",
   },
+  {
+    href: "/training-tips",
+    emoji: "💡",
+    title: "Training Tips",
+    descKey: "home.trainingTipsDesc",
+    color: "#34D399",
+    colorEnd: "#06B6D4",
+  },
 ];
 
 export default function Home() {
