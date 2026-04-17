@@ -31,7 +31,6 @@ export function TrainingTips() {
 
   const [calcYield, setCalcYield] = useState(1);
   const [calcPowerItem, setCalcPowerItem] = useState(false);
-  const [calcPokerus, setCalcPokerus] = useState(false);
   const [calcMacho, setCalcMacho] = useState(false);
 
   useEffect(() => {
@@ -55,7 +54,7 @@ export function TrainingTips() {
     sectionRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const calcResult = calcBattles(calcYield, calcPowerItem, calcPokerus, calcMacho);
+  const calcResult = calcBattles(calcYield, calcPowerItem, calcMacho);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
@@ -144,7 +143,6 @@ export function TrainingTips() {
               <div className="flex flex-col gap-2">
                 {[
                   { key: "calcPowerItem", value: calcPowerItem, set: setCalcPowerItem, label: t("trainingTips.calcPowerItem") },
-                  { key: "calcPokerus",   value: calcPokerus,   set: setCalcPokerus,   label: t("trainingTips.calcPokerus") },
                   ...(!calcPowerItem
                     ? [{ key: "calcMacho", value: calcMacho, set: setCalcMacho, label: t("trainingTips.calcMacho") }]
                     : []),

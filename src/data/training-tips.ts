@@ -34,14 +34,11 @@ export const EV_BERRIES_DATA: EVBerry[] = [
 export function calcBattles(
   baseYield: number,
   powerItem: boolean,
-  pokerus: boolean,
   machoBrace: boolean
 ): { evsPerBattle: number; battles252: number; battles152: number } {
   const powerBonus = powerItem ? 8 : 0;
   const machoMultiplier = machoBrace && !powerItem ? 2 : 1;
-  const pokerusMultiplier = pokerus ? 2 : 1;
-  const totalMultiplier = machoMultiplier * pokerusMultiplier;
-  const evsPerBattle = (baseYield + powerBonus) * totalMultiplier;
+  const evsPerBattle = (baseYield + powerBonus) * machoMultiplier;
   return {
     evsPerBattle,
     battles252: Math.ceil(252 / evsPerBattle),

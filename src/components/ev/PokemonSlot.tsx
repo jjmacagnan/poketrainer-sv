@@ -46,7 +46,6 @@ export interface PokemonSlotData {
   sprite: string;
   types: string[];
   evs: Record<StatName, number>;
-  pokerus: boolean;
   powerItem: StatName | null;
   machoBrace: boolean;
 }
@@ -58,7 +57,6 @@ export function createEmptySlot(index: number): PokemonSlotData {
     sprite: "",
     types: [],
     evs: { HP: 0, Atk: 0, Def: 0, SpA: 0, SpD: 0, Spe: 0 },
-    pokerus: false,
     powerItem: null,
     machoBrace: false,
   };
@@ -342,17 +340,6 @@ export function PokemonSlot({
         {/* Modifier Toggles */}
         {showModifiers && (
           <div className="mt-3 flex flex-wrap gap-2">
-            <button
-              onClick={() => onChange({ ...data, pokerus: !data.pokerus })}
-              className={`rounded-full border px-3 py-1 text-xs font-bold transition-all ${
-                data.pokerus
-                  ? "border-pink-400/50 bg-pink-500/20 text-pink-300"
-                  : "border-white/10 bg-white/5 text-gray-400"
-              }`}
-            >
-              {t("pokemonSlot.pokerus")} {data.pokerus ? "(2×)" : ""}
-            </button>
-
             <button
               onClick={() =>
                 onChange({
