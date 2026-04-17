@@ -126,7 +126,7 @@ export function TrainingTips() {
           <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-5">
             <h3 className="mb-4 font-bold text-white">{t("trainingTips.calcTitle")}</h3>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="flex flex-col gap-2">
               <div>
                 <label className="mb-1 block text-xs text-gray-400">{t("trainingTips.calcYield")}</label>
                 <select
@@ -140,32 +140,30 @@ export function TrainingTips() {
                 </select>
               </div>
 
-              <div className="flex flex-col gap-2">
-                {[
-                  { key: "calcPowerItem", value: calcPowerItem, set: setCalcPowerItem, label: t("trainingTips.calcPowerItem") },
-                  ...(!calcPowerItem
-                    ? [{ key: "calcMacho", value: calcMacho, set: setCalcMacho, label: t("trainingTips.calcMacho") }]
-                    : []),
-                ].map(({ key, value, set, label }) => (
-                  <button
-                    key={key}
-                    onClick={() => {
-                      set(!value);
-                      if (key === "calcPowerItem" && !value) setCalcMacho(false);
-                    }}
-                    aria-pressed={value}
-                    className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors"
-                    style={{
-                      borderColor: value ? "#34D399" : "rgba(255,255,255,0.08)",
-                      background: value ? "#34D39911" : "transparent",
-                      color: value ? "#34D399" : "#9CA3AF",
-                    }}
-                  >
-                    {label}
-                    <span className="font-bold">{value ? "ON" : "OFF"}</span>
-                  </button>
-                ))}
-              </div>
+              {[
+                { key: "calcPowerItem", value: calcPowerItem, set: setCalcPowerItem, label: t("trainingTips.calcPowerItem") },
+                ...(!calcPowerItem
+                  ? [{ key: "calcMacho", value: calcMacho, set: setCalcMacho, label: t("trainingTips.calcMacho") }]
+                  : []),
+              ].map(({ key, value, set, label }) => (
+                <button
+                  key={key}
+                  onClick={() => {
+                    set(!value);
+                    if (key === "calcPowerItem" && !value) setCalcMacho(false);
+                  }}
+                  aria-pressed={value}
+                  className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors"
+                  style={{
+                    borderColor: value ? "#34D399" : "rgba(255,255,255,0.08)",
+                    background: value ? "#34D39911" : "transparent",
+                    color: value ? "#34D399" : "#9CA3AF",
+                  }}
+                >
+                  {label}
+                  <span className="font-bold">{value ? "ON" : "OFF"}</span>
+                </button>
+              ))}
             </div>
 
             <div className="mt-5 grid grid-cols-3 gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-4">
