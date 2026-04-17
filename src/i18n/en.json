@@ -29,6 +29,12 @@
   },
   "home": {
     "tagline": "Practical tools for Pokémon Scarlet & Violet",
+    "sandwichTitle": "Sandwich Builder",
+    "evPokedexTitle": "EV Yield Pokédex",
+    "evTrackerTitle": "EV Training Tracker",
+    "raidBuilderTitle": "Tera Raid Build Maker",
+    "natureCalcTitle": "Nature Calculator",
+    "trainingTipsTitle": "Training Tips",
     "sandwichDesc": "Recipes for Shiny Hunting with Sparkling Power Lv.3 and Encounter Power",
     "evPokedexDesc": "Searchable list of all Pokémon with EV yields and locations",
     "evTrackerDesc": "Track your team's EV training progress with Power Items and Macho Brace",
