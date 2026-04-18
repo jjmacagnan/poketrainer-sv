@@ -101,6 +101,8 @@ export function TrainingTips() {
                 className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4"
               >
                 <div className="flex items-center gap-3 mb-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={item.sprite} alt={item.name} width={32} height={32} className="image-rendering-pixelated" />
                   <span
                     className="rounded-lg px-2 py-0.5 text-xs font-bold"
                     style={{ background: STAT_COLORS[item.stat] + "33", color: STAT_COLORS[item.stat] }}
@@ -203,7 +205,13 @@ export function TrainingTips() {
                     key={berry.name}
                     className={i % 2 === 0 ? "bg-white/[0.01]" : ""}
                   >
-                    <td className="px-4 py-3 font-medium text-white">{berry.name}</td>
+                    <td className="px-4 py-3 font-medium text-white">
+                      <div className="flex items-center gap-2">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={berry.sprite} alt={berry.name} width={24} height={24} className="image-rendering-pixelated" />
+                        {berry.name}
+                      </div>
+                    </td>
                     <td className="px-4 py-3">
                       <span
                         className="rounded px-2 py-0.5 text-xs font-bold"
