@@ -102,7 +102,7 @@ export function TrainingTips() {
               >
                 <div className="flex items-center gap-3 mb-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.sprite} alt={item.name} width={32} height={32} className="image-rendering-pixelated" />
+                  <img src={item.sprite} alt={item.name} width={32} height={32} className="[image-rendering:pixelated]" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                   <span
                     className="rounded-lg px-2 py-0.5 text-xs font-bold"
                     style={{ background: STAT_COLORS[item.stat] + "33", color: STAT_COLORS[item.stat] }}
@@ -208,7 +208,7 @@ export function TrainingTips() {
                     <td className="px-4 py-3 font-medium text-white">
                       <div className="flex items-center gap-2">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={berry.sprite} alt={berry.name} width={24} height={24} className="image-rendering-pixelated" />
+                        <img src={berry.sprite} alt={berry.name} width={24} height={24} className="[image-rendering:pixelated]" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                         {berry.name}
                       </div>
                     </td>
