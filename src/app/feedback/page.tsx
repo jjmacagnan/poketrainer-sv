@@ -13,6 +13,7 @@ const TOOLS = [
   "ev-tracker",
   "raid-builder",
   "nature-calc",
+  "training-tips",
 ] as const;
 
 export default function FeedbackPage() {
