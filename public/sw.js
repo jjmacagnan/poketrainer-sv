@@ -1,13 +1,6 @@
-const CACHE_NAME = "poketrainer-sv-v1";
+const CACHE_NAME = "poketrainer-sv-v2";
 
-// Assets to cache on install
 const PRECACHE_URLS = [
-  "/",
-  "/sandwich-builder",
-  "/ev-pokedex",
-  "/ev-tracker",
-  "/raid-builder",
-  "/nature-calc",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
 ];
@@ -35,44 +28,47 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  // Only handle GET requests
   if (event.request.method !== "GET") return;
 
   const url = new URL(event.request.url);
 
-  // Skip API routes and external requests
   if (url.pathname.startsWith("/api/") || url.origin !== self.location.origin) {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      // Return cached version if available
-      if (cached) return cached;
-
-      // Otherwise fetch, cache, and return
-      return fetch(event.request)
-        .then((response) => {
-          // Only cache successful same-origin responses
-          if (
-            !response ||
-            response.status !== 200 ||
-            response.type !== "basic"
-          ) {
+  // _next/static assets have hashed filenames — cache-first is safe
+  if (url.pathname.startsWith("/_next/static/")) {
+    event.respondWith(
+      caches.match(event.request).then(
+        (cached) =>
+          cached ||
+          fetch(event.request).then((response) => {
+            if (response.status === 200) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+            }
             return response;
-          }
-          const responseClone = response.clone();
-          caches
-            .open(CACHE_NAME)
-            .then((cache) => cache.put(event.request, responseClone));
-          return response;
-        })
-        .catch(() => {
-          // Offline fallback for navigation requests
-          if (event.request.mode === "navigate") {
-            return caches.match("/");
-          }
-        });
-    })
+          })
+      )
+    );
+    return;
+  }
+
+  // HTML pages — network-first so deploys are always picked up
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        if (response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
+        return response;
+      })
+      .catch(() => {
+        // Offline fallback
+        return caches.match(event.request).then(
+          (cached) => cached || caches.match("/")
+        );
+      })
   );
 });
