@@ -1,6 +1,6 @@
 # Design Spec — Game UI Redesign
 **Date:** 2026-04-20  
-**Scope:** Design system completo — tokens, Navbar, homepage
+**Scope:** Design system completo — tokens, Navbar, homepage, todos os componentes compartilhados e específicos de cada ferramenta
 
 ---
 
@@ -115,20 +115,123 @@ Descrição curta   ← Outfit 11px text-dim
 
 ---
 
+## Linguagem visual a aplicar em todos os componentes
+
+Estes princípios guiam as mudanças em todos os arquivos abaixo:
+
+- **Bordas:** `rounded-xl` / `rounded-full` / `rounded-lg` → `rounded-none` ou `rounded-sm` (cantos retos, game UI)
+- **Bordas de cor:** `border-white/10` → `border-[var(--pt-border-dim)]`; borda ativa → `border-[var(--pt-gold)]`
+- **Backgrounds:** `bg-white/5`, `bg-gray-900` → `bg-[var(--pt-card)]` ou `bg-[var(--pt-surface)]`
+- **Texto secundário:** `text-gray-400` / `text-gray-500` → `text-[var(--pt-text-dim)]`
+- **Focus rings:** `focus:border-violet-500` → `focus:border-[var(--pt-gold)]`
+- **Fonte de heading/label:** `font-syne` / `font-bold` em títulos → `font-[family-name:var(--font-share-tech-mono)]` uppercase
+- **Botões ativos:** sem `rounded-full` — borda gold retangular + fundo `rgba(255,215,0,0.08)`
+- **Gradientes SaaS** (violeta/azul genérico) → substituir por gold/orange ou remover
+
+---
+
+## Componentes Compartilhados (`src/components/shared/`)
+
+### `PageHeader.tsx`
+- Remover gradiente de texto (`WebkitBackgroundClip`) e `font-syne`
+- Título: Share Tech Mono uppercase, cor `var(--pt-gold)`
+- Adicionar `prop: number` (ex: `toolNumber: "#001"`) exibido acima do título em mono dim
+- Subtítulo: Outfit, `var(--pt-text-dim)`
+
+### `SearchInput.tsx`
+- `rounded-xl` → `rounded-none`
+- `border-white/10` → `border-[var(--pt-border-dim)]`
+- `bg-white/5` → `bg-[var(--pt-card)]`
+- `focus:border-violet-500` → `focus:border-[var(--pt-gold)]`
+- Ícone de busca: `var(--pt-text-dim)` → `var(--pt-gold)` no focus
+
+### `FilterBar.tsx`
+- Botões: `rounded-full` → `rounded-none`
+- Estilo inativo: `border-[var(--pt-border-dim)]` + texto dim
+- Estilo ativo: `border-[var(--pt-gold)]` + texto gold + fundo `rgba(255,215,0,0.08)`
+- TypeBadge filters (tipos Pokémon): mantém cores de tipo — são identidade do jogo, não SaaS
+
+---
+
+## Componentes UI (`src/components/ui/`)
+
+### `TypeBadge.tsx`
+- Manter cores de tipo (são canônicas do Pokémon)
+- `rounded-full` → `rounded-sm` (levemente menos pill, mais sharp)
+
+### `StatBar.tsx`
+- Manter cores por stat (HP vermelho, Atk laranja, etc. — canônicas)
+- Barra: `rounded-full` → `rounded-none` (barra reta, estilo game)
+- Label: `font-mono` → Share Tech Mono
+
+### `PowerTag.tsx`
+- Gold/teal gradients já batem com a paleta — manter
+- `rounded-md` → `rounded-none`
+- Border: `rgba(255,255,255,0.3)` → `rgba(255,215,0,0.4)` para Lv.3
+
+### `Footer.tsx`
+- Texto: Share Tech Mono uppercase, `var(--pt-text-dim)`
+- `border-top`: `var(--pt-border-dim)`
+- Links de ferramenta: mono, hover → gold
+- Remove qualquer `rounded-*` dos botões internos
+
+### `BuyMeCoffeeLink.tsx`
+- Estilizar inline com borda gold, mono, sem `rounded-xl`
+
+---
+
+## Componentes de Ferramenta
+
+### `sandwich/SandwichBuilder.tsx`, `RecipeCard.tsx`, `RecipeDetail.tsx`
+- Cards: `rounded-2xl` → `rounded-none`, `border-white/[0.08]` → `border-[var(--pt-border-dim)]`
+- Headers de seção: Share Tech Mono uppercase gold
+- Tabs: borda retangular, ativa com gold underline ou border
+
+### `ev/EVPokedex.tsx`, `PokemonDetailModal.tsx`
+- Tabela/grid: bordas dim, sem rounded
+- Modal: `border-[var(--pt-gold)]` 2px, background `var(--pt-surface)`
+- Badges de stat: Share Tech Mono
+
+### `ev/EVTracker.tsx`, `PokemonSlot.tsx`
+- Slots vazios: borda dashed dim (consistente com card LOCKED da homepage)
+- Slot ativo: borda gold
+- Barras de EV: `StatBar` já atualizado (rounded-none)
+- Botões +/-: retangulares, borda dim, hover gold
+
+### `raid/RaidBuildMaker.tsx`, `BuildCard.tsx`, `BuildExport.tsx`
+- Cards de build: sem rounded, borda dim
+- Seletor de Tera Type: usa TypeBadge (já atualizado)
+- Export button: borda gold, Share Tech Mono
+
+### `nature/NatureCalc.tsx`
+- Tabela de natures: bordas dim, célula ativa com background gold `rgba`
+- Highlight +10% / -10%: gold / text-dim (substituir violeta/vermelho genérico)
+
+### `training/TrainingTips.tsx`
+- Headers de seção: Share Tech Mono uppercase gold
+- Cards de dica: borda dim, sem rounded
+
+### `legal/LegalPageTemplate.tsx`
+- Headers: Share Tech Mono
+- Conteúdo: Outfit (corpo de texto — correto)
+
+---
+
 ## O que NÃO muda neste redesign
 
 - Estrutura de rotas e páginas internas
 - Lógica de i18n (`useI18n`, chaves de tradução)
-- Componentes internos das ferramentas (`EVPokedex`, `RaidBuilder`, etc.)
+- Cores de tipo Pokémon em `TypeBadge` / `FilterBar` (são identidade canônica)
+- Cores de stat em `StatBar` (HP, Atk, Def, etc. — canônicas)
 - Dados (`pokemon-ev-yields.ts`, `sandwich-recipes.ts`, etc.)
 - PWA / Service Worker / manifest
-- Footer (herda os tokens automaticamente sem alteração de código)
 
 ---
 
 ## Critérios de Sucesso
 
-- Visual imediatamente reconhecível como "jogo Pokémon", não SaaS
+- Visual imediatamente reconhecível como "jogo Pokémon" em qualquer página do site
 - Navbar com identidade forte — o cursor piscando como detalhe memorável
 - Grid numerado que escala naturalmente para novos jogos/ferramentas
-- Zero regressão nas páginas internas — elas herdam os novos tokens sem toques adicionais
+- Componentes internos consistentes — sem mistura de estilo SaaS e Game UI
+- Cores de tipo e stat preservadas — identidade do jogo intacta
