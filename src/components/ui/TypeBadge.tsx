@@ -1,3 +1,4 @@
+// src/components/ui/TypeBadge.tsx
 "use client";
 
 import type { PokemonType } from "@/data/types";
@@ -11,7 +12,7 @@ interface TypeBadgeProps {
 export function TypeBadge({ type, small = false }: TypeBadgeProps) {
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full font-bold uppercase tracking-wide"
+      className="inline-flex items-center gap-1 rounded-sm font-bold uppercase tracking-wide"
       style={{
         background: TYPE_COLORS[type] || "#888",
         color: "#fff",
