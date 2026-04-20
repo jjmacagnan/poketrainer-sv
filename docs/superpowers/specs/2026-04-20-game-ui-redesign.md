@@ -64,7 +64,7 @@ O design atual do PokéTrainer SV tem estética genérica de SaaS (glass cards, 
 
 ### Grid de Ferramentas
 - Layout: `grid-template-columns: repeat(3, 1fr)`, gap 8px. Mobile: 2 colunas.
-- Section label acima do grid: `▶ AVAILABLE TOOLS — 5/6 UNLOCKED` com linha separadora
+- Section label acima do grid: `▶ AVAILABLE TOOLS — 7/8 UNLOCKED` com linha separadora
 
 **Estrutura de cada card:**
 ```
@@ -90,6 +90,8 @@ Descrição curta   ← Outfit 11px text-dim
 | #003 | EV Tracker | 📊 |
 | #004 | Raid Builder | ⚔️ |
 | #005 | Nature Calc | 🧮 |
+| #006 | Dicas de Treino | 💡 |
+| #007 | Comunidade | 🌐 |
 | #??? | Coming Soon | 🔒 |
 
 ---
