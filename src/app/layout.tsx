@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Syne } from "next/font/google";
+import { Outfit, Share_Tech_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Navbar } from "@/components/ui/Navbar";
 import { Footer } from "@/components/ui/Footer";
@@ -12,10 +12,10 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-const syne = Syne({
-  variable: "--font-syne",
+const shareTechMono = Share_Tech_Mono({
+  variable: "--font-share-tech-mono",
   subsets: ["latin"],
-  weight: ["700", "800"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -31,31 +31,27 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     type: "website",
   },
-  twitter: {
-    card: "summary",
-  },
+  twitter: { card: "summary" },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "PokéTrainer SV",
   },
-  formatDetection: {
-    telephone: false,
-  },
-  icons: {
-    apple: "/icons/icon-192.png",
-  },
+  formatDetection: { telephone: false },
+  icons: { apple: "/icons/icon-192.png" },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${outfit.variable} ${syne.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="flex min-h-full flex-col bg-gray-950 font-[family-name:var(--font-outfit)] text-gray-100">
+    <html
+      lang="pt-BR"
+      className={`${outfit.variable} ${shareTechMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <body className="flex min-h-full flex-col bg-[var(--pt-bg)] font-[family-name:var(--font-outfit)] text-[var(--pt-text)]">
         <ServiceWorkerRegistration />
         <Providers>
           <div className="flex flex-1 flex-col">
