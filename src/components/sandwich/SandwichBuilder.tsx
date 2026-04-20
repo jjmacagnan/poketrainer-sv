@@ -99,7 +99,7 @@ function TypeGuideCard({
             </span>
           )}
           <span
-            className={`text-gray-400 transition-transform ${isSelected ? "rotate-180" : ""}`}
+            className={`text-[var(--pt-text-dim)] transition-transform ${isSelected ? "rotate-180" : ""}`}
           >
             ▾
           </span>
@@ -109,7 +109,7 @@ function TypeGuideCard({
       {/* Inline recipe picker */}
       {isSelected && (
         <div className="border-t border-[var(--pt-border-dim)] bg-black/20 p-2">
-          <div className="mb-1.5 px-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+          <div className="mb-1.5 px-1 text-[10px] font-bold uppercase tracking-wider text-[var(--pt-text-dim)]">
             {t("sandwich.selectRecipe")}
           </div>
           <div className="grid gap-1.5">
@@ -139,7 +139,7 @@ function TypeGuideCard({
                         <span className="text-[10px] text-teal-400">{t("sandwich.noHerbaMystica")}</span>
                       )}
                     </div>
-                    <div className="mt-1 text-[10px] text-gray-500">
+                    <div className="mt-1 text-[10px] text-[var(--pt-text-dim)]">
                       {recipe.ingredients.join(", ")}
                     </div>
                   </div>
@@ -298,7 +298,7 @@ export function SandwichBuilder() {
               className="border px-3 py-1 text-[11px] font-bold text-white transition-all"
               style={{
                 background: selectedType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
-                borderColor: selectedType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.1)",
+                borderColor: selectedType === tp ? TYPE_COLORS[tp] : "var(--pt-border-dim)",
                 opacity: selectedType === tp ? 1 : 0.6,
               }}
             >
@@ -350,7 +350,7 @@ export function SandwichBuilder() {
               ))}
             </div>
           ) : searchPower || searchType ? (
-            <div className="py-10 text-center text-gray-500">
+            <div className="py-10 text-center text-[var(--pt-text-dim)]">
               {t("sandwich.noRecipes")}
             </div>
           ) : null}
@@ -392,7 +392,7 @@ export function SandwichBuilder() {
                     {level === 1 && ` ${t("sandwich.eggBudget")}`}
                   </span>
                   {level === 3 && (
-                    <span className="text-[10px] text-gray-500">
+                    <span className="text-[10px] text-[var(--pt-text-dim)]">
                       {t("sandwich.requiresHerba")}
                     </span>
                   )}
@@ -443,7 +443,7 @@ export function SandwichBuilder() {
           </div>
 
           {filteredGuide.length === 0 && (
-            <div className="py-10 text-center text-gray-500">
+            <div className="py-10 text-center text-[var(--pt-text-dim)]">
               {t("sandwich.noRecipes")}
             </div>
           )}

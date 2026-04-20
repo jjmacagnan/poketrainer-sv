@@ -108,7 +108,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
           </h3>
           <button
             onClick={() => setShowFlavorDetails(!showFlavorDetails)}
-            className="rounded px-2 py-0.5 text-[10px] font-semibold text-violet-400 transition-colors hover:text-violet-300"
+            className="rounded px-2 py-0.5 text-[10px] font-semibold text-[var(--pt-text-dim)] transition-colors hover:text-[var(--pt-gold)]"
           >
             {showFlavorDetails ? t("sandwich.hideFlavors") : t("sandwich.showFlavors")}
           </button>
@@ -268,7 +268,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
             border: "1px solid rgba(139,92,246,0.2)",
           }}
         >
-          <h3 className="mb-2 text-sm font-bold text-violet-400">
+          <h3 className="mb-2 text-sm font-bold text-[var(--pt-gold)]">
             {t("sandwich.herbaTipTitle")}
           </h3>
           {[...new Set(recipe.herba)].map((h, i) => (
