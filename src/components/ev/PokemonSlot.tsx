@@ -160,7 +160,7 @@ export function PokemonSlot({
       <div className="px-4 pt-3">
         <div className="relative h-2 overflow-hidden bg-white/10">
           <div
-            className="absolute inset-y-0 left-0 rounded-full transition-all duration-300"
+            className="absolute inset-y-0 left-0 rounded-none transition-all duration-300"
             style={{
               width: `${(totalEVs / MAX_EV_TOTAL) * 100}%`,
               background:
@@ -198,7 +198,7 @@ export function PokemonSlot({
               </span>
               <div className="relative h-2.5 flex-1 overflow-hidden bg-white/10">
                 <div
-                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-200"
+                  className="absolute inset-y-0 left-0 rounded-none transition-all duration-200"
                   style={{
                     width: `${fill}%`,
                     background:
@@ -247,7 +247,7 @@ export function PokemonSlot({
                 return (
                   <div className="absolute left-8 right-0 z-50 p-1">
                     <div className="border border-emerald-500/30 bg-gray-900 p-3 shadow-2xl ring-1 ring-black">
-                      <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
+                      <div className="mb-3 flex items-center justify-between border-b border-[var(--pt-border-dim)] pb-2">
                         <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
                           {t("pokemonSlot.whereToTrain", { stat })}
                         </span>

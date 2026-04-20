@@ -567,7 +567,7 @@ export function PokemonDetailModal({
           {/* Game Availability */}
           <Section title="Game Availability">
             {loading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
+              <div className="h-4 w-4 animate-spin rounded-none border-2 border-[var(--pt-border-dim)] border-t-transparent" />
             ) : gameVersions.length === 0 ? (
               <p className="text-sm text-[var(--pt-text-dim)]">No data</p>
             ) : (
@@ -578,13 +578,13 @@ export function PokemonDetailModal({
                   return (
                     <div key={version} className="group relative">
                       <span
-                        className="inline-flex h-7 w-9 cursor-default items-center justify-center rounded-md text-[10px] font-black text-white"
+                        className="inline-flex h-7 w-9 cursor-default items-center justify-center rounded-none text-[10px] font-black text-white"
                         style={{ backgroundColor: meta.color + "CC", border: `1px solid ${meta.color}` }}
                       >
                         {meta.label}
                       </span>
                       {/* Custom tooltip */}
-                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-800 px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl ring-1 ring-white/10 transition-opacity duration-150 group-hover:opacity-100">
+                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-none bg-gray-800 px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl ring-1 ring-[var(--pt-border-dim)] transition-opacity duration-150 group-hover:opacity-100">
                         {meta.name}
                         <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
                       </div>
@@ -598,7 +598,7 @@ export function PokemonDetailModal({
           {/* Encounter Locations (SV) */}
           {/* <Section title="Encounter Locations (Scarlet / Violet)">
             {loading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
+              <div className="h-4 w-4 animate-spin rounded-none border-2 border-[var(--pt-border-dim)] border-t-transparent" />
             ) : encounters.length === 0 ? (
               <p className="text-sm text-[var(--pt-text-dim)]">No wild encounter data for Scarlet/Violet</p>
             ) : (
@@ -606,14 +606,14 @@ export function PokemonDetailModal({
                 {encounters.map((enc, i) => (
                   <div
                     key={i}
-                    className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+                    className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm"
                   >
                     <span className="font-semibold text-gray-200">{enc.location}</span>
                     {enc.levels && (
                       <span className="text-xs text-[var(--pt-text-dim)]">{enc.levels}</span>
                     )}
                     {enc.method && (
-                      <span className="rounded bg-violet-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-violet-300">
+                      <span className="rounded-none bg-[rgba(255,215,0,0.08)] px-1.5 py-0.5 text-[10px] font-semibold text-[var(--pt-gold)]">
                         {enc.method}
                       </span>
                     )}
@@ -632,7 +632,7 @@ export function PokemonDetailModal({
             if (!trainingSpot) return null;
             return (
               <Section title={t("evPokedex.trainingTitle")}>
-                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+                <div className="rounded-none border border-emerald-500/30 bg-emerald-500/10 p-4">
                   <div className="mb-2 flex items-center gap-2">
                     <span className="text-xl">📍</span>
                     <span className="text-sm font-bold text-emerald-300">{t("evPokedex.trainingDungeon")}</span>
@@ -717,7 +717,7 @@ export function PokemonDetailModal({
           {/* Movepool (SV) */}
           <Section title={`Movepool — Scarlet / Violet${svMoves.length > 0 ? ` (${svMoves.length})` : ""}`}>
             {loading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
+              <div className="h-4 w-4 animate-spin rounded-none border-2 border-[var(--pt-border-dim)] border-t-transparent" />
             ) : svMoves.length === 0 ? (
               <p className="text-sm text-[var(--pt-text-dim)]">No move data for Scarlet/Violet</p>
             ) : (() => {
@@ -867,7 +867,7 @@ export function PokemonDetailModal({
                   {(showAllMoves || svMoves.length > 12) && (
                     <button
                       onClick={() => setShowAllMoves(!showAllMoves)}
-                      className="text-xs font-semibold text-[var(--pt-gold)] hover:text-violet-300"
+                      className="text-xs font-semibold text-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
                     >
                       {showAllMoves ? "Show less" : `Show all ${svMoves.length} moves`}
                     </button>
@@ -884,7 +884,7 @@ export function PokemonDetailModal({
                 {pokemon.eggGroups.map((eg) => (
                   <span
                     key={eg}
-                    className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-gray-300"
+                    className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-1.5 text-sm text-gray-300"
                   >
                     {eg}
                   </span>
@@ -902,12 +902,12 @@ export function PokemonDetailModal({
                   return (
                     <div
                       key={itemName}
-                      className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2"
+                      className="flex items-start gap-3 rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2"
                     >
                       {itemData?.sprite ? (
                         <img src={itemData.sprite} alt={itemName} className="h-8 w-8 shrink-0 pixelated" />
                       ) : (
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white/10 text-[10px] text-white/40">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none bg-[var(--pt-card)] text-[10px] text-white/40">
                           ?
                         </div>
                       )}
@@ -930,7 +930,7 @@ export function PokemonDetailModal({
           <Section title="Evolution Chain">
             {loading ? (
               <div className="flex items-center gap-2 text-sm text-[var(--pt-text-dim)]">
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
+                <div className="h-4 w-4 animate-spin rounded-none border-2 border-[var(--pt-border-dim)] border-t-transparent" />
                 Loading...
               </div>
             ) : evoSteps.length === 0 ? (
