@@ -80,7 +80,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
   const [showFlavorDetails, setShowFlavorDetails] = useState(false);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6">
+    <div className="relative overflow-hidden border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-6">
       <div
         className="absolute left-0 right-0 top-0 h-1"
         style={{
@@ -90,7 +90,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
 
       <button
         onClick={onBack}
-        className="mb-4 flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3.5 py-1.5 text-sm font-semibold text-gray-400 transition-colors hover:text-white"
+        className="mb-4 flex items-center gap-1.5 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3.5 py-1.5 text-sm font-semibold text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
       >
         {t("common.back")}
       </button>
@@ -103,7 +103,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
       {/* Ingredients with Flavor Profiles */}
       <div className="mb-5">
         <div className="mb-2.5 flex items-center justify-between">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400">
+          <h3 className="font-[family-name:var(--font-share-tech-mono)] text-sm uppercase tracking-[2px] text-[var(--pt-gold)]">
             {t("sandwich.ingredients")}
           </h3>
           <button
@@ -123,7 +123,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
             return (
               <div
                 key={i}
-                className="flex flex-col rounded-lg bg-white/5 px-3.5 py-2.5"
+                className="flex flex-col bg-[var(--pt-card)] px-3.5 py-2.5"
               >
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{getIngredientEmoji(parsed.name)}</span>
@@ -131,7 +131,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
                     {parsed.name}
                   </span>
                   {parsed.qty > 1 && (
-                    <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-gray-400">
+                    <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-[var(--pt-text-dim)]">
                       ×{parsed.qty}
                     </span>
                   )}
@@ -168,11 +168,11 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
       {/* Berry Alternatives */}
       {showFlavorDetails && recipe.herba.length > 0 && (
         <div className="mb-5">
-          <h3 className="mb-2.5 text-sm font-bold uppercase tracking-widest text-gray-400">
+          <h3 className="mb-2.5 font-[family-name:var(--font-share-tech-mono)] text-sm uppercase tracking-[2px] text-[var(--pt-gold)]">
             {t("sandwich.berryAlternatives")}
           </h3>
-          <div className="rounded-lg border border-white/10 bg-white/5 p-3">
-            <p className="mb-2 text-[11px] text-gray-500">
+          <div className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-3">
+            <p className="mb-2 text-[11px] text-[var(--pt-text-dim)]">
               {t("sandwich.berryAltNote")}
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -189,8 +189,8 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
                 if (!flavorName) return null;
                 const topBerries = getBerriesByFlavor(flavorName, 15).slice(0, 4);
                 return (
-                  <div key={i} className="rounded-lg bg-white/5 px-2.5 py-1.5">
-                    <div className="text-[10px] font-bold text-gray-400">
+                  <div key={i} className="bg-[var(--pt-card)] px-2.5 py-1.5">
+                    <div className="text-[10px] font-bold text-[var(--pt-text-dim)]">
                       {herba} →
                     </div>
                     <div className="mt-0.5 flex gap-1">
@@ -219,14 +219,14 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
       {/* Condiments */}
       {recipe.condiments.length > 0 && (
         <div className="mb-5">
-          <h3 className="mb-2.5 text-sm font-bold uppercase tracking-widest text-gray-400">
+          <h3 className="mb-2.5 font-[family-name:var(--font-share-tech-mono)] text-sm uppercase tracking-[2px] text-[var(--pt-gold)]">
             {t("sandwich.condiments")}
           </h3>
           <div className="flex flex-col gap-1.5">
             {recipe.condiments.map((cond, i) => (
               <div
                 key={i}
-                className="flex items-center gap-2 rounded-lg px-3.5 py-2.5 text-sm font-semibold text-gray-100"
+                className="flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold text-gray-100"
                 style={{
                   background: cond.includes("Herba")
                     ? "linear-gradient(135deg, rgba(139,92,246,0.13), rgba(109,40,217,0.13))"
@@ -248,7 +248,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
 
       {/* Meal Powers */}
       <div className="mb-5">
-        <h3 className="mb-2.5 text-sm font-bold uppercase tracking-widest text-gray-400">
+        <h3 className="mb-2.5 text-sm font-bold uppercase tracking-widest text-[var(--pt-text-dim)]">
           {t("sandwich.mealPowers")}
         </h3>
         <div className="flex flex-wrap gap-1.5">
@@ -261,7 +261,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
       {/* Herba farming info */}
       {recipe.herba.length > 0 && (
         <div
-          className="rounded-xl p-4"
+          className="p-4"
           style={{
             background:
               "linear-gradient(135deg, rgba(139,92,246,0.07), rgba(109,40,217,0.07))",
@@ -272,12 +272,12 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
             {t("sandwich.herbaTipTitle")}
           </h3>
           {[...new Set(recipe.herba)].map((h, i) => (
-            <div key={i} className="mb-1 text-sm text-gray-400">
+            <div key={i} className="mb-1 text-sm text-[var(--pt-text-dim)]">
               <strong>{h} Herba Mystica:</strong>{" "}
               {t(`sandwich.herba.${h}`)}
             </div>
           ))}
-          <div className="mt-2 text-xs italic text-gray-500">
+          <div className="mt-2 text-xs italic text-[var(--pt-text-dim)]">
             {t("sandwich.herbaTipNote")}
           </div>
         </div>
