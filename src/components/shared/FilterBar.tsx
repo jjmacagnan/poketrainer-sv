@@ -1,3 +1,4 @@
+// src/components/shared/FilterBar.tsx
 "use client";
 
 interface FilterOption {
@@ -13,44 +14,44 @@ interface FilterBarProps {
   allLabel?: string;
 }
 
-export function FilterBar({
-  options,
-  selected,
-  onSelect,
-  allLabel = "Todos",
-}: FilterBarProps) {
+export function FilterBar({ options, selected, onSelect, allLabel = "Todos" }: FilterBarProps) {
   return (
     <div className="flex flex-wrap justify-center gap-1.5">
       <button
         onClick={() => onSelect(null)}
-        className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+        className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-colors ${
           !selected
-            ? "border-white/30 bg-white/15 text-white"
-            : "border-white/10 bg-white/5 text-gray-400"
+            ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
+            : "border-[var(--pt-border-dim)] text-[var(--pt-text-dim)] hover:border-[rgba(255,215,0,0.4)] hover:text-[var(--pt-text)]"
         }`}
       >
         {allLabel}
       </button>
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          onClick={() => onSelect(selected === opt.value ? null : opt.value)}
-          className="rounded-full border px-3 py-1 text-[11px] font-bold text-white transition-all"
-          style={{
-            background:
-              selected === opt.value
-                ? opt.color || "rgba(255,255,255,0.15)"
-                : "rgba(255,255,255,0.05)",
-            borderColor:
-              selected === opt.value
-                ? opt.color || "rgba(255,255,255,0.3)"
-                : "rgba(255,255,255,0.1)",
-            opacity: selected === opt.value ? 1 : 0.6,
-          }}
-        >
-          {opt.label}
-        </button>
-      ))}
+      {options.map((opt) => {
+        const isActive = selected === opt.value;
+        return (
+          <button
+            key={opt.value}
+            onClick={() => onSelect(isActive ? null : opt.value)}
+            className="border px-3 py-1 text-[11px] font-bold uppercase text-white transition-all"
+            style={{
+              background: isActive
+                ? opt.color || "var(--pt-gold)"
+                : opt.color
+                  ? `${opt.color}22`
+                  : "var(--pt-card)",
+              borderColor: isActive
+                ? opt.color || "var(--pt-gold)"
+                : opt.color
+                  ? `${opt.color}44`
+                  : "var(--pt-border-dim)",
+              opacity: isActive ? 1 : 0.75,
+            }}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
