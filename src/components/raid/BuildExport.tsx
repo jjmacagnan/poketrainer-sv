@@ -70,7 +70,7 @@ export function BuildExport({
     <div>
       <button
         onClick={handleExport}
-        className="rounded-lg border border-emerald-500/30 bg-emerald-500/15 px-3 py-1.5 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/25"
+        className="rounded-none border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-3 py-1.5 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)] hover:bg-[rgba(255,215,0,0.15)]"
       >
         {t("raid.exportPng")}
       </button>

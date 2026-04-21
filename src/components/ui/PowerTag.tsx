@@ -1,3 +1,4 @@
+// src/components/ui/PowerTag.tsx
 "use client";
 
 interface PowerTagProps {
@@ -11,7 +12,7 @@ export function PowerTag({ power }: PowerTagProps) {
 
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-md text-xs font-semibold"
+      className="inline-flex items-center gap-1 text-xs font-semibold"
       style={{
         background: isShiny
           ? "linear-gradient(135deg, #FFD700, #FFA500)"
@@ -21,7 +22,7 @@ export function PowerTag({ power }: PowerTagProps) {
         color: isShiny || isEncounter ? "#fff" : "#F0F0F0",
         padding: "3px 10px",
         border: isLv3
-          ? "1px solid rgba(255,255,255,0.3)"
+          ? "1px solid rgba(255,215,0,0.4)"
           : "1px solid rgba(255,255,255,0.12)",
       }}
     >

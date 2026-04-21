@@ -63,7 +63,7 @@ function TypeGuideCard({
   const typeColor = TYPE_COLORS[entry.type] ?? "#666";
 
   return (
-    <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
+    <div className="overflow-hidden border border-[var(--pt-border-dim)] bg-[var(--pt-card)]">
       {/* Card header — click to expand */}
       <button
         onClick={onToggle}
@@ -71,7 +71,7 @@ function TypeGuideCard({
       >
         {/* Type badge */}
         <span
-          className="shrink-0 rounded-lg px-2.5 py-1 text-xs font-bold text-white"
+          className="shrink-0 rounded-sm px-2.5 py-1 text-xs font-bold text-white"
           style={{ background: typeColor }}
         >
           {entry.type}
@@ -94,12 +94,12 @@ function TypeGuideCard({
         {/* Badges */}
         <div className="flex shrink-0 items-center gap-1.5">
           {hasAlts && (
-            <span className="rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-bold text-violet-300">
+            <span className="border border-[var(--pt-border-dim)] px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase text-[var(--pt-text-dim)]">
               {t("sandwich.altBadge", { count: entry.recipes.length - 1 })}
             </span>
           )}
           <span
-            className={`text-gray-400 transition-transform ${isSelected ? "rotate-180" : ""}`}
+            className={`text-[var(--pt-text-dim)] transition-transform ${isSelected ? "rotate-180" : ""}`}
           >
             ▾
           </span>
@@ -108,8 +108,8 @@ function TypeGuideCard({
 
       {/* Inline recipe picker */}
       {isSelected && (
-        <div className="border-t border-white/10 bg-black/20 p-2">
-          <div className="mb-1.5 px-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+        <div className="border-t border-[var(--pt-border-dim)] bg-black/20 p-2">
+          <div className="mb-1.5 px-1 text-[10px] font-bold uppercase tracking-wider text-[var(--pt-text-dim)]">
             {t("sandwich.selectRecipe")}
           </div>
           <div className="grid gap-1.5">
@@ -117,13 +117,13 @@ function TypeGuideCard({
               <button
                 key={i}
                 onClick={() => onSelectRecipe(recipe)}
-                className="w-full rounded-lg border border-white/10 bg-white/5 p-2.5 text-left transition-colors hover:border-white/20 hover:bg-white/10"
+                className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-2.5 text-left transition-colors hover:border-white/20 hover:bg-white/10"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
                       {i === 0 && (
-                        <span className="rounded bg-yellow-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase text-yellow-400">
+                        <span className="border border-[rgba(255,215,0,0.4)] px-1.5 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase text-[var(--pt-gold)]">
                           {t("sandwich.bestBadge")}
                         </span>
                       )}
@@ -139,7 +139,7 @@ function TypeGuideCard({
                         <span className="text-[10px] text-teal-400">{t("sandwich.noHerbaMystica")}</span>
                       )}
                     </div>
-                    <div className="mt-1 text-[10px] text-gray-500">
+                    <div className="mt-1 text-[10px] text-[var(--pt-text-dim)]">
                       {recipe.ingredients.join(", ")}
                     </div>
                   </div>
@@ -244,23 +244,16 @@ export function SandwichBuilder() {
     <div className="mx-auto max-w-2xl px-4 py-6">
       {/* Header */}
       <div className="mb-8 text-center">
+        <div className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[3px] text-[var(--pt-text-dim)]">#001</div>
         <div className="mb-2 text-5xl">🥪</div>
-        <h1
-          className="mb-1.5 text-3xl font-[family-name:var(--font-syne)] font-extrabold tracking-tight"
-          style={{
-            background: "linear-gradient(135deg, #F59E0B, #F97316, #EF4444)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            paddingBottom: "0.1em",
-          }}
-        >
+        <h1 className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-2xl uppercase tracking-[2px] text-[var(--pt-gold)]">
           {t("sandwich.title")}
         </h1>
-        <p className="text-sm text-gray-400">{t("sandwich.subtitle")}</p>
+        <p className="text-sm text-[var(--pt-text-dim)]">{t("sandwich.subtitle")}</p>
       </div>
 
       {/* Tabs */}
-      <div className="mb-5 flex gap-1 rounded-xl bg-white/5 p-1">
+      <div className="mb-5 flex gap-0 border border-[var(--pt-border-dim)]">
         {tabs.map((tb) => (
           <button
             key={tb.id}
@@ -269,18 +262,14 @@ export function SandwichBuilder() {
               setSelectedType(null);
               setSelectedEntry(null);
             }}
-            className={`flex-1 rounded-lg px-2 py-2.5 text-center text-sm font-bold transition-all ${
+            className={`flex-1 px-2 py-2.5 text-center text-sm font-bold transition-all border-b-2 ${
               tab === tb.id
-                ? "border-b-2 bg-white/10 text-white"
-                : "border-b-2 border-transparent text-gray-400"
+                ? "bg-[rgba(255,215,0,0.06)] text-white"
+                : "border-transparent text-[var(--pt-text-dim)] hover:text-[var(--pt-text)]"
             }`}
-            style={
-              tab === tb.id
-                ? { borderColor: tb.color }
-                : undefined
-            }
+            style={tab === tb.id ? { borderColor: tb.color } : undefined}
           >
-            <div>{tb.label}</div>
+            <div className="font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[1px]">{tb.label}</div>
             <div className="text-[10px] font-normal opacity-70">{tb.desc}</div>
           </button>
         ))}
@@ -291,10 +280,10 @@ export function SandwichBuilder() {
         <div className="mb-5 flex flex-wrap justify-center gap-1.5">
           <button
             onClick={() => { setSelectedType(null); setSelectedEntry(null); }}
-            className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+            className={`border px-3 py-1 text-xs font-semibold transition-colors ${
               !selectedType
                 ? "border-white/30 bg-white/15 text-white"
-                : "border-white/10 bg-white/5 text-gray-400"
+                : "border-[var(--pt-border-dim)] bg-[var(--pt-card)] text-[var(--pt-text-dim)]"
             }`}
           >
             {t("sandwich.allTypes")}
@@ -306,10 +295,10 @@ export function SandwichBuilder() {
                 setSelectedType(selectedType === tp ? null : tp);
                 setSelectedEntry(null);
               }}
-              className="rounded-full border px-3 py-1 text-[11px] font-bold text-white transition-all"
+              className="border px-3 py-1 text-[11px] font-bold text-white transition-all"
               style={{
                 background: selectedType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
-                borderColor: selectedType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.1)",
+                borderColor: selectedType === tp ? TYPE_COLORS[tp] : "var(--pt-border-dim)",
                 opacity: selectedType === tp ? 1 : 0.6,
               }}
             >
@@ -322,7 +311,7 @@ export function SandwichBuilder() {
       {/* Search Tab */}
       {tab === "search" && (
         <div className="mb-5">
-          <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="mb-4 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
             <div className="mb-3 text-sm font-bold text-gray-100">
               {t("sandwich.reverseSearch")}
             </div>
@@ -330,7 +319,7 @@ export function SandwichBuilder() {
               <select
                 value={searchPower}
                 onChange={(e) => setSearchPower(e.target.value)}
-                className="min-w-[180px] flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                className="min-w-[180px] flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
               >
                 <option value="">{t("sandwich.anyPower")}</option>
                 {MEAL_POWERS.map((p) => (
@@ -342,7 +331,7 @@ export function SandwichBuilder() {
               <select
                 value={searchType}
                 onChange={(e) => setSearchType(e.target.value)}
-                className="min-w-[140px] flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                className="min-w-[140px] flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
               >
                 <option value="">{t("sandwich.anyType")}</option>
                 {TYPES.map((tp) => (
@@ -361,7 +350,7 @@ export function SandwichBuilder() {
               ))}
             </div>
           ) : searchPower || searchType ? (
-            <div className="py-10 text-center text-gray-500">
+            <div className="py-10 text-center text-[var(--pt-text-dim)]">
               {t("sandwich.noRecipes")}
             </div>
           ) : null}
@@ -372,7 +361,7 @@ export function SandwichBuilder() {
       {tab === "breeding" && (
         <div>
           <div
-            className="mb-4 rounded-xl p-3.5 text-sm text-gray-400"
+            className="mb-4 p-3.5 text-sm text-[var(--pt-text-dim)]"
             style={{ background: banner.gradient, border: banner.border }}
           >
             <strong className={banner.titleColor}>{banner.title}</strong> —{" "}
@@ -389,12 +378,12 @@ export function SandwichBuilder() {
               <div key={level} className="mb-5">
                 <div className="mb-2 flex items-center gap-2">
                   <span
-                    className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                    className={`px-2.5 py-0.5 text-xs font-bold ${
                       level === 3
-                        ? "bg-yellow-500/20 text-yellow-400"
+                        ? "border border-[rgba(255,215,0,0.3)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                         : level === 2
-                          ? "bg-orange-500/20 text-orange-400"
-                          : "bg-white/10 text-gray-400"
+                          ? "border border-[rgba(249,115,22,0.3)] bg-[rgba(249,115,22,0.08)] text-[var(--pt-orange)]"
+                          : "border border-[var(--pt-border-dim)] text-[var(--pt-text-dim)]"
                     }`}
                   >
                     {t("sandwich.eggPowerLevel", { level: String(level) })}
@@ -403,7 +392,7 @@ export function SandwichBuilder() {
                     {level === 1 && ` ${t("sandwich.eggBudget")}`}
                   </span>
                   {level === 3 && (
-                    <span className="text-[10px] text-gray-500">
+                    <span className="text-[10px] text-[var(--pt-text-dim)]">
                       {t("sandwich.requiresHerba")}
                     </span>
                   )}
@@ -425,7 +414,7 @@ export function SandwichBuilder() {
           {/* Info banner */}
           {banner.title && (
             <div
-              className="mb-4 rounded-xl p-3.5 text-sm text-gray-400"
+              className="mb-4 p-3.5 text-sm text-[var(--pt-text-dim)]"
               style={{ background: banner.gradient, border: banner.border }}
             >
               <strong className={banner.titleColor}>{banner.title}</strong> —{" "}
@@ -454,7 +443,7 @@ export function SandwichBuilder() {
           </div>
 
           {filteredGuide.length === 0 && (
-            <div className="py-10 text-center text-gray-500">
+            <div className="py-10 text-center text-[var(--pt-text-dim)]">
               {t("sandwich.noRecipes")}
             </div>
           )}

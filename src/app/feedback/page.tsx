@@ -67,15 +67,15 @@ export default function FeedbackPage() {
   if (status === "success") {
     return (
       <div className="mx-auto flex min-h-[60vh] max-w-lg items-center justify-center px-4 py-16">
-        <div className="animate-fade-up w-full rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center">
+        <div className="animate-fade-up w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-10 text-center">
           <div className="mb-4 text-5xl">✅</div>
-          <h2 className="mb-2 font-[family-name:var(--font-syne)] text-2xl font-extrabold leading-normal text-white">
+          <h2 className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-2xl font-extrabold uppercase leading-normal text-[var(--pt-gold)]">
             {t("feedback.successTitle")}
           </h2>
-          <p className="mb-6 text-sm text-gray-400">{t("feedback.successBody")}</p>
+          <p className="mb-6 text-sm text-[var(--pt-text-dim)]">{t("feedback.successBody")}</p>
           <button
             onClick={reset}
-            className="rounded-xl bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/20"
+            className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/20"
           >
             {t("feedback.sendAnother")}
           </button>
@@ -90,17 +90,11 @@ export default function FeedbackPage() {
       <div className="animate-fade-up mb-10 text-center">
         <div className="mb-2 text-5xl">💬</div>
         <h1
-          className="mb-2 font-[family-name:var(--font-syne)] text-3xl font-extrabold tracking-tight"
-          style={{
-            background: "linear-gradient(135deg, #22D3EE, #A78BFA)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            paddingBottom: "0.1em",
-          }}
+          className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-3xl font-extrabold uppercase tracking-[2px] text-[var(--pt-gold)]"
         >
           {t("feedback.title")}
         </h1>
-        <p className="text-sm text-gray-500">{t("feedback.subtitle")}</p>
+        <p className="text-sm text-[var(--pt-text-dim)]">{t("feedback.subtitle")}</p>
       </div>
 
       <form
@@ -111,14 +105,14 @@ export default function FeedbackPage() {
         {/* Category + Tool row */}
         <div className="grid grid-cols-2 gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[var(--pt-text-dim)]">
               {t("feedback.category")}
             </label>
             <select
               required
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white transition-colors focus:border-white/30 focus:outline-none"
+              className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2.5 text-sm text-white transition-colors focus:border-[var(--pt-gold)]/50 focus:outline-none"
             >
               <option value="" disabled>—</option>
               {CATEGORIES.map((c) => (
@@ -130,14 +124,14 @@ export default function FeedbackPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <label className="text-xs font-semibold uppercase tracking-wider text-[var(--pt-text-dim)]">
               {t("feedback.tool")}
             </label>
             <select
               required
               value={tool}
               onChange={(e) => setTool(e.target.value)}
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white transition-colors focus:border-white/30 focus:outline-none"
+              className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2.5 text-sm text-white transition-colors focus:border-[var(--pt-gold)]/50 focus:outline-none"
             >
               <option value="" disabled>—</option>
               {TOOLS.map((tc) => (
@@ -151,7 +145,7 @@ export default function FeedbackPage() {
 
         {/* Message */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <label className="text-xs font-semibold uppercase tracking-wider text-[var(--pt-text-dim)]">
             {t("feedback.message")}
           </label>
           <textarea
@@ -160,13 +154,13 @@ export default function FeedbackPage() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder={t("feedback.messagePlaceholder")}
-            className="resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-600 transition-colors focus:border-white/30 focus:outline-none"
+            className="resize-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-4 py-3 text-sm text-white placeholder-[var(--pt-text-dim)] transition-colors focus:border-[var(--pt-gold)]/50 focus:outline-none"
           />
         </div>
 
         {/* Email */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <label className="text-xs font-semibold uppercase tracking-wider text-[var(--pt-text-dim)]">
             {t("feedback.email")}
           </label>
           <input
@@ -174,7 +168,7 @@ export default function FeedbackPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t("feedback.emailPlaceholder")}
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-600 transition-colors focus:border-white/30 focus:outline-none"
+            className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-4 py-3 text-sm text-white placeholder-[var(--pt-text-dim)] transition-colors focus:border-[var(--pt-gold)]/50 focus:outline-none"
           />
         </div>
 
@@ -182,7 +176,7 @@ export default function FeedbackPage() {
         <input type="checkbox" name="botcheck" className="hidden" />
 
         {status === "error" && (
-          <p className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+          <p className="border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
             {t("feedback.errorBody")}
           </p>
         )}
@@ -190,7 +184,7 @@ export default function FeedbackPage() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="rounded-xl bg-violet-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
+          className="border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-6 py-3 font-[family-name:var(--font-share-tech-mono)] text-sm font-bold uppercase text-[var(--pt-gold)] transition-all hover:bg-[rgba(255,215,0,0.15)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {status === "submitting" ? t("feedback.submitting") : t("feedback.submit")}
         </button>

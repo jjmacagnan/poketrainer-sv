@@ -110,7 +110,7 @@ export function EVTracker() {
               setSelectingSlot(null);
               setPokemonSearch("");
             }}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold text-gray-400 hover:text-white"
+            className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-1.5 text-sm font-semibold text-[var(--pt-text-dim)] hover:text-white"
           >
             {t("common.back")}
           </button>
@@ -129,7 +129,7 @@ export function EVTracker() {
             <button
               key={p.nationalDex}
               onClick={() => selectPokemon(p)}
-              className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-left transition-colors hover:border-white/20 hover:bg-white/10"
+              className="flex items-center gap-3 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-left transition-colors hover:border-[rgba(255,215,0,0.5)] hover:bg-[rgba(255,215,0,0.02)]"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -144,7 +144,7 @@ export function EVTracker() {
                 <div className="text-sm font-semibold text-gray-100">
                   {p.name}
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-[var(--pt-text-dim)]">
                   #{p.nationalDex} · {p.types.join(" / ")}
                 </div>
               </div>
@@ -165,13 +165,13 @@ export function EVTracker() {
       />
 
       {/* Summary Bar */}
-      <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4">
+      <div className="mb-6 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="text-sm font-bold text-gray-100">
               {t("evTracker.teamCount", { count: slots.filter((s) => s.name).length })}
             </div>
-            <div className="text-xs text-gray-400">
+            <div className="text-xs text-[var(--pt-text-dim)]">
               {t("evTracker.autoSave")}
             </div>
           </div>
@@ -182,7 +182,7 @@ export function EVTracker() {
                   Array.from({ length: 6 }, (_, i) => createEmptySlot(i))
                 );
               }}
-              className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20"
+              className="border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20"
             >
               {t("evTracker.resetAll")}
             </button>
@@ -204,11 +204,11 @@ export function EVTracker() {
       </div>
 
       {/* Legend */}
-      <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
-        <h3 className="mb-2 text-sm font-bold text-gray-300">
+      <div className="mt-6 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+        <h3 className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-sm uppercase tracking-[2px] text-[var(--pt-gold)]">
           {t("evTracker.quickRef")}
         </h3>
-        <div className="grid gap-2 text-xs text-gray-400 sm:grid-cols-2">
+        <div className="grid gap-2 text-xs text-[var(--pt-text-dim)] sm:grid-cols-2">
           <div>
             <strong className="text-gray-300">{t("evTracker.machoBrace")}</strong>{" "}
             {t("evTracker.machoBraceDesc")}

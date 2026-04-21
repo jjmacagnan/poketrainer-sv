@@ -33,12 +33,12 @@ export function LegalPageTemplate({ meta, getSections }: LegalPageTemplateProps)
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="mb-2 text-3xl font-black text-white">{title}</h1>
-      <p className="mb-10 text-sm text-gray-500">{updated}</p>
+      <h1 className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-3xl font-black uppercase tracking-[2px] text-[var(--pt-gold)]">{title}</h1>
+      <p className="mb-10 text-sm text-[var(--pt-text-dim)]">{updated}</p>
       <div className="flex flex-col gap-8 text-gray-300">
         {sections.map((s, i) => (
           <section key={i}>
-            <h2 className="mb-3 text-lg font-bold text-white">{s.title}</h2>
+            <h2 className="mb-3 font-[family-name:var(--font-share-tech-mono)] text-lg font-bold uppercase tracking-[2px] text-[var(--pt-text)]">{s.title}</h2>
             {s.body}
           </section>
         ))}
