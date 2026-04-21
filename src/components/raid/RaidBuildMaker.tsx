@@ -399,17 +399,26 @@ export function RaidBuildMaker() {
 
     return RAID_TIER_LIST
       .map((entry) => {
-        const primaryBuild = entry.builds[0];
-        const seMovesForBoss: string[] = [];
+        let bestBuildIndex = 0;
+        let bestSeCount = -1;
+        let seMovesForBoss: string[] = [];
 
-        for (const moveName of primaryBuild.moves) {
-          const moveData = allMoves.find(
-            (m) => m.name.toLowerCase() === moveName.toLowerCase()
-          );
-          if (moveData && bossWeaknesses.has(moveData.type.toLowerCase())) {
-            seMovesForBoss.push(moveName);
+        entry.builds.forEach((build, idx) => {
+          const seMoves: string[] = [];
+          for (const moveName of build.moves) {
+            const moveData = allMoves.find(
+              (m) => m.name.toLowerCase() === moveName.toLowerCase()
+            );
+            if (moveData && bossWeaknesses.has(moveData.type.toLowerCase())) {
+              seMoves.push(moveName);
+            }
           }
-        }
+          if (seMoves.length > bestSeCount) {
+            bestSeCount = seMoves.length;
+            bestBuildIndex = idx;
+            seMovesForBoss = seMoves;
+          }
+        });
 
         let score = seMovesForBoss.length * 2;
         if (entry.tags.includes("Top Pick")) score += 1;
@@ -417,7 +426,7 @@ export function RaidBuildMaker() {
         if (entry.tags.includes("7★ Ready") && bossStars === 7) score += 1;
         if (entry.tags.includes("Budget Pick")) score += 0.5;
 
-        return { entry, score, seMovesForBoss, bestBuildIndex: 0 };
+        return { entry, score, seMovesForBoss, bestBuildIndex };
       })
       .filter((r) => r.score > 0)
       .sort((a, b) => b.score - a.score)
@@ -602,10 +611,10 @@ export function RaidBuildMaker() {
                 </div>
               ) : (
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {bossRecommendations.map(({ entry, seMovesForBoss }) => {
+                  {bossRecommendations.map(({ entry, seMovesForBoss, bestBuildIndex }) => {
                     const spriteNum = entry.spriteId ?? entry.nationalDex;
                     const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
-                    const primaryBuild = entry.builds[0];
+                    const bestBuild = entry.builds[bestBuildIndex];
                     const isSelected = selectedEntry?.name === entry.name && selectedEntry?.role === entry.role;
                     return (
                       <div key={`rec-${entry.name}-${entry.role}`} className="flex flex-col gap-1">
@@ -633,8 +642,8 @@ export function RaidBuildMaker() {
                               ))}
                             </div>
                             <div className="mt-1 flex items-center gap-1.5">
-                              <TypeBadge type={primaryBuild.teraType as PokemonType} small />
-                              <span className="text-ui-base text-[var(--pt-text-dim)]">{primaryBuild.nature} · {primaryBuild.ability}</span>
+                              <TypeBadge type={bestBuild.teraType as PokemonType} small />
+                              <span className="text-ui-base text-[var(--pt-text-dim)]">{bestBuild.nature} · {bestBuild.ability}</span>
                             </div>
                             {seMovesForBoss.length > 0 && (
                               <div className="mt-1 flex flex-wrap items-center gap-0.5">
