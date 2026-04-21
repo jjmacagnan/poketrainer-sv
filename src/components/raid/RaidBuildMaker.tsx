@@ -513,11 +513,21 @@ export function RaidBuildMaker() {
                     <span className="ml-2 text-xs text-[var(--pt-text-dim)]">{t("raid.bossFinderSubtitle")}</span>
                   )}
                   {bossTeraType && (
-                    <span className="ml-2 text-xs text-[var(--pt-gold)]">
-                      {bossPokemon ? `${bossPokemon.name} · ` : ""}{bossTeraType} Tera
-                      {bossStars ? ` · ${bossStars}★` : ""}
-                      {" "}· {bossRecommendations.length} builds
-                    </span>
+                    <div className="ml-2 flex flex-wrap items-center gap-1.5">
+                      {bossPokemon && (
+                        <>
+                          <span className="text-xs font-bold text-[var(--pt-text)]">{bossPokemon.name}</span>
+                          {bossPokemon.types.map((tp) => (
+                            <TypeBadge key={tp} type={tp as PokemonType} small />
+                          ))}
+                          <span className="text-xs text-[var(--pt-text-dim)]">→</span>
+                        </>
+                      )}
+                      {bossTeraType && <TypeBadge type={bossTeraType} small />}
+                      {bossTeraType && <span className="text-xs text-[var(--pt-text-dim)]">Tera</span>}
+                      {bossStars && <span className="text-xs font-bold text-yellow-400">{bossStars}★</span>}
+                      <span className="text-xs text-[var(--pt-text-dim)]">· {bossRecommendations.length} builds</span>
+                    </div>
                   )}
                 </div>
               </div>
