@@ -460,6 +460,13 @@ export function RaidBuildMaker() {
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
   const itemFilter = useCallback((i: { name: string }, q: string) => i.name.toLowerCase().includes(q), []);
 
+  const selectKnownBoss = useCallback((boss: typeof RAID_BOSSES[number]) => {
+    const pokemon = allPokemon.find((p) => p.nationalDex === boss.nationalDex) ?? null;
+    setBossPokemon(pokemon);
+    setBossTeraType(boss.teraType);
+    setBossStars(boss.stars);
+  }, []);
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
       <PageHeader
@@ -605,6 +612,73 @@ export function RaidBuildMaker() {
                         {t("raid.clearBoss")}
                       </button>
                     )}
+                  </div>
+                </div>
+
+                {/* Known boss quick-select chips */}
+                <div className="mt-3 border-t border-[var(--pt-border-dim)] pt-3">
+                  <div className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-text-dim)]">
+                    {locale === "pt" ? "Bosses conhecidos" : "Known bosses"}
+                  </div>
+
+                  {/* 7★ chips */}
+                  <div className="mb-2">
+                    <span className="mr-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs text-yellow-400">7★</span>
+                    <div className="inline-flex flex-wrap gap-1">
+                      {RAID_BOSSES.filter((b) => b.stars === 7).map((boss) => {
+                        const isActive = bossPokemon?.nationalDex === boss.nationalDex && bossTeraType === boss.teraType;
+                        return (
+                          <button
+                            key={`${boss.name}-${boss.teraType}`}
+                            onClick={() => selectKnownBoss(boss)}
+                            className="flex items-center gap-1 rounded-none border px-2 py-0.5 text-ui-xs font-semibold transition-all"
+                            style={{
+                              borderColor: isActive ? TYPE_COLORS[boss.teraType] : "rgba(255,255,255,0.1)",
+                              background: isActive ? TYPE_COLORS[boss.teraType] + "22" : "rgba(255,255,255,0.04)",
+                              color: isActive ? TYPE_COLORS[boss.teraType] : "var(--pt-text-dim)",
+                            }}
+                          >
+                            {boss.name}
+                            <span
+                              className="rounded px-1 text-ui-xs font-bold text-white"
+                              style={{ background: TYPE_COLORS[boss.teraType] + "BB" }}
+                            >
+                              {boss.teraType}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* 6★ chips */}
+                  <div>
+                    <span className="mr-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs text-[var(--pt-text-dim)]">6★</span>
+                    <div className="inline-flex flex-wrap gap-1">
+                      {RAID_BOSSES.filter((b) => b.stars === 6).map((boss) => {
+                        const isActive = bossPokemon?.nationalDex === boss.nationalDex && bossTeraType === boss.teraType;
+                        return (
+                          <button
+                            key={`${boss.name}-${boss.teraType}`}
+                            onClick={() => selectKnownBoss(boss)}
+                            className="flex items-center gap-1 rounded-none border px-2 py-0.5 text-ui-xs font-semibold transition-all"
+                            style={{
+                              borderColor: isActive ? TYPE_COLORS[boss.teraType] : "rgba(255,255,255,0.1)",
+                              background: isActive ? TYPE_COLORS[boss.teraType] + "22" : "rgba(255,255,255,0.04)",
+                              color: isActive ? TYPE_COLORS[boss.teraType] : "var(--pt-text-dim)",
+                            }}
+                          >
+                            {boss.name}
+                            <span
+                              className="rounded px-1 text-ui-xs font-bold text-white"
+                              style={{ background: TYPE_COLORS[boss.teraType] + "BB" }}
+                            >
+                              {boss.teraType}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
