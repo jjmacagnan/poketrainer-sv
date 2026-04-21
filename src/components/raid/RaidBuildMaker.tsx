@@ -397,6 +397,16 @@ export function RaidBuildMaker() {
     );
     const bossWeaknesses = new Set((bossTypeData?.weaknesses ?? []).map((w) => w.toLowerCase()));
 
+    const bossBaseWeaknesses = new Set<string>();
+    if (bossPokemon) {
+      bossPokemon.types.forEach((baseType) => {
+        const baseTypeData = allTypesData.find(
+          (td) => td.name.toLowerCase() === baseType.toLowerCase()
+        );
+        (baseTypeData?.weaknesses ?? []).forEach((w) => bossBaseWeaknesses.add(w.toLowerCase()));
+      });
+    }
+
     return RAID_TIER_LIST
       .map((entry) => {
         let bestBuildIndex = 0;
@@ -413,8 +423,21 @@ export function RaidBuildMaker() {
               seMoves.push(moveName);
             }
           }
-          if (seMoves.length > bestSeCount) {
-            bestSeCount = seMoves.length;
+          let baseTypeBonus = 0;
+          if (bossBaseWeaknesses.size > 0) {
+            for (const moveName of build.moves) {
+              const moveData = allMoves.find(
+                (m) => m.name.toLowerCase() === moveName.toLowerCase()
+              );
+              if (moveData && bossBaseWeaknesses.has(moveData.type.toLowerCase())) {
+                baseTypeBonus += 0.5;
+              }
+            }
+          }
+
+          const totalForBuild = seMoves.length + baseTypeBonus;
+          if (totalForBuild > bestSeCount) {
+            bestSeCount = totalForBuild;
             bestBuildIndex = idx;
             seMovesForBoss = seMoves;
           }
@@ -431,7 +454,7 @@ export function RaidBuildMaker() {
       .filter((r) => r.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 6);
-  }, [bossTeraType, bossStars]);
+  }, [bossTeraType, bossStars, bossPokemon]);
 
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
