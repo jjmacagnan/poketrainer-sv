@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect, useState } from "react";
 import { toPng } from "html-to-image";
 import { TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
@@ -46,12 +46,31 @@ export function BuildExport({
 }: BuildExportProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const { t } = useI18n();
+  const [itemSpriteB64, setItemSpriteB64] = useState<string | null>(null);
+
+  const itemData = itemsList.find(i => i.name === item);
+
+  useEffect(() => {
+    if (!itemData?.sprite) { setItemSpriteB64(null); return; }
+    let cancelled = false;
+    fetch(itemData.sprite)
+      .then(r => r.blob())
+      .then(blob => new Promise<string>((res, rej) => {
+        const reader = new FileReader();
+        reader.onload = () => res(reader.result as string);
+        reader.onerror = rej;
+        reader.readAsDataURL(blob);
+      }))
+      .then(b64 => { if (!cancelled) setItemSpriteB64(b64); })
+      .catch(() => { if (!cancelled) setItemSpriteB64(null); });
+    return () => { cancelled = true; };
+  }, [itemData?.sprite]);
 
   const handleExport = useCallback(async () => {
     if (!cardRef.current) return;
     try {
       const dataUrl = await toPng(cardRef.current, {
-        backgroundColor: "#0a0a1a",
+        backgroundColor: "#08080f",
         pixelRatio: 2,
       });
       const link = document.createElement("a");
@@ -172,20 +191,18 @@ export function BuildExport({
                   </div>
                 );
               })()}
-              {item && (() => {
-                const itemData = itemsList.find(i => i.name === item);
-                return (
-                  <div style={{ background: "#0a0a16", border: "1px solid #2a2a3a", padding: "8px 12px", flex: 1, display: "flex", gap: 8 }}>
-                    {itemData?.sprite && (
-                      <img src={itemData.sprite} alt={item} style={{ width: 28, height: 28, imageRendering: "pixelated" }} crossOrigin="anonymous" />
-                    )}
-                    <div>
-                      <div style={{ fontSize: 8, fontFamily: "monospace", letterSpacing: 2, color: "#FFD700", textTransform: "uppercase", marginBottom: 3 }}>{t("raid.heldItem")}</div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: "#ffffff" }}>{item}</div>
-                    </div>
+              {item && (
+                <div style={{ background: "#0a0a16", border: "1px solid #2a2a3a", padding: "8px 12px", flex: 1, display: "flex", gap: 8 }}>
+                  {itemSpriteB64 && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={itemSpriteB64} alt={item} style={{ width: 28, height: 28, imageRendering: "pixelated" }} />
+                  )}
+                  <div>
+                    <div style={{ fontSize: 8, fontFamily: "monospace", letterSpacing: 2, color: "#FFD700", textTransform: "uppercase", marginBottom: 3 }}>{t("raid.heldItem")}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#ffffff" }}>{item}</div>
                   </div>
-                );
-              })()}
+                </div>
+              )}
             </div>
 
             {/* Defenses */}
