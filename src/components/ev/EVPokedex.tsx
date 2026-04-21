@@ -68,7 +68,7 @@ export function EVPokedex() {
   const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("card");
   const [showBestOnly, setShowBestOnly] = useState(false);
-  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   // Filter pipeline
   const filtered = useMemo(() => {
@@ -254,24 +254,32 @@ export function EVPokedex() {
         </div>
       ) : viewMode === "card" ? (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {sorted.map((pokemon) => (
+          {sorted.map((pokemon, idx) => (
             <PokemonCard
               key={pokemon.nationalDex}
               pokemon={pokemon}
               selectedStat={selectedStat}
-              onClick={() => setSelectedPokemon(pokemon)}
+              onClick={() => setSelectedIndex(idx)}
             />
           ))}
         </div>
       ) : (
-        <PokemonTable pokemon={sorted} selectedStat={selectedStat} onSelect={setSelectedPokemon} />
+        <PokemonTable
+          pokemon={sorted}
+          selectedStat={selectedStat}
+          onSelect={(p) => setSelectedIndex(sorted.findIndex((s) => s.nationalDex === p.nationalDex))}
+        />
       )}
 
       {/* Detail Modal */}
-      {selectedPokemon && (
+      {selectedIndex !== null && sorted[selectedIndex] && (
         <PokemonDetailModal
-          pokemon={selectedPokemon}
-          onClose={() => setSelectedPokemon(null)}
+          pokemon={sorted[selectedIndex]}
+          onClose={() => setSelectedIndex(null)}
+          hasPrev={selectedIndex > 0}
+          hasNext={selectedIndex < sorted.length - 1}
+          onPrev={() => setSelectedIndex((i) => (i !== null && i > 0 ? i - 1 : i))}
+          onNext={() => setSelectedIndex((i) => (i !== null && i < sorted.length - 1 ? i + 1 : i))}
         />
       )}
 
