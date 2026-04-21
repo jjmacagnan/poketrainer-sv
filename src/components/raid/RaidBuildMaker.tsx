@@ -179,23 +179,23 @@ function SearchDropdown<T>({
         onFocus={() => { setOpen(true); setQuery(""); }}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-violet-500/50"
+        className="w-full rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100 placeholder-[var(--pt-text-dim)] outline-none focus:border-[var(--pt-gold)]"
       />
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute z-20 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-white/10 bg-gray-900 shadow-xl">
+          <div className="absolute z-20 mt-1 max-h-48 w-full overflow-y-auto rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-surface)] shadow-xl">
             {filtered.map((item, i) => (
               <button
                 key={i}
                 onClick={() => { onSelect(item); setOpen(false); setQuery(""); }}
-                className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-white/10"
+                className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-[var(--pt-card)]"
               >
                 {renderItem(item)}
               </button>
             ))}
             {filtered.length === 0 && (
-              <div className="px-3 py-2 text-xs text-gray-500">{t("common.noResults")}</div>
+              <div className="px-3 py-2 text-xs text-[var(--pt-text-dim)]">{t("common.noResults")}</div>
             )}
           </div>
         </>
@@ -432,19 +432,19 @@ export function RaidBuildMaker() {
       />
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 rounded-xl bg-white/5 p-1">
+      <div className="mb-6 flex gap-1 rounded-none bg-[var(--pt-card)] p-1">
         <button
           onClick={() => setTab("build")}
-          className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-bold transition-all ${
-            tab === "build" ? "bg-violet-500/15 text-white" : "text-gray-400"
+          className={`flex-1 rounded-none px-4 py-2.5 text-sm font-bold transition-all ${
+            tab === "build" ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]" : "text-[var(--pt-text-dim)]"
           }`}
         >
           {t("raid.tabBuild")}
         </button>
         <button
           onClick={() => setTab("tierlist")}
-          className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-bold transition-all ${
-            tab === "tierlist" ? "bg-violet-500/15 text-white" : "text-gray-400"
+          className={`flex-1 rounded-none px-4 py-2.5 text-sm font-bold transition-all ${
+            tab === "tierlist" ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]" : "text-[var(--pt-text-dim)]"
           }`}
         >
           {t("raid.tabTierList")}
@@ -455,7 +455,7 @@ export function RaidBuildMaker() {
       {tab === "tierlist" && (
         <div>
           {/* Boss Finder Panel */}
-          <div className="mb-5 rounded-xl border border-violet-500/30 bg-violet-500/5">
+          <div className="mb-5 rounded-none border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.04)]">
             <button
               onClick={() => setBossFinderOpen(!bossFinderOpen)}
               className="flex w-full items-center justify-between px-4 py-3 text-left"
@@ -463,12 +463,12 @@ export function RaidBuildMaker() {
               <div className="flex items-center gap-2">
                 <span className="text-base">🎯</span>
                 <div>
-                  <span className="text-sm font-bold text-violet-300">{t("raid.bossFinder")}</span>
+                  <span className="text-sm font-bold text-[var(--pt-gold)]">{t("raid.bossFinder")}</span>
                   {!bossTeraType && (
-                    <span className="ml-2 text-xs text-gray-500">{t("raid.bossFinderSubtitle")}</span>
+                    <span className="ml-2 text-xs text-[var(--pt-text-dim)]">{t("raid.bossFinderSubtitle")}</span>
                   )}
                   {bossTeraType && (
-                    <span className="ml-2 text-xs text-violet-400">
+                    <span className="ml-2 text-xs text-[var(--pt-gold)]">
                       {bossPokemon ? `${bossPokemon.name} · ` : ""}{bossTeraType} Tera
                       {bossStars ? ` · ${bossStars}★` : ""}
                       {" "}· {bossRecommendations.length} builds
@@ -476,15 +476,15 @@ export function RaidBuildMaker() {
                   )}
                 </div>
               </div>
-              <span className="text-xs text-gray-500">{bossFinderOpen ? "▲" : "▼"}</span>
+              <span className="text-xs text-[var(--pt-text-dim)]">{bossFinderOpen ? "▲" : "▼"}</span>
             </button>
 
             {bossFinderOpen && (
-              <div className="border-t border-violet-500/20 px-4 pb-4 pt-3">
+              <div className="border-t border-[var(--pt-border-dim)] px-4 pb-4 pt-3">
                 <div className="grid gap-3 sm:grid-cols-3">
                   {/* Boss Pokemon search */}
                   <div>
-                    <div className="mb-1.5 text-[10px] font-bold uppercase text-gray-500">
+                    <div className="mb-1.5 text-[10px] font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">
                       {locale === "pt" ? "Pokémon Boss (opcional)" : "Boss Pokémon (optional)"}
                     </div>
                     <SearchDropdown
@@ -496,7 +496,7 @@ export function RaidBuildMaker() {
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={p.sprite} alt={p.name} width={24} height={24} className="pixelated" />
                           <span className="font-semibold text-gray-100">{p.name}</span>
-                          <span className="text-xs text-gray-500">#{p.nationalDex}</span>
+                          <span className="text-xs text-[var(--pt-text-dim)]">#{p.nationalDex}</span>
                         </>
                       )}
                       getLabel={(p) => p.name}
@@ -518,7 +518,7 @@ export function RaidBuildMaker() {
 
                   {/* Boss Tera Type */}
                   <div>
-                    <div className="mb-1.5 text-[10px] font-bold uppercase text-gray-500">
+                    <div className="mb-1.5 text-[10px] font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">
                       {t("raid.bossTeraType")}
                     </div>
                     <div className="flex flex-wrap gap-1">
@@ -526,7 +526,7 @@ export function RaidBuildMaker() {
                         <button
                           key={tp}
                           onClick={() => setBossTeraType(bossTeraType === tp ? null : tp)}
-                          className="rounded-full border px-2 py-0.5 text-[10px] font-bold text-white transition-all"
+                          className="rounded-none border px-2 py-0.5 text-[10px] font-bold text-white transition-all"
                           style={{
                             background: bossTeraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
                             borderColor: bossTeraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.1)",
@@ -541,7 +541,7 @@ export function RaidBuildMaker() {
 
                   {/* Star level */}
                   <div>
-                    <div className="mb-1.5 text-[10px] font-bold uppercase text-gray-500">
+                    <div className="mb-1.5 text-[10px] font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">
                       {t("raid.starLevel")}
                     </div>
                     <div className="flex gap-1.5">
@@ -549,10 +549,10 @@ export function RaidBuildMaker() {
                         <button
                           key={s}
                           onClick={() => setBossStars(bossStars === s ? null : s)}
-                          className={`rounded-lg border px-3 py-1.5 text-sm font-bold transition-all ${
+                          className={`rounded-none border px-3 py-1.5 text-sm font-bold transition-all ${
                             bossStars === s
                               ? "border-yellow-500/50 bg-yellow-500/15 text-yellow-300"
-                              : "border-white/10 bg-white/5 text-gray-400 hover:text-white"
+                              : "border-[var(--pt-border-dim)] bg-[var(--pt-card)] text-[var(--pt-text-dim)] hover:text-white"
                           }`}
                         >
                           {s}★
@@ -562,7 +562,7 @@ export function RaidBuildMaker() {
                     {bossTeraType && (
                       <button
                         onClick={() => { setBossPokemon(null); setBossTeraType(null); setBossStars(null); }}
-                        className="mt-3 text-xs text-gray-500 underline hover:text-red-400"
+                        className="mt-3 text-xs text-[var(--pt-text-dim)] underline hover:text-red-400"
                       >
                         {t("raid.clearBoss")}
                       </button>
@@ -579,19 +579,19 @@ export function RaidBuildMaker() {
               <div className="mb-3 flex items-center gap-2">
                 <span className="text-base">⭐</span>
                 <span className="text-sm font-bold text-yellow-300">{t("raid.recommended")}</span>
-                <span className="rounded-full bg-yellow-500/15 px-2 py-0.5 text-[10px] font-bold text-yellow-400">
+                <span className="rounded-none bg-yellow-500/15 px-2 py-0.5 text-[10px] font-bold text-yellow-400">
                   {t("raid.recommendedCount", { count: bossRecommendations.length })}
                 </span>
                 {bossTeraType && (
                   <TypeBadge type={bossTeraType} small />
                 )}
                 {bossStars && (
-                  <span className="text-xs font-bold text-gray-400">{bossStars}★</span>
+                  <span className="text-xs font-bold text-[var(--pt-text-dim)]">{bossStars}★</span>
                 )}
               </div>
 
               {bossRecommendations.length === 0 ? (
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-gray-500">
+                <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4 text-sm text-[var(--pt-text-dim)]">
                   {t("raid.noBossRecommendations")}
                 </div>
               ) : (
@@ -605,7 +605,7 @@ export function RaidBuildMaker() {
                       <div key={`rec-${entry.name}-${entry.role}`} className="flex flex-col gap-1">
                         <button
                           onClick={() => setSelectedEntry(isSelected ? null : entry)}
-                          className={`group flex items-center gap-3 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+                          className={`group flex items-center gap-3 rounded-none border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-lg ${
                             isSelected
                               ? "border-yellow-500/50 bg-yellow-500/10"
                               : "border-yellow-500/20 bg-yellow-500/5 hover:border-yellow-500/40"
@@ -628,7 +628,7 @@ export function RaidBuildMaker() {
                             </div>
                             <div className="mt-1 flex items-center gap-1.5">
                               <TypeBadge type={primaryBuild.teraType as PokemonType} small />
-                              <span className="text-[10px] text-gray-500">{primaryBuild.nature} · {primaryBuild.ability}</span>
+                              <span className="text-[10px] text-[var(--pt-text-dim)]">{primaryBuild.nature} · {primaryBuild.ability}</span>
                             </div>
                             {seMovesForBoss.length > 0 && (
                               <div className="mt-1 flex flex-wrap items-center gap-0.5">
@@ -655,21 +655,21 @@ export function RaidBuildMaker() {
 
                         {/* Build picker — same pattern as main tier list */}
                         {isSelected && (
-                          <div className="rounded-xl border border-yellow-500/30 bg-gray-900/80 p-2">
-                            <div className="mb-1.5 px-1 text-[10px] font-semibold text-gray-500">
+                          <div className="rounded-none border border-yellow-500/30 bg-[var(--pt-surface)] p-2">
+                            <div className="mb-1.5 px-1 text-[10px] font-semibold text-[var(--pt-text-dim)]">
                               {locale === "pt" ? "Selecione uma build:" : "Select a build:"}
                             </div>
                             {entry.builds.map((buildOption, idx) => (
                               <button
                                 key={idx}
                                 onClick={() => loadTierBuild(entry, buildOption)}
-                                className="mb-1 w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-left transition-all hover:border-yellow-500/30 hover:bg-yellow-500/10 last:mb-0"
+                                className="mb-1 w-full rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-left transition-all hover:border-yellow-500/30 hover:bg-yellow-500/10 last:mb-0"
                               >
                                 <div className="flex items-center justify-between">
                                   <span className="text-xs font-semibold text-gray-200">{buildOption.name}</span>
                                   <TypeBadge type={buildOption.teraType as PokemonType} small />
                                 </div>
-                                <div className="mt-0.5 text-[10px] text-gray-500">
+                                <div className="mt-0.5 text-[10px] text-[var(--pt-text-dim)]">
                                   {buildOption.nature} · {buildOption.ability} · {buildOption.item}
                                 </div>
                                 <div className="mt-0.5 text-[10px] text-gray-600">
@@ -685,8 +685,8 @@ export function RaidBuildMaker() {
                 </div>
               )}
 
-              <div className="mt-4 border-t border-white/5 pt-4">
-                <div className="mb-2 text-xs font-bold text-gray-500 uppercase tracking-wide">
+              <div className="mt-4 border-t border-[var(--pt-border-dim)] pt-4">
+                <div className="mb-2 font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-xs text-[var(--pt-gold)]">
                   {locale === "pt" ? "Guia Completo" : "Full Guide"}
                 </div>
               </div>
@@ -697,12 +697,12 @@ export function RaidBuildMaker() {
           <div className="mb-4 flex flex-wrap items-center gap-3">
             {/* Tag filter */}
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-gray-500">Tag</span>
-              <div className="flex flex-wrap gap-0.5 rounded-lg border border-white/10 bg-white/5 p-0.5">
+              <span className="text-xs font-semibold text-[var(--pt-text-dim)]">Tag</span>
+              <div className="flex flex-wrap gap-0.5 rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-0.5">
                 <button
                   onClick={() => setTagFilter("all")}
-                  className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
-                    tagFilter === "all" ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
+                  className={`rounded-none px-2.5 py-1 text-xs font-bold transition-all ${
+                    tagFilter === "all" ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]" : "text-[var(--pt-text-dim)] hover:text-gray-300"
                   }`}
                 >
                   {t("common.all")}
@@ -711,8 +711,8 @@ export function RaidBuildMaker() {
                   <button
                     key={tag}
                     onClick={() => setTagFilter(tagFilter === tag ? "all" : tag)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
-                      tagFilter === tag ? "text-white" : "text-gray-500 hover:text-gray-300"
+                    className={`rounded-none px-2.5 py-1 text-xs font-bold transition-all ${
+                      tagFilter === tag ? "text-white" : "text-[var(--pt-text-dim)] hover:text-gray-300"
                     }`}
                     style={tagFilter === tag ? { background: TAG_COLORS[tag] + "33" } : undefined}
                     title={locale === "pt" ? TAG_LABELS[tag].pt : TAG_LABELS[tag].en}
@@ -725,12 +725,12 @@ export function RaidBuildMaker() {
 
             {/* Role filter */}
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-gray-500">Role</span>
-              <div className="flex gap-0.5 rounded-lg border border-white/10 bg-white/5 p-0.5">
+              <span className="text-xs font-semibold text-[var(--pt-text-dim)]">Role</span>
+              <div className="flex gap-0.5 rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-0.5">
                 <button
                   onClick={() => setRoleFilter("all")}
-                  className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
-                    roleFilter === "all" ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
+                  className={`rounded-none px-2.5 py-1 text-xs font-bold transition-all ${
+                    roleFilter === "all" ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]" : "text-[var(--pt-text-dim)] hover:text-gray-300"
                   }`}
                 >
                   {t("common.all")}
@@ -739,8 +739,8 @@ export function RaidBuildMaker() {
                   <button
                     key={role}
                     onClick={() => setRoleFilter(roleFilter === role ? "all" : role)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
-                      roleFilter === role ? "bg-violet-500/20 text-white" : "text-gray-500 hover:text-gray-300"
+                    className={`rounded-none px-2.5 py-1 text-xs font-bold transition-all ${
+                      roleFilter === role ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]" : "text-[var(--pt-text-dim)] hover:text-gray-300"
                     }`}
                   >
                     {ROLE_LABELS[role].emoji} {locale === "pt" ? ROLE_LABELS[role].pt : ROLE_LABELS[role].en}
@@ -775,10 +775,10 @@ export function RaidBuildMaker() {
                       <div key={`${entry.name}-${entry.role}`} className="flex flex-col gap-1">
                         <button
                           onClick={() => setSelectedEntry(isSelected ? null : entry)}
-                          className={`group flex items-center gap-3 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+                          className={`group flex items-center gap-3 rounded-none border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-lg ${
                             isSelected
-                              ? "border-violet-500/50 bg-violet-500/10"
-                              : "border-white/10 bg-white/5 hover:border-white/20"
+                              ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)]"
+                              : "border-[var(--pt-border-dim)] bg-[var(--pt-card)] hover:border-[var(--pt-gold)]"
                           }`}
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -799,32 +799,32 @@ export function RaidBuildMaker() {
                             </div>
                             <div className="mt-1 flex items-center gap-1.5">
                               <TypeBadge type={primaryBuild.teraType as PokemonType} small />
-                              <span className="text-[10px] text-gray-500">{primaryBuild.nature} · {primaryBuild.ability}</span>
+                              <span className="text-[10px] text-[var(--pt-text-dim)]">{primaryBuild.nature} · {primaryBuild.ability}</span>
                             </div>
                             <div className="mt-1 flex items-center justify-between text-[10px] text-gray-600">
                               <span>{primaryBuild.item}</span>
-                              <span className="text-violet-400">{entry.builds.length} build{entry.builds.length > 1 ? "s" : ""} →</span>
+                              <span className="text-[var(--pt-gold)]">{entry.builds.length} build{entry.builds.length > 1 ? "s" : ""} →</span>
                             </div>
                           </div>
                         </button>
 
                         {/* Build picker — expands below the card */}
                         {isSelected && (
-                          <div className="col-span-full rounded-xl border border-violet-500/30 bg-gray-900/80 p-2">
-                            <div className="mb-1.5 px-1 text-[10px] font-semibold text-gray-500">
+                          <div className="col-span-full rounded-none border border-[var(--pt-gold)] bg-[var(--pt-surface)] p-2">
+                            <div className="mb-1.5 px-1 text-[10px] font-semibold text-[var(--pt-text-dim)]">
                               {locale === "pt" ? "Selecione uma build:" : "Select a build:"}
                             </div>
                             {entry.builds.map((buildOption, idx) => (
                               <button
                                 key={idx}
                                 onClick={() => loadTierBuild(entry, buildOption)}
-                                className="mb-1 w-full rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-left transition-all hover:border-violet-500/30 hover:bg-violet-500/10 last:mb-0"
+                                className="mb-1 w-full rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-left transition-all hover:border-[var(--pt-gold)] hover:bg-[rgba(255,215,0,0.08)] last:mb-0"
                               >
                                 <div className="flex items-center justify-between">
                                   <span className="text-xs font-semibold text-gray-200">{buildOption.name}</span>
                                   <TypeBadge type={buildOption.teraType as PokemonType} small />
                                 </div>
-                                <div className="mt-0.5 text-[10px] text-gray-500">
+                                <div className="mt-0.5 text-[10px] text-[var(--pt-text-dim)]">
                                   {buildOption.nature} · {buildOption.ability} · {buildOption.item}
                                 </div>
                                 <div className="mt-0.5 text-[10px] text-gray-600">
@@ -843,7 +843,7 @@ export function RaidBuildMaker() {
           })}
 
           {filteredTierList.length === 0 && (
-            <div className="py-8 text-center text-sm text-gray-500">
+            <div className="py-8 text-center text-sm text-[var(--pt-text-dim)]">
               {t("common.noResults")}
             </div>
           )}
@@ -857,20 +857,20 @@ export function RaidBuildMaker() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setShowImport(!showImport)}
-              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-400 hover:text-white"
+              className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-1.5 text-xs font-semibold text-[var(--pt-text-dim)] hover:text-white"
             >
               {t("raid.importShowdown")}
             </button>
             <button
               onClick={() => setShowExport(!showExport)}
-              className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-400 hover:text-white"
+              className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-1.5 text-xs font-semibold text-[var(--pt-text-dim)] hover:text-white"
               disabled={!build.pokemon && !build.pokemonFallback}
             >
               {t("raid.exportShowdown")}
             </button>
             <button
               onClick={() => setBuild(createEmptyBuild())}
-              className="ml-auto rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20"
+              className="ml-auto rounded-none border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/20"
             >
               {t("common.reset")}
             </button>
@@ -878,7 +878,7 @@ export function RaidBuildMaker() {
 
           {/* Import Modal */}
           {showImport && (
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
               <div className="mb-2 text-sm font-bold text-gray-300">
                 {t("raid.pasteShowdown")}
               </div>
@@ -886,11 +886,11 @@ export function RaidBuildMaker() {
                 value={importText}
                 onChange={(e) => setImportText(e.target.value)}
                 placeholder={`Garchomp @ Choice Band\nAbility: Rough Skin\nTera Type: Dragon\nEVs: 252 Atk / 252 Spe / 4 HP\nJolly Nature\n- Earthquake\n- Outrage\n- Stone Edge\n- Swords Dance`}
-                className="mb-2 h-40 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-gray-100 placeholder-gray-600 outline-none"
+                className="mb-2 h-40 w-full rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-surface)] px-3 py-2 font-mono text-xs text-gray-100 placeholder-gray-600 outline-none"
               />
               <button
                 onClick={handleImport}
-                className="rounded-lg bg-violet-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-violet-500"
+                className="rounded-none border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-4 py-1.5 text-sm font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)] hover:bg-[rgba(255,215,0,0.15)]"
               >
                 {t("raid.import")}
               </button>
@@ -899,18 +899,18 @@ export function RaidBuildMaker() {
 
           {/* Export Modal */}
           {showExport && (build.pokemon || build.pokemonFallback) && (
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
               <div className="mb-2 text-sm font-bold text-gray-300">
                 {t("raid.showdownFormat")}
               </div>
               <textarea
                 readOnly
                 value={exportText}
-                className="mb-2 h-40 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-gray-100 outline-none"
+                className="mb-2 h-40 w-full rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-surface)] px-3 py-2 font-mono text-xs text-gray-100 outline-none"
               />
               <button
                 onClick={() => { navigator.clipboard.writeText(exportText); }}
-                className="rounded-lg bg-violet-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-violet-500"
+                className="rounded-none border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-4 py-1.5 text-sm font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)] hover:bg-[rgba(255,215,0,0.15)]"
               >
                 {t("common.copy")}
               </button>
@@ -919,8 +919,8 @@ export function RaidBuildMaker() {
 
           {/* Pokémon + Tera Type */}
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">{t("common.pokemon")}</div>
+            <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <div className="mb-2 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">{t("common.pokemon")}</div>
               <SearchDropdown
                 items={allPokemon}
                 value={build.pokemon?.name || ""}
@@ -934,7 +934,7 @@ export function RaidBuildMaker() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.sprite} alt={p.name} width={28} height={28} className="pixelated" />
                     <span className="font-semibold text-gray-100">{p.name}</span>
-                    <span className="text-xs text-gray-500">#{p.nationalDex}</span>
+                    <span className="text-xs text-[var(--pt-text-dim)]">#{p.nationalDex}</span>
                   </>
                 )}
                 getLabel={(p) => p.name}
@@ -951,19 +951,19 @@ export function RaidBuildMaker() {
                         <TypeBadge key={tp} type={tp as PokemonType} small />
                       ))}
                       {build.pokemon.isLegendary && (
-                        <span className="rounded-full bg-yellow-500/15 px-1.5 py-0.5 text-[9px] font-bold text-yellow-300">★ Legendary</span>
+                        <span className="rounded-none bg-yellow-500/15 px-1.5 py-0.5 text-[9px] font-bold text-yellow-300">★ Legendary</span>
                       )}
                       {build.pokemon.isMythical && (
-                        <span className="rounded-full bg-pink-500/15 px-1.5 py-0.5 text-[9px] font-bold text-pink-300">✦ Mythical</span>
+                        <span className="rounded-none bg-pink-500/15 px-1.5 py-0.5 text-[9px] font-bold text-pink-300">✦ Mythical</span>
                       )}
                     </div>
-                    <div className="text-[10px] text-gray-500">
+                    <div className="text-[10px] text-[var(--pt-text-dim)]">
                       #{build.pokemon.nationalDex}
                       {build.pokemon.height ? ` · ${(build.pokemon.height / 10).toFixed(1)}m` : ""}
                       {build.pokemon.weight ? ` · ${(build.pokemon.weight / 10).toFixed(1)}kg` : ""}
                     </div>
                     {build.pokemon.flavorText && (
-                      <p className="mt-1 text-[10px] italic leading-relaxed text-gray-500 line-clamp-2">
+                      <p className="mt-1 text-[10px] italic leading-relaxed text-[var(--pt-text-dim)] line-clamp-2">
                         {build.pokemon.flavorText}
                       </p>
                     )}
@@ -982,14 +982,14 @@ export function RaidBuildMaker() {
               )}
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">{t("raid.teraType")}</div>
+            <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <div className="mb-2 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">{t("raid.teraType")}</div>
               <div className="flex flex-wrap gap-1">
                 {TYPES.map((t) => (
                   <button
                     key={t}
                     onClick={() => setBuild((prev) => ({ ...prev, teraType: build.teraType === t ? null : t }))}
-                    className="rounded-full border px-2 py-0.5 text-[10px] font-bold text-white transition-all"
+                    className="rounded-none border px-2 py-0.5 text-[10px] font-bold text-white transition-all"
                     style={{
                       background: build.teraType === t ? TYPE_COLORS[t] : "rgba(255,255,255,0.05)",
                       borderColor: build.teraType === t ? TYPE_COLORS[t] : "rgba(255,255,255,0.1)",
@@ -1001,8 +1001,8 @@ export function RaidBuildMaker() {
                 ))}
               </div>
               {defenses && (
-                <div className="mt-4 border-t border-white/5 pt-3">
-                  <div className="text-[10px] font-bold text-gray-500 uppercase">{t("raid.defensiveMatchup", { defaultValue: "Defensive Matchups" })}</div>
+                <div className="mt-4 border-t border-[var(--pt-border-dim)] pt-3">
+                  <div className="text-[10px] font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">{t("raid.defensiveMatchup", { defaultValue: "Defensive Matchups" })}</div>
                   <div className="mt-1.5 flex flex-col gap-1.5">
                     {defenses.weaknesses.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1">
@@ -1025,7 +1025,7 @@ export function RaidBuildMaker() {
                     )}
                     {defenses.immunities.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1">
-                        <span className="w-12 text-[10px] text-gray-400">Immune:</span>
+                        <span className="w-12 text-[10px] text-[var(--pt-text-dim)]">Immune:</span>
                         {defenses.immunities.map((i) => (
                           <TypeBadge key={i} type={i} small />
                         ))}
@@ -1039,15 +1039,15 @@ export function RaidBuildMaker() {
 
           {/* Nature + Ability + Item */}
           <div className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">{t("common.nature")}</div>
+            <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <div className="mb-2 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">{t("common.nature")}</div>
               <select
                 value={build.nature.name}
                 onChange={(e) => {
                   const n = natures.find((x) => x.name === e.target.value);
                   if (n) setBuild((prev) => ({ ...prev, nature: n }));
                 }}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
               >
                 {natures.map((n) => (
                   <option key={n.name} value={n.name}>
@@ -1057,13 +1057,13 @@ export function RaidBuildMaker() {
               </select>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">{t("common.ability")}</div>
+            <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <div className="mb-2 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">{t("common.ability")}</div>
               {build.pokemon ? (
                 <select
                   value={build.ability}
                   onChange={(e) => setBuild((prev) => ({ ...prev, ability: e.target.value }))}
-                  className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                  className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
                 >
                   {build.pokemon.abilities.map((a) => (
                     <option key={a.name} value={a.name}>
@@ -1076,22 +1076,22 @@ export function RaidBuildMaker() {
                   type="text"
                   value={build.ability}
                   onChange={(e) => setBuild((prev) => ({ ...prev, ability: e.target.value }))}
-                  className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                  className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
                 />
               ) : (
-                <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-500">
+                <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-[var(--pt-text-dim)]">
                   {t("raid.selectPokemon")}
                 </div>
               )}
               {build.ability && (
-                <div className="mt-2 rounded bg-black/20 p-2 text-[10px] text-gray-400">
+                <div className="mt-2 rounded-none bg-black/20 p-2 text-[10px] text-[var(--pt-text-dim)]">
                   {abilities.find(a => a.name === build.ability)?.shortEffect || "No description available."}
                 </div>
               )}
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">{t("raid.heldItem")}</div>
+            <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <div className="mb-2 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">{t("raid.heldItem")}</div>
               <SearchDropdown
                 items={HELD_ITEMS}
                 value={build.item}
@@ -1101,7 +1101,7 @@ export function RaidBuildMaker() {
                     {i.sprite && <img src={i.sprite} alt={i.name} className="h-6 w-6 pixelated" />}
                     <div>
                       <span className="font-semibold text-gray-100">{i.name}</span>
-                      <span className="block text-[10px] text-gray-500">{i.description}</span>
+                      <span className="block text-[10px] text-[var(--pt-text-dim)]">{i.description}</span>
                     </div>
                   </div>
                 )}
@@ -1117,7 +1117,7 @@ export function RaidBuildMaker() {
                     {selectedItem.sprite && (
                       <img src={selectedItem.sprite} alt={selectedItem.name} className="h-6 w-6 shrink-0 pixelated" />
                     )}
-                    <div className="flex-1 text-[10px] text-gray-400">
+                    <div className="flex-1 text-[10px] text-[var(--pt-text-dim)]">
                       {selectedItem.officialDescription || selectedItem.description}
                     </div>
                   </div>
@@ -1127,12 +1127,12 @@ export function RaidBuildMaker() {
           </div>
 
           {/* Moves */}
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <div className="mb-3 text-xs font-bold text-gray-400">{t("raid.moves")}</div>
+          <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+            <div className="mb-3 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">{t("raid.moves")}</div>
             <div className="grid gap-2 sm:grid-cols-2">
               {build.moves.map((move, i) => (
                 <div key={i} className="flex items-start gap-2">
-                  <span className="mt-2 w-4 text-center text-xs font-bold text-gray-500">
+                  <span className="mt-2 w-4 text-center text-xs font-bold text-[var(--pt-text-dim)]">
                     {i + 1}
                   </span>
                   <div className="flex-1">
@@ -1148,7 +1148,7 @@ export function RaidBuildMaker() {
                         <div className="flex w-full flex-col items-start">
                           <div className="flex w-full items-center gap-2">
                             <span
-                              className="h-2 w-2 shrink-0 rounded-full"
+                              className="h-2 w-2 shrink-0 rounded-none"
                               style={{ background: TYPE_COLORS[m.type as PokemonType] || "#888" }}
                             />
                             <span className="flex-1 truncate font-semibold text-gray-100">{m.name}</span>
@@ -1158,13 +1158,13 @@ export function RaidBuildMaker() {
                                   TM{String(m.tm).padStart(3, "0")}
                                 </span>
                               )}
-                              <span className="text-[10px] text-gray-500">
+                              <span className="text-[10px] text-[var(--pt-text-dim)]">
                                 {m.category} {m.power ? `· ${m.power}bp` : ""}
                               </span>
                             </div>
                           </div>
                           {m.effect && (
-                            <span className="mt-1 w-full truncate text-[10px] text-gray-500">
+                            <span className="mt-1 w-full truncate text-[10px] text-[var(--pt-text-dim)]">
                               {m.effect}
                             </span>
                           )}
@@ -1258,7 +1258,7 @@ export function RaidBuildMaker() {
                         moves[i] = null;
                         return { ...prev, moves };
                       })}
-                      className="mt-2 text-xs text-gray-500 hover:text-red-400"
+                      className="mt-2 text-xs text-[var(--pt-text-dim)] hover:text-red-400"
                     >
                       ✕
                     </button>
@@ -1269,21 +1269,21 @@ export function RaidBuildMaker() {
           </div>
 
           {/* EVs + IVs + Stats */}
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
             <div className="mb-1 flex items-center justify-between">
-              <div className="text-xs font-bold text-gray-400">{t("raid.evsAndStats")}</div>
-              <div className="text-xs text-gray-500">
+              <div className="text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">{t("raid.evsAndStats")}</div>
+              <div className="text-xs text-[var(--pt-text-dim)]">
                 {t("raid.evsCount", { count: totalEvs })}
               </div>
             </div>
 
             {/* Total EV bar */}
-            <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+            <div className="mb-3 h-1.5 overflow-hidden rounded-none bg-white/10">
               <div
-                className="h-full rounded-full transition-all"
+                className="h-full transition-all"
                 style={{
                   width: `${(totalEvs / 510) * 100}%`,
-                  background: totalEvs >= 510 ? "#10B981" : "#8B5CF6",
+                  background: totalEvs >= 510 ? "#10B981" : "var(--pt-gold)",
                 }}
               />
             </div>
@@ -1294,7 +1294,7 @@ export function RaidBuildMaker() {
                 const finalStat = calcStats?.[stat] ?? 0;
                 return (
                   <div key={stat} className="flex items-center gap-2">
-                    <span className="w-8 shrink-0 text-right text-xs font-bold text-gray-400">
+                    <span className="w-8 shrink-0 text-right text-xs font-bold text-[var(--pt-text-dim)]">
                       {stat}
                     </span>
                     {/* EV */}
@@ -1307,14 +1307,14 @@ export function RaidBuildMaker() {
                         const val = Math.min(MAX_EV_PER_STAT, Math.max(0, parseInt(e.target.value) || 0));
                         setBuild((prev) => ({ ...prev, evs: { ...prev.evs, [stat]: val } }));
                       }}
-                      className="w-14 rounded border border-white/10 bg-white/5 px-1.5 py-1 text-center text-xs text-gray-100"
+                      className="w-14 rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-1.5 py-1 text-center text-xs text-gray-100"
                       title="EVs"
                     />
                     {/* Quick EV buttons */}
                     <div className="flex gap-0.5">
-                      <button onClick={() => updateEV(stat, -4)} className="rounded bg-white/5 px-1 py-0.5 text-[9px] font-bold text-gray-400 hover:bg-white/10">-4</button>
-                      <button onClick={() => updateEV(stat, 4)} className="rounded bg-white/5 px-1 py-0.5 text-[9px] font-bold text-gray-400 hover:bg-white/10">+4</button>
-                      <button onClick={() => updateEV(stat, 252 - build.evs[stat])} className="rounded bg-violet-500/15 px-1 py-0.5 text-[9px] font-bold text-violet-300 hover:bg-violet-500/25">MAX</button>
+                      <button onClick={() => updateEV(stat, -4)} className="rounded-none bg-[var(--pt-card)] px-1 py-0.5 text-[9px] font-bold text-[var(--pt-text-dim)] hover:bg-white/10">-4</button>
+                      <button onClick={() => updateEV(stat, 4)} className="rounded-none bg-[var(--pt-card)] px-1 py-0.5 text-[9px] font-bold text-[var(--pt-text-dim)] hover:bg-white/10">+4</button>
+                      <button onClick={() => updateEV(stat, 252 - build.evs[stat])} className="rounded-none bg-[rgba(255,215,0,0.08)] px-1 py-0.5 text-[9px] font-bold text-[var(--pt-gold)] hover:bg-[rgba(255,215,0,0.15)]">MAX</button>
                     </div>
                     {/* IV */}
                     <input
@@ -1326,7 +1326,7 @@ export function RaidBuildMaker() {
                         const val = Math.min(MAX_IV, Math.max(0, parseInt(e.target.value) || 0));
                         setBuild((prev) => ({ ...prev, ivs: { ...prev.ivs, [stat]: val } }));
                       }}
-                      className="w-12 rounded border border-white/10 bg-white/5 px-1.5 py-1 text-center text-xs text-gray-100"
+                      className="w-12 rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-1.5 py-1 text-center text-xs text-gray-100"
                       title="IVs"
                     />
                     {/* Nature indicator */}
@@ -1336,9 +1336,9 @@ export function RaidBuildMaker() {
                       {mod > 1 ? "↑" : mod < 1 ? "↓" : ""}
                     </span>
                     {/* Stat bar + final */}
-                    <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-white/10">
+                    <div className="relative h-2 flex-1 overflow-hidden rounded-none bg-white/10">
                       <div
-                        className="absolute inset-y-0 left-0 rounded-full transition-all"
+                        className="absolute inset-y-0 left-0 transition-all"
                         style={{
                           width: build.pokemon ? `${Math.min((finalStat / 500) * 100, 100)}%` : "0%",
                           background: STAT_COLORS[stat],
@@ -1355,15 +1355,15 @@ export function RaidBuildMaker() {
           </div>
 
           {/* Notes */}
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <div className="mb-2 text-xs font-bold text-gray-400">
+          <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+            <div className="mb-2 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">
               {t("raid.notes")}
             </div>
             <textarea
               value={build.notes}
               onChange={(e) => setBuild((prev) => ({ ...prev, notes: e.target.value }))}
               placeholder={t("raid.notesPlaceholder")}
-              className="h-24 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 outline-none"
+              className="h-24 w-full rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-surface)] px-3 py-2 text-sm text-gray-100 placeholder-gray-600 outline-none"
             />
           </div>
 
