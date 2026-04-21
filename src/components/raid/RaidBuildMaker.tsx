@@ -12,6 +12,7 @@ import typesData from "@/data/generated/types.json";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
 import { RAID_TIER_LIST, TAG_COLORS, TAG_NAMES, TAG_LABELS, type RaidTag, type RaidRole, type RaidTierEntry, type RaidBuild } from "@/data/raid-tier-list";
+import { RAID_BOSSES } from "@/data/raid-bosses";
 import { STAT_NAMES, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
@@ -383,7 +384,12 @@ export function RaidBuildMaker() {
 
 
   // Boss Finder: score tier list entries by type effectiveness against boss tera type
-  const bossRecommendations = useMemo((): { entry: RaidTierEntry; score: number; seMovesForBoss: string[] }[] => {
+  const bossRecommendations = useMemo((): {
+  entry: RaidTierEntry;
+  score: number;
+  seMovesForBoss: string[];
+  bestBuildIndex: number;
+}[] => {
     if (!bossTeraType) return [];
 
     const bossTypeData = allTypesData.find(
@@ -411,7 +417,7 @@ export function RaidBuildMaker() {
         if (entry.tags.includes("7★ Ready") && bossStars === 7) score += 1;
         if (entry.tags.includes("Budget Pick")) score += 0.5;
 
-        return { entry, score, seMovesForBoss };
+        return { entry, score, seMovesForBoss, bestBuildIndex: 0 };
       })
       .filter((r) => r.score > 0)
       .sort((a, b) => b.score - a.score)
