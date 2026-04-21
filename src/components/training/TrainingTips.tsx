@@ -66,7 +66,7 @@ export function TrainingTips() {
       />
 
       {/* Sticky anchor nav */}
-      <div className="sticky top-[57px] z-40 mb-8 flex gap-2 border border-[var(--pt-border-dim)] bg-gray-950/90 p-2 backdrop-blur-md">
+      <div className="sticky top-[57px] z-40 mb-8 flex gap-2 border border-[var(--pt-border-dim)] bg-[var(--pt-surface)]/90 p-2 backdrop-blur-md">
         {SECTIONS.map((s) => {
           const isActive = activeSection === s.id;
           return (
