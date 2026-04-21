@@ -66,14 +66,14 @@ export function TrainingTips() {
       />
 
       {/* Sticky anchor nav */}
-      <div className="sticky top-[57px] z-40 mb-8 flex gap-2 rounded-xl border border-white/[0.08] bg-gray-950/90 p-2 backdrop-blur-md">
+      <div className="sticky top-[57px] z-40 mb-8 flex gap-2 border border-[var(--pt-border-dim)] bg-[var(--pt-surface)]/90 p-2 backdrop-blur-md">
         {SECTIONS.map((s) => {
           const isActive = activeSection === s.id;
           return (
             <button
               key={s.id}
               onClick={() => scrollTo(s.id)}
-              className="flex-1 rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200"
+              className="flex-1 px-3 py-2 text-sm font-semibold transition-all duration-200"
               style={{
                 background: isActive ? `${s.color}22` : "transparent",
                 color: isActive ? s.color : "#9CA3AF",
@@ -91,20 +91,22 @@ export function TrainingTips() {
           id="power-items"
           ref={(el) => { sectionRefs.current["power-items"] = el; }}
         >
-          <h2 className="mb-1 text-xl font-bold text-white">{t("trainingTips.powerItemsTitle")}</h2>
-          <p className="mb-6 text-sm text-gray-400">{t("trainingTips.powerItemsDesc")}</p>
+          <h2 className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-xl uppercase tracking-[2px] text-[var(--pt-gold)]">
+            ▶ {t("trainingTips.powerItemsTitle")}
+          </h2>
+          <p className="mb-6 text-sm text-[var(--pt-text-dim)]">{t("trainingTips.powerItemsDesc")}</p>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 mb-8">
             {POWER_ITEMS_DATA.map((item) => (
               <div
                 key={item.name}
-                className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4"
+                className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4"
               >
                 <div className="flex items-center gap-3 mb-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={item.sprite} alt={item.name} width={32} height={32} className="[image-rendering:pixelated]" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                   <span
-                    className="rounded-lg px-2 py-0.5 text-xs font-bold"
+                    className="px-2 py-0.5 text-xs font-bold"
                     style={{ background: STAT_COLORS[item.stat] + "33", color: STAT_COLORS[item.stat] }}
                   >
                     {STAT_LABELS[item.stat]}
@@ -117,7 +119,7 @@ export function TrainingTips() {
                   </span>
                 </div>
                 <p className="font-semibold text-white text-sm mb-1">{item.name}</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-[var(--pt-text-dim)]">
                   {t("trainingTips.powerItemsWhere")}: {item.where}
                 </p>
               </div>
@@ -125,16 +127,18 @@ export function TrainingTips() {
           </div>
 
           {/* Battle Calculator */}
-          <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-5">
-            <h3 className="mb-4 font-bold text-white">{t("trainingTips.calcTitle")}</h3>
+          <div className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-5">
+            <h3 className="mb-4 font-[family-name:var(--font-share-tech-mono)] font-bold uppercase tracking-[2px] text-[var(--pt-gold)]">
+              {t("trainingTips.calcTitle")}
+            </h3>
 
             <div className="flex flex-col gap-2">
               <div>
-                <label className="mb-1 block text-xs text-gray-400">{t("trainingTips.calcYield")}</label>
+                <label className="mb-1 block text-xs text-[var(--pt-text-dim)]">{t("trainingTips.calcYield")}</label>
                 <select
                   value={calcYield}
                   onChange={(e) => setCalcYield(Number(e.target.value))}
-                  className="w-full rounded-lg border border-white/10 bg-gray-900 px-3 py-2 text-sm text-white focus:outline-none"
+                  className="w-full border border-[var(--pt-border-dim)] bg-gray-900 px-3 py-2 text-sm text-white focus:outline-none"
                 >
                   <option value={1}>1 EV</option>
                   <option value={2}>2 EVs</option>
@@ -155,7 +159,7 @@ export function TrainingTips() {
                     if (key === "calcPowerItem" && !value) setCalcMacho(false);
                   }}
                   aria-pressed={value}
-                  className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors"
+                  className="flex items-center justify-between border px-3 py-2 text-sm transition-colors"
                   style={{
                     borderColor: value ? "#34D399" : "rgba(255,255,255,0.08)",
                     background: value ? "#34D39911" : "transparent",
@@ -168,7 +172,7 @@ export function TrainingTips() {
               ))}
             </div>
 
-            <div className="mt-5 grid grid-cols-3 gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] p-4">
+            <div className="mt-5 grid grid-cols-3 gap-3 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
               {[
                 { label: t("trainingTips.calcEvsPerBattle"),    value: calcResult.evsPerBattle },
                 { label: t("trainingTips.calcBattles252"),       value: `~${calcResult.battles252}` },
@@ -176,7 +180,7 @@ export function TrainingTips() {
               ].map(({ label, value }) => (
                 <div key={label} className="text-center">
                   <div className="text-2xl font-black text-white">{value}</div>
-                  <div className="mt-1 text-[11px] text-gray-500 leading-tight">{label}</div>
+                  <div className="mt-1 text-ui-md text-[var(--pt-text-dim)] leading-tight">{label}</div>
                 </div>
               ))}
             </div>
@@ -187,16 +191,18 @@ export function TrainingTips() {
           id="berries"
           ref={(el) => { sectionRefs.current["berries"] = el; }}
         >
-          <h2 className="mb-1 text-xl font-bold text-white">{t("trainingTips.berriesTitle")}</h2>
-          <p className="mb-4 text-sm text-gray-400">{t("trainingTips.berriesDesc")}</p>
+          <h2 className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-xl uppercase tracking-[2px] text-[var(--pt-gold)]">
+            ▶ {t("trainingTips.berriesTitle")}
+          </h2>
+          <p className="mb-4 text-sm text-[var(--pt-text-dim)]">{t("trainingTips.berriesDesc")}</p>
 
-          <div className="overflow-hidden rounded-xl border border-white/[0.08]">
+          <div className="overflow-hidden border border-[var(--pt-border-dim)]">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/[0.08] bg-white/[0.03]">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-400">{t("trainingTips.berriesName")}</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-400">{t("trainingTips.berriesStat")}</th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-400">{t("trainingTips.berriesEffect")}</th>
+                <tr className="border-b border-[var(--pt-border-dim)] bg-[var(--pt-card)]">
+                  <th className="px-4 py-3 text-left font-semibold text-[var(--pt-text-dim)]">{t("trainingTips.berriesName")}</th>
+                  <th className="px-4 py-3 text-left font-semibold text-[var(--pt-text-dim)]">{t("trainingTips.berriesStat")}</th>
+                  <th className="px-4 py-3 text-left font-semibold text-[var(--pt-text-dim)]">{t("trainingTips.berriesEffect")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -214,7 +220,7 @@ export function TrainingTips() {
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className="rounded px-2 py-0.5 text-xs font-bold"
+                        className="border border-[var(--pt-border-dim)] px-2 py-0.5 text-xs font-bold"
                         style={{
                           background: STAT_COLORS[berry.stat] + "33",
                           color: STAT_COLORS[berry.stat],
@@ -223,24 +229,26 @@ export function TrainingTips() {
                         {STAT_LABELS[berry.stat]}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-400">−{berry.reduction} EVs</td>
+                    <td className="px-4 py-3 text-[var(--pt-text-dim)]">−{berry.reduction} EVs</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <p className="mt-3 text-xs text-gray-500">{t("trainingTips.berriesWhere")}</p>
+          <p className="mt-3 text-xs text-[var(--pt-text-dim)]">{t("trainingTips.berriesWhere")}</p>
         </section>
 
         <section
           id="tera-type"
           ref={(el) => { sectionRefs.current["tera-type"] = el; }}
         >
-          <h2 className="mb-1 text-xl font-bold text-white">{t("trainingTips.teraTypeTitle")}</h2>
-          <p className="mb-4 text-sm text-gray-400">{t("trainingTips.teraTypeLocation")}</p>
+          <h2 className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-xl uppercase tracking-[2px] text-[var(--pt-gold)]">
+            ▶ {t("trainingTips.teraTypeTitle")}
+          </h2>
+          <p className="mb-4 text-sm text-[var(--pt-text-dim)]">{t("trainingTips.teraTypeLocation")}</p>
 
-          <div className="rounded-xl border bg-white/[0.03] p-5" style={{ borderColor: "#FFD70033" }}>
+          <div className="border bg-[var(--pt-card)] p-5" style={{ borderColor: "#FFD70033" }}>
             <div className="mb-5 flex flex-col gap-3">
               {[
                 t("trainingTips.teraTypeStep1"),
@@ -249,7 +257,7 @@ export function TrainingTips() {
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <span
-                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-black"
+                    className="flex h-6 w-6 shrink-0 items-center justify-center text-xs font-black"
                     style={{ background: "#FFD70033", color: "#FFD700" }}
                   >
                     {i + 1}
@@ -259,8 +267,8 @@ export function TrainingTips() {
               ))}
             </div>
 
-            <div className="mb-4 rounded-lg border border-white/[0.06] bg-white/[0.03] p-4">
-              <p className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-500">
+            <div className="mb-4 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <p className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-xs uppercase tracking-[2px] text-[var(--pt-text-dim)]">
                 {t("trainingTips.teraTypeReq")}
               </p>
               <ul className="flex flex-col gap-1">
@@ -276,7 +284,7 @@ export function TrainingTips() {
               </ul>
             </div>
 
-            <p className="text-xs text-gray-500 italic">{t("trainingTips.teraTypeTip")}</p>
+            <p className="text-xs text-[var(--pt-text-dim)] italic">{t("trainingTips.teraTypeTip")}</p>
           </div>
         </section>
       </div>

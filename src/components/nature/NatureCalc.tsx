@@ -131,15 +131,15 @@ export function NatureCalc() {
       />
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 rounded-xl bg-white/5 p-1">
+      <div className="mb-6 flex gap-1 bg-[var(--pt-card)] p-1">
         {tabs.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 rounded-lg px-2 py-2.5 text-center text-sm font-bold transition-all ${
+            className={`flex-1 px-2 py-2.5 text-center text-sm font-bold transition-all ${
               tab === t.id
-                ? "border-b-2 border-violet-500 bg-violet-500/15 text-white"
-                : "border-b-2 border-transparent text-gray-400"
+                ? "border-b-2 border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
+                : "border-b-2 border-transparent text-[var(--pt-text-dim)]"
             }`}
           >
             {t.label}
@@ -151,20 +151,20 @@ export function NatureCalc() {
       {tab === "table" && (
         <div>
           {/* Mint Suggestions */}
-          <div className="mb-5 rounded-xl border border-white/10 bg-white/5 p-4">
-            <h3 className="mb-3 text-sm font-bold text-gray-300">
+          <div className="mb-5 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+            <h3 className="mb-3 font-[family-name:var(--font-share-tech-mono)] text-sm uppercase tracking-[2px] text-[var(--pt-gold)]">
               {t("natureCalc.mintSuggestion")}
             </h3>
             <div className="grid gap-2 sm:grid-cols-2">
               {ROLE_SUGGESTIONS.map((r) => (
                 <div
                   key={r.role}
-                  className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2"
+                  className="flex items-center justify-between bg-[var(--pt-card)] px-3 py-2"
                 >
                   <span className="text-sm font-semibold text-gray-200">
                     {r.role}
                   </span>
-                  <span className="rounded-md bg-violet-500/20 px-2 py-0.5 text-xs font-bold text-violet-300">
+                  <span className="border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-2 py-0.5 text-xs font-bold text-[var(--pt-gold)]">
                     {r.nature} ({r.desc})
                   </span>
                 </div>
@@ -173,22 +173,22 @@ export function NatureCalc() {
           </div>
 
           {/* Nature Grid */}
-          <div className="overflow-x-auto rounded-xl border border-white/10">
+          <div className="overflow-x-auto border border-[var(--pt-border-dim)]">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/10 bg-white/5">
-                  <th className="px-3 py-2 text-left text-xs font-semibold text-gray-400">
+                <tr className="border-b border-[var(--pt-border-dim)] bg-[var(--pt-card)]">
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-[var(--pt-text-dim)]">
                     {t("common.nature")}
                   </th>
                   {STAT_NAMES.filter((s) => s !== "HP").map((stat) => (
                     <th
                       key={stat}
-                      className="px-3 py-2 text-center text-xs font-semibold text-gray-400"
+                      className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]"
                     >
                       {STAT_LABELS[stat]}
                     </th>
                   ))}
-                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]">
                     {t("natureCalc.flavor")}
                   </th>
                 </tr>
@@ -203,13 +203,13 @@ export function NatureCalc() {
                       )
                     }
                     className={`cursor-pointer border-b border-white/5 transition-colors hover:bg-white/5 ${
-                      selectedNature?.name === nature.name ? "bg-violet-500/10" : ""
+                      selectedNature?.name === nature.name ? "bg-[rgba(255,215,0,0.05)]" : ""
                     }`}
                   >
                     <td className="px-3 py-2 font-semibold text-gray-100">
                       {nature.name}
                       {!nature.increased && (
-                        <span className="ml-1.5 text-[10px] text-gray-500">
+                        <span className="ml-1.5 text-ui-base text-[var(--pt-text-dim)]">
                           {t("natureCalc.neutral")}
                         </span>
                       )}
@@ -222,10 +222,10 @@ export function NatureCalc() {
                           key={stat}
                           className={`px-3 py-2 text-center text-xs font-bold ${
                             isUp
-                              ? "text-emerald-400"
+                              ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                               : isDown
-                                ? "text-red-400"
-                                : "text-gray-600"
+                                ? "bg-[rgba(255,255,255,0.04)] text-[var(--pt-text-dim)]"
+                                : "text-[var(--pt-text-dim)]"
                           }`}
                         >
                           {isUp ? "▲ +10%" : isDown ? "▼ -10%" : "—"}
@@ -236,20 +236,20 @@ export function NatureCalc() {
                       {(() => {
                         const berryInfo = natureBerryInfoMap.get(nature.name) ?? getNatureBerryInfo(nature);
                         if (!berryInfo.likeFlavor || !berryInfo.dislikeFlavor) {
-                          return <span className="text-gray-500">—</span>;
+                          return <span className="text-[var(--pt-text-dim)]">—</span>;
                         }
                         const isOpen = selectedNature?.name === nature.name;
                         return (
                           <div className="flex flex-col gap-0.5">
                             <div className="flex items-center gap-1 justify-center">
-                              <span className="text-[9px] text-emerald-400">♥</span>
-                              <span className="text-[10px] text-gray-400">{nature.likes}</span>
+                              <span className="text-ui-sm text-[var(--pt-gold)]">♥</span>
+                              <span className="text-ui-base text-[var(--pt-text-dim)]">{nature.likes}</span>
                             </div>
                             <div className="flex items-center gap-1 justify-center">
-                              <span className="text-[9px] text-red-400">✕</span>
-                              <span className="text-[10px] text-gray-400">{nature.dislikes}</span>
+                              <span className="text-ui-sm text-red-400">✕</span>
+                              <span className="text-ui-base text-[var(--pt-text-dim)]">{nature.dislikes}</span>
                             </div>
-                            <span className="text-[8px] text-gray-600">{isOpen ? "▲" : "▼"}</span>
+                            <span className="text-ui-xs text-[var(--pt-text-dim)]">{isOpen ? "▲" : "▼"}</span>
                           </div>
                         );
                       })()}
@@ -261,18 +261,18 @@ export function NatureCalc() {
                     return (
                       <tr>
                         <td colSpan={7} className="px-3 pb-3 pt-0">
-                          <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-3">
+                          <div className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-3">
                             <div className="mb-2 flex items-center gap-1.5">
-                              <span className="text-[10px] font-bold text-violet-400">
+                              <span className="font-[family-name:var(--font-share-tech-mono)] text-ui-base font-bold uppercase tracking-[2px] text-[var(--pt-gold)]">
                                 {t("natureCalc.berryPreferences")}
                               </span>
                             </div>
                             <div className="grid gap-2 sm:grid-cols-2">
-                              <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-2.5">
+                              <div className="border border-emerald-500/20 bg-emerald-500/5 p-2.5">
                                 <div className="mb-1 flex items-center gap-1">
-                                  <span className="text-[10px] text-emerald-400">♥</span>
-                                  <span className="text-[10px] font-bold text-emerald-400">{t("natureCalc.likesFlavor")}</span>
-                                  <span className="rounded bg-emerald-500/20 px-1 py-0.5 text-[9px] font-bold text-emerald-300">
+                                  <span className="text-ui-base text-[var(--pt-gold)]">♥</span>
+                                  <span className="text-ui-base font-bold text-[var(--pt-gold)]">{t("natureCalc.likesFlavor")}</span>
+                                  <span className="border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-1 py-0.5 text-ui-sm font-bold text-[var(--pt-gold)]">
                                     {berryInfo.likeFlavor.localizedName}
                                   </span>
                                 </div>
@@ -280,7 +280,7 @@ export function NatureCalc() {
                                   {berryInfo.likeBerries.map((b) => (
                                     <span
                                       key={b.berry.name}
-                                      className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[9px] text-emerald-300/80"
+                                      className="bg-[rgba(255,215,0,0.06)] px-1.5 py-0.5 text-ui-sm text-[var(--pt-gold)]"
                                       title={`Potency: ${b.potency}`}
                                     >
                                       {b.berry.name} ({b.potency})
@@ -288,11 +288,11 @@ export function NatureCalc() {
                                   ))}
                                 </div>
                               </div>
-                              <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-2.5">
+                              <div className="border border-red-500/20 bg-red-500/5 p-2.5">
                                 <div className="mb-1 flex items-center gap-1">
-                                  <span className="text-[10px] text-red-400">✕</span>
-                                  <span className="text-[10px] font-bold text-red-400">{t("natureCalc.dislikesFlavor")}</span>
-                                  <span className="rounded bg-red-500/20 px-1 py-0.5 text-[9px] font-bold text-red-300">
+                                  <span className="text-ui-base text-red-400">✕</span>
+                                  <span className="text-ui-base font-bold text-red-400">{t("natureCalc.dislikesFlavor")}</span>
+                                  <span className="border border-red-500/30 bg-red-500/10 px-1 py-0.5 text-ui-sm font-bold text-red-300">
                                     {berryInfo.dislikeFlavor.localizedName}
                                   </span>
                                 </div>
@@ -300,7 +300,7 @@ export function NatureCalc() {
                                   {berryInfo.dislikeBerries.map((b) => (
                                     <span
                                       key={b.berry.name}
-                                      className="rounded bg-red-500/10 px-1.5 py-0.5 text-[9px] text-red-300/80"
+                                      className="bg-red-500/10 px-1.5 py-0.5 text-ui-sm text-red-300/80"
                                       title={`Potency: ${b.potency}`}
                                     >
                                       {b.berry.name} ({b.potency})
@@ -309,7 +309,7 @@ export function NatureCalc() {
                                 </div>
                               </div>
                             </div>
-                            <p className="mt-1.5 text-[9px] italic text-gray-500">
+                            <p className="mt-1.5 text-ui-sm italic text-[var(--pt-text-dim)]">
                               {t("natureCalc.berryNote")}
                             </p>
                           </div>
@@ -329,7 +329,7 @@ export function NatureCalc() {
       {tab === "calculator" && (
         <div className="space-y-4">
           {/* Pokemon Selector */}
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
             <div className="mb-3 text-sm font-bold text-gray-300">
               {t("natureCalc.selectPokemon")}
             </div>
@@ -342,10 +342,10 @@ export function NatureCalc() {
                   setCalcPokemon(null);
                 }}
                 placeholder={t("natureCalc.searchPokemon")}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-violet-500/50"
+                className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100 placeholder-[var(--pt-text-dim)] outline-none focus:border-[var(--pt-gold)]/50"
               />
               {filteredCalcPokemon.length > 0 && !calcPokemon && (
-                <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-white/10 bg-gray-900">
+                <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto border border-[var(--pt-border-dim)] bg-gray-900">
                   {filteredCalcPokemon.map((p) => (
                     <button
                       key={p.nationalDex}
@@ -358,7 +358,7 @@ export function NatureCalc() {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={p.sprite} alt={p.name} width={28} height={28} className="pixelated" />
                       <span className="font-semibold text-gray-100">{p.name}</span>
-                      <span className="text-xs text-gray-500">#{p.nationalDex}</span>
+                      <span className="text-xs text-[var(--pt-text-dim)]">#{p.nationalDex}</span>
                     </button>
                   ))}
                 </div>
@@ -371,7 +371,7 @@ export function NatureCalc() {
                 <img src={calcPokemon.sprite} alt={calcPokemon.name} width={48} height={48} className="pixelated" />
                 <div>
                   <div className="text-sm font-bold text-gray-100">{calcPokemon.name}</div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-[var(--pt-text-dim)]">
                     Base: {STAT_NAMES.map((s) => `${s} ${calcPokemon.baseStats[s]}`).join(" / ")}
                   </div>
                 </div>
@@ -381,15 +381,15 @@ export function NatureCalc() {
 
           {/* Nature + Level */}
           <div className="flex gap-3">
-            <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">Nature</div>
+            <div className="flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <div className="mb-2 text-xs font-bold text-[var(--pt-text-dim)]">Nature</div>
               <select
                 value={calcNature.name}
                 onChange={(e) => {
                   const n = natures.find((x) => x.name === e.target.value);
                   if (n) setCalcNature(n);
                 }}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
               >
                 {natures.map((n) => (
                   <option key={n.name} value={n.name}>
@@ -399,30 +399,30 @@ export function NatureCalc() {
                 ))}
               </select>
             </div>
-            <div className="w-28 rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">Level</div>
+            <div className="w-28 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <div className="mb-2 text-xs font-bold text-[var(--pt-text-dim)]">Level</div>
               <input
                 type="number"
                 min={1}
                 max={100}
                 value={calcLevel}
                 onChange={(e) => setCalcLevel(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
               />
             </div>
           </div>
 
           {/* Stats Table */}
-          <div className="overflow-x-auto rounded-xl border border-white/10">
+          <div className="overflow-x-auto border border-[var(--pt-border-dim)]">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/10 bg-white/5">
-                  <th className="px-3 py-2 text-left text-xs font-semibold text-gray-400">Stat</th>
-                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Base</th>
-                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">IV</th>
-                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">EV</th>
-                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Nature</th>
-                  <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Final</th>
+                <tr className="border-b border-[var(--pt-border-dim)] bg-[var(--pt-card)]">
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-[var(--pt-text-dim)]">Stat</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]">Base</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]">IV</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]">EV</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]">Nature</th>
+                  <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]">Final</th>
                 </tr>
               </thead>
               <tbody>
@@ -444,7 +444,7 @@ export function NatureCalc() {
                       <td className="px-3 py-2 font-semibold text-gray-200">
                         {STAT_LABELS[stat]}
                       </td>
-                      <td className="px-3 py-2 text-center font-mono text-gray-400">
+                      <td className="px-3 py-2 text-center font-mono text-[var(--pt-text-dim)]">
                         {base || "—"}
                       </td>
                       <td className="px-3 py-2 text-center">
@@ -459,7 +459,7 @@ export function NatureCalc() {
                               [stat]: Math.min(MAX_IV, Math.max(0, parseInt(e.target.value) || 0)),
                             }))
                           }
-                          className="w-14 rounded border border-white/10 bg-white/5 px-2 py-1 text-center text-xs text-gray-100"
+                          className="w-14 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-2 py-1 text-center text-xs text-gray-100"
                         />
                       </td>
                       <td className="px-3 py-2 text-center">
@@ -474,16 +474,16 @@ export function NatureCalc() {
                               [stat]: Math.min(MAX_EV_PER_STAT, Math.max(0, parseInt(e.target.value) || 0)),
                             }))
                           }
-                          className="w-14 rounded border border-white/10 bg-white/5 px-2 py-1 text-center text-xs text-gray-100"
+                          className="w-14 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-2 py-1 text-center text-xs text-gray-100"
                         />
                       </td>
                       <td
                         className={`px-3 py-2 text-center text-xs font-bold ${
                           mod > 1
-                            ? "text-emerald-400"
+                            ? "text-[var(--pt-gold)]"
                             : mod < 1
                               ? "text-red-400"
-                              : "text-gray-600"
+                              : "text-[var(--pt-text-dim)]"
                         }`}
                       >
                         {mod > 1 ? "×1.1" : mod < 1 ? "×0.9" : "×1.0"}
@@ -504,7 +504,7 @@ export function NatureCalc() {
       {tab === "comparator" && (
         <div className="space-y-4">
           {/* Pokemon Selector */}
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
             <div className="mb-3 text-sm font-bold text-gray-300">
               {t("natureCalc.selectToCompare")}
             </div>
@@ -517,10 +517,10 @@ export function NatureCalc() {
                   setCompPokemon(null);
                 }}
                 placeholder={t("natureCalc.searchPokemon")}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100 placeholder-gray-500 outline-none focus:border-violet-500/50"
+                className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100 placeholder-[var(--pt-text-dim)] outline-none focus:border-[var(--pt-gold)]/50"
               />
               {filteredCompPokemon.length > 0 && !compPokemon && (
-                <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-white/10 bg-gray-900">
+                <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto border border-[var(--pt-border-dim)] bg-gray-900">
                   {filteredCompPokemon.map((p) => (
                     <button
                       key={p.nationalDex}
@@ -542,15 +542,15 @@ export function NatureCalc() {
 
           {/* Nature Selectors */}
           <div className="flex gap-3">
-            <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">{t("natureCalc.natureA")}</div>
+            <div className="flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <div className="mb-2 text-xs font-bold text-[var(--pt-text-dim)]">{t("natureCalc.natureA")}</div>
               <select
                 value={compNature1.name}
                 onChange={(e) => {
                   const n = natures.find((x) => x.name === e.target.value);
                   if (n) setCompNature1(n);
                 }}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
               >
                 {natures.map((n) => (
                   <option key={n.name} value={n.name}>
@@ -560,15 +560,15 @@ export function NatureCalc() {
                 ))}
               </select>
             </div>
-            <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="mb-2 text-xs font-bold text-gray-400">{t("natureCalc.natureB")}</div>
+            <div className="flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+              <div className="mb-2 text-xs font-bold text-[var(--pt-text-dim)]">{t("natureCalc.natureB")}</div>
               <select
                 value={compNature2.name}
                 onChange={(e) => {
                   const n = natures.find((x) => x.name === e.target.value);
                   if (n) setCompNature2(n);
                 }}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-100"
+                className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
               >
                 {natures.map((n) => (
                   <option key={n.name} value={n.name}>
@@ -582,19 +582,19 @@ export function NatureCalc() {
 
           {/* Comparison Table */}
           {compPokemon && (
-            <div className="overflow-x-auto rounded-xl border border-white/10">
+            <div className="overflow-x-auto border border-[var(--pt-border-dim)]">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
-                    <th className="px-3 py-2 text-left text-xs font-semibold text-gray-400">Stat</th>
-                    <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">Base</th>
-                    <th className="px-3 py-2 text-center text-xs font-semibold text-violet-400">
+                  <tr className="border-b border-[var(--pt-border-dim)] bg-[var(--pt-card)]">
+                    <th className="px-3 py-2 text-left text-xs font-semibold text-[var(--pt-text-dim)]">Stat</th>
+                    <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]">Base</th>
+                    <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-gold)]">
                       {compNature1.name}
                     </th>
-                    <th className="px-3 py-2 text-center text-xs font-semibold text-cyan-400">
+                    <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]">
                       {compNature2.name}
                     </th>
-                    <th className="px-3 py-2 text-center text-xs font-semibold text-gray-400">{t("natureCalc.diff")}</th>
+                    <th className="px-3 py-2 text-center text-xs font-semibold text-[var(--pt-text-dim)]">{t("natureCalc.diff")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -610,22 +610,22 @@ export function NatureCalc() {
                         <td className="px-3 py-2 font-semibold text-gray-200">
                           {STAT_LABELS[stat]}
                         </td>
-                        <td className="px-3 py-2 text-center font-mono text-gray-400">
+                        <td className="px-3 py-2 text-center font-mono text-[var(--pt-text-dim)]">
                           {base}
                         </td>
-                        <td className={`px-3 py-2 text-center font-mono font-bold ${mod1 > 1 ? "text-emerald-400" : mod1 < 1 ? "text-red-400" : "text-gray-300"}`}>
+                        <td className={`px-3 py-2 text-center font-mono font-bold ${mod1 > 1 ? "text-[var(--pt-gold)]" : mod1 < 1 ? "text-red-400" : "text-gray-300"}`}>
                           {val1}
                         </td>
-                        <td className={`px-3 py-2 text-center font-mono font-bold ${mod2 > 1 ? "text-emerald-400" : mod2 < 1 ? "text-red-400" : "text-gray-300"}`}>
+                        <td className={`px-3 py-2 text-center font-mono font-bold ${mod2 > 1 ? "text-[var(--pt-gold)]" : mod2 < 1 ? "text-red-400" : "text-gray-300"}`}>
                           {val2}
                         </td>
                         <td
                           className={`px-3 py-2 text-center font-mono text-xs font-bold ${
                             diff > 0
-                              ? "text-emerald-400"
+                              ? "text-[var(--pt-gold)]"
                               : diff < 0
                                 ? "text-red-400"
-                                : "text-gray-600"
+                                : "text-[var(--pt-text-dim)]"
                           }`}
                         >
                           {diff > 0 ? `+${diff}` : diff === 0 ? "—" : diff}
@@ -635,14 +635,14 @@ export function NatureCalc() {
                   })}
                 </tbody>
               </table>
-              <div className="border-t border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-500">
+              <div className="border-t border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-xs text-[var(--pt-text-dim)]">
                 {t("natureCalc.compareNote")}
               </div>
             </div>
           )}
 
           {!compPokemon && (
-            <div className="py-10 text-center text-gray-500">
+            <div className="py-10 text-center text-[var(--pt-text-dim)]">
               {t("natureCalc.selectToComparePrompt")}
             </div>
           )}

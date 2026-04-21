@@ -29,6 +29,10 @@
   },
   "home": {
     "tagline": "Practical tools for Pokémon Scarlet & Violet",
+    "selectYourTool": "SELECT YOUR TOOL",
+    "availableTools": "AVAILABLE TOOLS — 7/8 UNLOCKED",
+    "openTool": "OPEN",
+    "comingSoon": "COMING SOON",
     "sandwichTitle": "Sandwich Builder",
     "evPokedexTitle": "EV Pokédex",
     "evTrackerTitle": "EV Tracker",
@@ -42,8 +46,7 @@
     "raidBuilderDesc": "Build and share optimized builds for 5★/6★/7★ Tera Raids",
     "natureCalcDesc": "Nature calculator, stat calculator, and Mint suggestions by role",
     "trainingTipsDesc": "Guide to Power Items, EV-resetting berries, and how to change Tera Type",
-    "comunidadeDesc": "YouTube channel, Discord server and Pokémon SV content",
-    "openTool": "Open"
+    "comunidadeDesc": "YouTube channel, Discord server and Pokémon SV content"
   },
   "sandwich": {
     "title": "Sandwich Builder",
@@ -233,7 +236,8 @@
     "aiLoading": "Analyzing builds...",
     "aiError": "Failed to get recommendations. Try again.",
     "aiTierLabel": "Tier",
-    "aiPoweredBy": "Powered by Gemini"
+    "aiPoweredBy": "Powered by Gemini",
+    "knownBosses": "Known bosses"
   },
   "comunidade": {
     "title": "Community",

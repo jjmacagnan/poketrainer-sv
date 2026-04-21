@@ -18,7 +18,7 @@ export function BuildCard({ boss, onClick }: BuildCardProps) {
   return (
     <button
       onClick={onClick}
-      className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 text-left transition-all hover:-translate-y-0.5 hover:border-white/20"
+      className="group flex items-center gap-3 rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-3 text-left transition-all hover:-translate-y-0.5 hover:border-white/20"
       style={{
         boxShadow: undefined,
       }}
@@ -34,16 +34,16 @@ export function BuildCard({ boss, onClick }: BuildCardProps) {
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-gray-100">{boss.name}</span>
-          <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-gray-300">
+          <span className="rounded-sm bg-[var(--pt-card)] px-1.5 py-0.5 text-ui-base font-bold text-gray-300">
             {boss.stars}★
           </span>
         </div>
         <div className="mt-1 flex items-center gap-1.5">
-          <span className="text-[10px] font-semibold text-gray-500">{t("raid.teraType").toUpperCase()}</span>
+          <span className="text-ui-base font-semibold text-[var(--pt-text-dim)]">{t("raid.teraType").toUpperCase()}</span>
           <TypeBadge type={boss.teraType as PokemonType} small />
         </div>
         {boss.notes && (
-          <div className="mt-0.5 text-[10px] text-gray-500">{boss.notes}</div>
+          <div className="mt-0.5 text-ui-base text-[var(--pt-text-dim)]">{boss.notes}</div>
         )}
       </div>
     </button>

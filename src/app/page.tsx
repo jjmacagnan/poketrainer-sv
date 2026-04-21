@@ -1,66 +1,18 @@
+// src/app/page.tsx
 "use client";
 
 import Link from "next/link";
 import { useI18n } from "@/i18n";
-import { BuyMeCoffeeLink } from '@/components/ui/BuyMeCoffeeLink';
+import { BuyMeCoffeeLink } from "@/components/ui/BuyMeCoffeeLink";
 
 const TOOLS = [
-  {
-    href: "/sandwich-builder",
-    emoji: "🥪",
-    titleKey: "home.sandwichTitle",
-    descKey: "home.sandwichDesc",
-    color: "#F59E0B",
-    colorEnd: "#F97316",
-  },
-  {
-    href: "/ev-pokedex",
-    emoji: "📖",
-    titleKey: "home.evPokedexTitle",
-    descKey: "home.evPokedexDesc",
-    color: "#22D3EE",
-    colorEnd: "#3B82F6",
-  },
-  {
-    href: "/ev-tracker",
-    emoji: "📊",
-    titleKey: "home.evTrackerTitle",
-    descKey: "home.evTrackerDesc",
-    color: "#34D399",
-    colorEnd: "#10B981",
-  },
-  {
-    href: "/raid-builder",
-    emoji: "⚔️",
-    titleKey: "home.raidBuilderTitle",
-    descKey: "home.raidBuilderDesc",
-    color: "#F87171",
-    colorEnd: "#8B5CF6",
-  },
-  {
-    href: "/nature-calc",
-    emoji: "🧮",
-    titleKey: "home.natureCalcTitle",
-    descKey: "home.natureCalcDesc",
-    color: "#F472B6",
-    colorEnd: "#EC4899",
-  },
-  {
-    href: "/training-tips",
-    emoji: "💡",
-    titleKey: "home.trainingTipsTitle",
-    descKey: "home.trainingTipsDesc",
-    color: "#34D399",
-    colorEnd: "#06B6D4",
-  },
-  {
-    href: "/comunidade",
-    emoji: "🌐",
-    titleKey: "home.comunidadeTitle",
-    descKey: "home.comunidadeDesc",
-    color: "#818CF8",
-    colorEnd: "#6366F1",
-  },
+  { href: "/sandwich-builder",  number: "#001", emoji: "🥪",  titleKey: "home.sandwichTitle",    descKey: "home.sandwichDesc" },
+  { href: "/ev-pokedex",        number: "#002", emoji: "📖",  titleKey: "home.evPokedexTitle",   descKey: "home.evPokedexDesc" },
+  { href: "/ev-tracker",        number: "#003", emoji: "📊",  titleKey: "home.evTrackerTitle",   descKey: "home.evTrackerDesc" },
+  { href: "/raid-builder",      number: "#004", emoji: "⚔️",  titleKey: "home.raidBuilderTitle", descKey: "home.raidBuilderDesc" },
+  { href: "/nature-calc",       number: "#005", emoji: "🧮",  titleKey: "home.natureCalcTitle",  descKey: "home.natureCalcDesc" },
+  { href: "/training-tips",     number: "#006", emoji: "💡",  titleKey: "home.trainingTipsTitle",descKey: "home.trainingTipsDesc" },
+  { href: "/comunidade",        number: "#007", emoji: "🌐",  titleKey: "home.comunidadeTitle",  descKey: "home.comunidadeDesc" },
 ];
 
 export default function Home() {
@@ -69,70 +21,66 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
       {/* Hero */}
-      <div className="mb-14 text-center animate-fade-up">
-        <div className="mb-1 text-xs font-bold uppercase tracking-[0.2em] text-gray-600">
-          Pokémon Scarlet &amp; Violet
+      <div className="mb-12 text-center animate-fade-up">
+        <div className="mb-3 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[5px] text-[var(--pt-gold)]">
+          ▶ POKÉMON SCARLET &amp; VIOLET
         </div>
-        <h1
-          className="mb-3 text-5xl font-[family-name:var(--font-syne)] font-extrabold tracking-tight sm:text-6xl"
-          style={{
-            background: "linear-gradient(135deg, #FB923C 0%, #FBBF24 40%, #A78BFA 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            paddingBottom: "0.1em",
-          }}
-        >
-          PokéTrainer SV
+        <h1 className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-4xl uppercase tracking-[3px] text-[var(--pt-text)] sm:text-5xl">
+          POKÉ<span className="text-[var(--pt-gold)]">TRAINER</span>
         </h1>
-        <p className="text-base text-gray-500">{t("home.tagline")}</p>
+        <div className="mx-auto mb-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--pt-gold)] to-transparent" />
+        <p className="font-[family-name:var(--font-share-tech-mono)] text-ui-base uppercase tracking-[3px] text-[var(--pt-text-dim)]">
+          {t("home.selectYourTool")}
+        </p>
       </div>
 
-      {/* Tool cards */}
-      <div className="grid gap-3 sm:grid-cols-2">
+      {/* Section label */}
+      <div className="mb-4 flex items-center gap-3 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[4px] text-[var(--pt-gold)]">
+        ▶ {t("home.availableTools")}
+        <div className="h-px flex-1 bg-[var(--pt-border-dim)]" />
+      </div>
+
+      {/* Tool grid */}
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         {TOOLS.map((tool, i) => (
           <Link
             key={tool.href}
             href={tool.href}
-            className="animate-fade-up group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14] hover:bg-white/[0.06]"
-            style={{ animationDelay: `${80 + i * 70}ms` }}
+            className="animate-fade-up group relative border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4 transition-all hover:border-[rgba(255,215,0,0.5)] hover:bg-[rgba(255,215,0,0.02)]"
+            style={{ animationDelay: `${80 + i * 60}ms` }}
           >
-            {/* Top accent bar */}
-            <div
-              className="absolute inset-x-0 top-0 h-[2px]"
-              style={{ background: `linear-gradient(90deg, ${tool.color}, ${tool.colorEnd})` }}
-            />
+            {/* Top accent on hover */}
+            <div className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-[var(--pt-gold)] to-[var(--pt-orange)] transition-transform duration-300 group-hover:scale-x-100" />
 
-            {/* Corner glow on hover */}
-            <div
-              className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              style={{
-                background: `radial-gradient(ellipse 90% 70% at 0% 0%, ${tool.color}18, transparent 65%)`,
-              }}
-            />
-
-            {/* Icon container */}
-            <div
-              className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl text-2xl"
-              style={{ background: `${tool.color}1f` }}
-            >
-              {tool.emoji}
+            <div className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-gold)]">
+              {tool.number}
             </div>
-
-            <h2 className="mb-1.5 text-base font-bold text-white">{t(tool.titleKey)}</h2>
-            <p className="text-sm leading-relaxed text-gray-500">{t(tool.descKey)}</p>
-
-            {/* Arrow on hover */}
-            <div
-              className="mt-3 flex items-center gap-1 text-xs font-semibold opacity-0 transition-all duration-200 group-hover:opacity-100"
-              style={{ color: tool.color }}
-            >
-              {t("home.openTool")} →
+            <div className="mb-2 text-2xl">{tool.emoji}</div>
+            <div className="mb-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-base uppercase leading-snug tracking-[1px] text-[var(--pt-text)]">
+              {t(tool.titleKey)}
+            </div>
+            <p className="text-ui-md leading-relaxed text-[var(--pt-text-dim)]">
+              {t(tool.descKey)}
+            </p>
+            <div className="mt-3 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] text-[var(--pt-gold)] opacity-0 transition-opacity group-hover:opacity-100">
+              ▶ {t("home.openTool")} →
             </div>
           </Link>
         ))}
+
+        {/* Locked slot */}
+        <div className="relative border border-dashed border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4 opacity-35">
+          <div className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-text-dim)]">
+            #???
+          </div>
+          <div className="mb-2 text-2xl">🔒</div>
+          <div className="font-[family-name:var(--font-share-tech-mono)] text-ui-base uppercase tracking-[1px] text-[var(--pt-text-dim)]">
+            {t("home.comingSoon")}
+          </div>
+        </div>
       </div>
 
-      <p className="text-sm text-gray-500 text-center py-6">
+      <p className="py-6 text-center text-sm text-[var(--pt-text-dim)]">
         {t("kofi.cta")} <BuyMeCoffeeLink variant="inline" />
       </p>
     </div>

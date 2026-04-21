@@ -1,42 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --background: #030712;
-  --foreground: #f3f4f6;
+  --pt-bg:         #08080f;
+  --pt-surface:    #0f0f1e;
+  --pt-card:       #0a0a16;
+  --pt-gold:       #FFD700;
+  --pt-gold-dim:   #B8860B;
+  --pt-orange:     #F97316;
+  --pt-border:     #FFD700;
+  --pt-border-dim: #2a2a3a;
+  --pt-text:       #ffffff;
+  --pt-text-dim:   #888888;
+  --background:    #08080f;
+  --foreground:    #f3f4f6;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-outfit);
-  --font-display: var(--font-syne), var(--font-outfit), sans-serif;
+  --font-display: var(--font-share-tech-mono), monospace;
+
+  /* UI type scale — change here to affect all components */
+  --text-ui-xs:   10px;
+  --text-ui-sm:   11px;
+  --text-ui-base: 12px;
+  --text-ui-md:   13px;
+  --text-ui-lg:   15px;
 }
 
 body {
-  background:
-    radial-gradient(ellipse 65% 40% at 10% -5%, rgba(249, 115, 22, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 40% at 90% -5%, rgba(124, 58, 237, 0.10) 0%, transparent 60%),
-    #030712;
-  color: var(--foreground);
+  background: var(--pt-bg);
+  color: var(--pt-text);
 }
 
-/* Dark select options */
 select option {
   background: #1f2937;
   color: #f3f4f6;
 }
 
 @keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-up {
   animation: fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
 }

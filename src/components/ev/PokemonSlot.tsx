@@ -99,12 +99,12 @@ export function PokemonSlot({
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
+    <div className="overflow-hidden border border-[var(--pt-gold)] bg-[var(--pt-card)]">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
+      <div className="flex items-center gap-3 border-b border-[var(--pt-border-dim)] px-4 py-3">
         <button
           onClick={onSelectPokemon}
-          className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-white/5 transition-colors hover:border-white/20"
+          className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden border border-[var(--pt-border-dim)] bg-[var(--pt-card)] transition-colors hover:border-[var(--pt-gold)]"
         >
           {data.sprite ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -116,7 +116,7 @@ export function PokemonSlot({
               className="pixelated"
             />
           ) : (
-            <span className="text-lg text-gray-500">+</span>
+            <span className="text-lg text-[var(--pt-text-dim)]">+</span>
           )}
         </button>
         <div className="min-w-0 flex-1">
@@ -134,7 +134,7 @@ export function PokemonSlot({
           ) : (
             <button
               onClick={onSelectPokemon}
-              className="text-sm font-semibold text-gray-400 hover:text-white"
+              className="text-sm font-semibold text-[var(--pt-text-dim)] hover:text-white"
             >
               {t("pokemonSlot.selectPokemon")}
             </button>
@@ -143,12 +143,12 @@ export function PokemonSlot({
 
         {/* Total / Remaining */}
         <div className="text-right">
-          <div className="text-xs font-semibold text-gray-400">
+          <div className="text-xs font-semibold text-[var(--pt-text-dim)]">
             {totalEVs}/{MAX_EV_TOTAL}
           </div>
           <div
             className={`text-xs font-bold ${
-              remaining === 0 ? "text-emerald-400" : "text-gray-500"
+              remaining === 0 ? "text-emerald-400" : "text-[var(--pt-text-dim)]"
             }`}
           >
             {t("pokemonSlot.remaining", { count: remaining })}
@@ -158,9 +158,9 @@ export function PokemonSlot({
 
       {/* Total EV Bar */}
       <div className="px-4 pt-3">
-        <div className="relative h-2 overflow-hidden rounded-full bg-white/10">
+        <div className="relative h-2 overflow-hidden bg-white/10">
           <div
-            className="absolute inset-y-0 left-0 rounded-full transition-all duration-300"
+            className="absolute inset-y-0 left-0 rounded-none transition-all duration-300"
             style={{
               width: `${(totalEVs / MAX_EV_TOTAL) * 100}%`,
               background:
@@ -181,24 +181,24 @@ export function PokemonSlot({
             <div key={stat} className="relative flex items-center gap-2">
               <button
                 onClick={() => setActiveFarmingStat(activeFarmingStat === stat ? null : stat)}
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-colors ${
+                className={`flex h-5 w-5 shrink-0 items-center justify-center transition-colors ${
                   activeFarmingStat === stat
                     ? "bg-emerald-500/20 text-emerald-400"
-                    : "bg-white/5 text-gray-500 hover:text-white"
+                    : "bg-[var(--pt-card)] text-[var(--pt-text-dim)] hover:text-white"
                 }`}
                 title={t("pokemonSlot.whereToTrain", { stat })}
               >
                 📍
               </button>
-              <span className="w-8 shrink-0 text-right text-xs font-bold text-gray-400">
+              <span className="w-8 shrink-0 text-right text-xs font-bold text-[var(--pt-text-dim)]">
                 {stat}
               </span>
               <span className="w-8 shrink-0 text-right font-mono text-xs font-semibold text-gray-200">
                 {value}
               </span>
-              <div className="relative h-2.5 flex-1 overflow-hidden rounded-full bg-white/10">
+              <div className="relative h-2.5 flex-1 overflow-hidden bg-white/10">
                 <div
-                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-200"
+                  className="absolute inset-y-0 left-0 rounded-none transition-all duration-200"
                   style={{
                     width: `${fill}%`,
                     background:
@@ -211,31 +211,31 @@ export function PokemonSlot({
               <div className="flex shrink-0 gap-0.5">
                 <button
                   onClick={() => updateEV(stat, -1)}
-                  className="rounded bg-white/5 px-1.5 py-0.5 text-[10px] font-bold text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+                  className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-1.5 py-0.5 text-ui-base font-bold text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
                 >
                   -1
                 </button>
                 <button
                   onClick={() => updateEV(stat, 1)}
-                  className="rounded bg-white/5 px-1.5 py-0.5 text-[10px] font-bold text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+                  className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-1.5 py-0.5 text-ui-base font-bold text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
                 >
                   +1
                 </button>
                 <button
                   onClick={() => updateEV(stat, VITAMIN_AMOUNT)}
-                  className="group relative flex h-6 w-8 items-center justify-center rounded bg-violet-500/15 transition-colors hover:bg-violet-500/25"
+                  className="group relative flex h-6 w-8 items-center justify-center border border-[var(--pt-border-dim)] bg-[var(--pt-card)] transition-colors hover:border-[var(--pt-gold)]"
                 >
                   <img src={getSprite(STAT_ITEMS[stat].vitamin)} alt={STAT_ITEMS[stat].vitamin} className="h-5 w-5 pixelated" />
-                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-[10px] font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
+                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-ui-base font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
                     +{VITAMIN_AMOUNT} ({STAT_ITEMS[stat].vitamin})
                   </div>
                 </button>
                 <button
                   onClick={() => updateEV(stat, -VITAMIN_AMOUNT)}
-                  className="group relative flex h-6 w-8 items-center justify-center rounded bg-white/5 transition-colors hover:bg-white/10"
+                  className="group relative flex h-6 w-8 items-center justify-center border border-[var(--pt-border-dim)] bg-[var(--pt-card)] transition-colors hover:border-[var(--pt-gold)]"
                 >
                   <img src={getSprite(STAT_ITEMS[stat].berry)} alt={STAT_ITEMS[stat].berry} className="h-5 w-5 pixelated" />
-                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-[10px] font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
+                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-ui-base font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
                     -{VITAMIN_AMOUNT} ({STAT_ITEMS[stat].berry})
                   </div>
                 </button>
@@ -246,12 +246,12 @@ export function PokemonSlot({
                 const targets = getBestTrainingTargets(stat);
                 return (
                   <div className="absolute left-8 right-0 z-50 p-1">
-                    <div className="rounded-xl border border-emerald-500/30 bg-gray-900 p-3 shadow-2xl ring-1 ring-black">
-                      <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
-                        <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
+                    <div className="border border-emerald-500/30 bg-gray-900 p-3 shadow-2xl ring-1 ring-black">
+                      <div className="mb-3 flex items-center justify-between border-b border-[var(--pt-border-dim)] pb-2">
+                        <span className="text-ui-md font-bold text-emerald-400 uppercase tracking-wider">
                           {t("pokemonSlot.whereToTrain", { stat })}
                         </span>
-                        <button onClick={() => setActiveFarmingStat(null)} className="text-gray-500 hover:text-white transition-colors">✕</button>
+                        <button onClick={() => setActiveFarmingStat(null)} className="text-[var(--pt-text-dim)] hover:text-white transition-colors">✕</button>
                       </div>
                       
                       <div className="max-h-60 space-y-3 overflow-y-auto pr-1 thin-scrollbar">
@@ -261,28 +261,28 @@ export function PokemonSlot({
                               <img src={target.sprite} alt={target.name} className="h-6 w-6 pixelated shrink-0" />
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between">
-                                  <span className="text-[12px] font-bold text-gray-100 truncate">{target.name}</span>
-                                  <span className="text-[10px] font-black text-emerald-400">+{target.yieldAmount} EV</span>
+                                  <span className="text-ui-base font-bold text-gray-100 truncate">{target.name}</span>
+                                  <span className="text-ui-base font-black text-emerald-400">+{target.yieldAmount} EV</span>
                                 </div>
                               </div>
                             </div>
 
                             {target.location ? (
-                              <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/10 p-2">
+                              <div className="bg-emerald-500/5 border border-emerald-500/10 p-2">
                                 <div>
-                                  <div className="text-[9px] font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.farmingSpot")}</div>
-                                  <div className="text-[11px] text-gray-200 leading-tight">{target.location.location[locale as "pt" | "en"]}</div>
+                                  <div className="text-ui-sm font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.farmingSpot")}</div>
+                                  <div className="text-ui-md text-gray-200 leading-tight">{target.location.location[locale as "pt" | "en"]}</div>
                                 </div>
                                 <div className="mt-1.5 pt-1.5 border-t border-emerald-500/10">
-                                  <div className="text-[9px] font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.sandwich")}</div>
-                                  <div className="text-[10px] text-gray-300 leading-tight">
+                                  <div className="text-ui-sm font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.sandwich")}</div>
+                                  <div className="text-ui-base text-gray-300 leading-tight">
                                     {target.location.sandwich[locale as "pt" | "en"]}
-                                    <span className="ml-1 text-[9px] text-emerald-500/50">({target.location.sandwich.effect})</span>
+                                    <span className="ml-1 text-ui-sm text-emerald-500/50">({target.location.sandwich.effect})</span>
                                   </div>
                                 </div>
                               </div>
                             ) : (
-                              <div className="rounded-lg bg-white/5 border border-white/5 p-2 italic text-[10px] text-gray-500">
+                              <div className="bg-[var(--pt-card)] border border-[var(--pt-border-dim)] p-2 italic text-ui-base text-[var(--pt-text-dim)]">
                                 {t("evPokedex.noEncounterData")}
                               </div>
                             )}
@@ -299,12 +299,12 @@ export function PokemonSlot({
       </div>
 
       {/* Modifiers + Actions */}
-      <div className="border-t border-white/10 px-4 py-3">
+      <div className="border-t border-[var(--pt-border-dim)] px-4 py-3">
         <div className="flex flex-wrap items-center gap-2">
           {/* Toggle Modifiers */}
           <button
             onClick={() => setShowModifiers(!showModifiers)}
-            className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-gray-400 transition-colors hover:text-white"
+            className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-2.5 py-1 text-xs font-semibold text-[var(--pt-text-dim)] transition-colors hover:text-white"
           >
             {t("pokemonSlot.modifiers")} {showModifiers ? "▲" : "▼"}
           </button>
@@ -319,7 +319,7 @@ export function PokemonSlot({
               }
             }}
             defaultValue=""
-            className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-gray-400"
+            className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-2.5 py-1 text-xs font-semibold text-[var(--pt-text-dim)]"
           >
             <option value="">{t("pokemonSlot.templatesDrop")}</option>
             {templateOptions.map((tpl, i) => (
@@ -331,7 +331,7 @@ export function PokemonSlot({
 
           <button
             onClick={resetEVs}
-            className="ml-auto rounded-lg border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-400 transition-colors hover:bg-red-500/20"
+            className="ml-auto border border-red-500/20 bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-400 transition-colors hover:bg-red-500/20"
           >
             {t("common.reset")}
           </button>
@@ -348,21 +348,21 @@ export function PokemonSlot({
                   powerItem: data.machoBrace ? data.powerItem : null,
                 })
               }
-              className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 border px-3 py-1 text-xs font-bold transition-all ${
                 data.machoBrace
-                  ? "border-yellow-400/50 bg-yellow-500/20 text-yellow-300"
-                  : "border-white/10 bg-white/5 text-gray-400"
+                  ? "border-[rgba(255,215,0,0.4)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
+                  : "border-[var(--pt-border-dim)] bg-[var(--pt-card)] text-[var(--pt-text-dim)]"
               }`}
             >
               <img src={getSprite("Macho Brace")} alt="Macho Brace" className="h-4 w-4 pixelated" />
               {t("pokemonSlot.machoBrace")} {data.machoBrace ? "(2×)" : ""}
             </button>
 
-            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 pr-3 pl-1 py-0.5">
+            <div className="flex items-center gap-2 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] pr-3 pl-1 py-0.5">
               {data.powerItem ? (
                 <img src={getSprite(STAT_ITEMS[data.powerItem].powerItem)} alt="Power Item" className="h-5 w-5 pixelated" />
               ) : (
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10 text-[10px] text-white/30">
+                <div className="flex h-5 w-5 items-center justify-center bg-[var(--pt-card)] text-ui-base text-white/30">
                   ?
                 </div>
               )}
@@ -375,7 +375,7 @@ export function PokemonSlot({
                     machoBrace: e.target.value ? false : data.machoBrace,
                   })
                 }
-                className="bg-transparent text-xs font-bold text-gray-400 outline-none"
+                className="bg-transparent text-xs font-bold text-[var(--pt-text-dim)] outline-none"
               >
                 <option value="">{t("pokemonSlot.powerItemDrop")}</option>
                 {POWER_ITEMS.map((pi) => (

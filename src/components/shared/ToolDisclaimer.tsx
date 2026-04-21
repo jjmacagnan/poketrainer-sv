@@ -19,8 +19,8 @@ export function ToolDisclaimer({
   sources,
 }: ToolDisclaimerProps) {
   return (
-    <div className="mt-8 border-t border-white/10 pt-4 text-center text-xs text-gray-500">
-      <div className="mb-1 font-semibold text-gray-400">
+    <div className="mt-8 border-t border-[var(--pt-border-dim)] pt-4 text-center text-xs text-[var(--pt-text-dim)]">
+      <div className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] text-[var(--pt-text-dim)]">
         PokéTrainer SV Tools — {toolName} {version}
       </div>
       <div className="mb-2">{note}</div>
@@ -31,7 +31,7 @@ export function ToolDisclaimer({
             href={s.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-violet-400/70 hover:text-violet-300 transition-colors"
+            className="text-[var(--pt-text-dim)] hover:text-[var(--pt-gold)] transition-colors"
           >
             {s.label} ↗
           </a>
