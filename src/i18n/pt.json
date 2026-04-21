@@ -15,7 +15,9 @@
     "ability": "Habilidade",
     "stats": "Stats",
     "base": "Base",
-    "final": "Final"
+    "final": "Final",
+    "prev": "Ant.",
+    "next": "Próx."
   },
   "nav": {
     "home": "Home",

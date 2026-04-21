@@ -474,7 +474,7 @@ export function PokemonDetailModal({
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                     <path d="M7 1L3 5l4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  Prev
+                  {t("common.prev")}
                 </button>
                 <button
                   onClick={onNext}
@@ -482,7 +482,7 @@ export function PokemonDetailModal({
                   title="Next (→)"
                   className="flex items-center gap-1.5 border border-[var(--pt-border-dim)] px-2.5 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[1px] text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)] disabled:cursor-not-allowed disabled:opacity-30"
                 >
-                  Next
+                  {t("common.next")}
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                     <path d="M3 1l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
