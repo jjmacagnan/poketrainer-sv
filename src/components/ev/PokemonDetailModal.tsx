@@ -353,9 +353,17 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 export function PokemonDetailModal({
   pokemon,
   onClose,
+  onPrev,
+  onNext,
+  hasPrev = false,
+  hasNext = false,
 }: {
   pokemon: PokemonEntry;
   onClose: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
+  hasPrev?: boolean;
+  hasNext?: boolean;
 }) {
   const [evoSteps, setEvoSteps] = useState<EvoStep[]>([]);
   const [gameVersions, setGameVersions] = useState<string[]>([]);
@@ -423,12 +431,16 @@ export function PokemonDetailModal({
     fetchData();
   }, [fetchData]);
 
-  // Close on Escape
+  // Keyboard navigation
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft" && hasPrev && onPrev) onPrev();
+      if (e.key === "ArrowRight" && hasNext && onNext) onNext();
+    };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [onClose]);
+  }, [onClose, onPrev, onNext, hasPrev, hasNext]);
 
   // Use pre-cached data; fall back to species live data for backward compat
   const flavorText = pokemon.flavorText ?? "";
@@ -445,18 +457,51 @@ export function PokemonDetailModal({
 
       {/* Modal */}
       <div
-        className="relative z-10 max-h-[90vh] w-full max-w-2xl overflow-y-auto border-2 border-[var(--pt-gold)] bg-[var(--pt-bg)] shadow-2xl"
+        className="relative z-10 flex max-h-[90vh] w-full max-w-2xl flex-col border-2 border-[var(--pt-gold)] bg-[var(--pt-bg)] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 z-10 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-1.5 text-[var(--pt-text-dim)] hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-            <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-        </button>
+        {/* Nav + Close bar — outside scroll area so always visible */}
+        <div className="flex shrink-0 items-center justify-between border-b border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2">
+          <div className="flex items-center gap-1">
+            {(onPrev || onNext) && (
+              <>
+                <button
+                  onClick={onPrev}
+                  disabled={!hasPrev}
+                  title="Previous (←)"
+                  className="flex items-center gap-1.5 border border-[var(--pt-border-dim)] px-2.5 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[1px] text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)] disabled:cursor-not-allowed disabled:opacity-30"
+                >
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M7 1L3 5l4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {t("common.prev")}
+                </button>
+                <button
+                  onClick={onNext}
+                  disabled={!hasNext}
+                  title="Next (→)"
+                  className="flex items-center gap-1.5 border border-[var(--pt-border-dim)] px-2.5 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[1px] text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)] disabled:cursor-not-allowed disabled:opacity-30"
+                >
+                  {t("common.next")}
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M3 1l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="border border-[var(--pt-border-dim)] p-1.5 text-[var(--pt-text-dim)] hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Scrollable content */}
+        <div className="overflow-y-auto">
 
         {/* Header */}
         <div className="flex flex-col gap-4 p-6 sm:flex-row">
@@ -1019,6 +1064,7 @@ export function PokemonDetailModal({
           </Section>
 
         </div>
+        </div> {/* end overflow-y-auto */}
       </div>
     </div>
   );
