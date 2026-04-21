@@ -1,10 +1,30 @@
 // src/components/sandwich/RecipeCard.tsx
 "use client";
 
+import { useState } from "react";
 import type { SandwichRecipe } from "@/data/sandwich-recipes";
 import { TYPE_COLORS } from "@/data/types";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { PowerTag } from "@/components/ui/PowerTag";
+import { getIngredientSprite } from "@/lib/ingredient-sprites";
+import Image from "next/image";
+
+function CardSprite({ name }: { name: string }) {
+  const sprite = getIngredientSprite(name);
+  const [failed, setFailed] = useState(false);
+  if (!sprite || failed) return null;
+  return (
+    <Image
+      src={sprite}
+      alt={name}
+      title={name}
+      width={28}
+      height={28}
+      onError={() => setFailed(true)}
+      style={{ imageRendering: "pixelated", objectFit: "contain" }}
+    />
+  );
+}
 
 interface RecipeCardProps {
   recipe: SandwichRecipe;
@@ -33,17 +53,27 @@ export function RecipeCard({ recipe, onSelect }: RecipeCardProps) {
       />
       <div className="mb-2.5 flex items-start justify-between">
         <div>
-          <div className="mb-1 text-[15px] font-extrabold text-[var(--pt-text)]">
+          <div className="mb-1 text-ui-lg font-extrabold text-[var(--pt-text)]">
             {recipe.name}
           </div>
           <TypeBadge type={recipe.type} small />
         </div>
         {recipe.herba.length > 0 && (
-          <span className="border border-[rgba(255,215,0,0.4)] bg-[rgba(255,215,0,0.08)] px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[1px] text-[var(--pt-gold)]">
+          <span className="border border-[rgba(255,215,0,0.4)] bg-[rgba(255,215,0,0.08)] px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[1px] text-[var(--pt-gold)]">
             HERBA ×{recipe.herba.length}
           </span>
         )}
       </div>
+      {/* Ingredient sprites */}
+      {recipe.ingredients.length > 0 && (
+        <div className="mb-2 flex items-center gap-1.5">
+          {recipe.ingredients.map((ing, i) => {
+            const name = ing.replace(/\s*x\d+$/, "").trim();
+            return <CardSprite key={i} name={name} />;
+          })}
+        </div>
+      )}
+
       <div className="flex flex-wrap gap-1">
         {recipe.powers.map((p, i) => (
           <PowerTag key={i} power={p} />

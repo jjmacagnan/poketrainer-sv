@@ -20,7 +20,7 @@ export function ToolDisclaimer({
 }: ToolDisclaimerProps) {
   return (
     <div className="mt-8 border-t border-[var(--pt-border-dim)] pt-4 text-center text-xs text-[var(--pt-text-dim)]">
-      <div className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] text-[var(--pt-text-dim)]">
+      <div className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] text-[var(--pt-text-dim)]">
         PokéTrainer SV Tools — {toolName} {version}
       </div>
       <div className="mb-2">{note}</div>

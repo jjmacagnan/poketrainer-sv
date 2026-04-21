@@ -141,7 +141,7 @@ export function EVPokedex() {
 
       {/* Stat Filter */}
       <div className="mb-3">
-        <div className="mb-1.5 text-center font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-wider text-[var(--pt-text-dim)]">
+        <div className="mb-1.5 text-center font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-wider text-[var(--pt-text-dim)]">
           {t("evPokedex.filterByStat")}
         </div>
         <div className="flex flex-wrap justify-center gap-1.5">
@@ -150,7 +150,7 @@ export function EVPokedex() {
               setSelectedStat(null);
               setShowBestOnly(false);
             }}
-            className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-colors ${
+            className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
               !selectedStat
                 ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                 : "border-[var(--pt-border-dim)] text-[var(--pt-text-dim)]"
@@ -165,7 +165,7 @@ export function EVPokedex() {
                 setSelectedStat(selectedStat === stat ? null : stat);
                 if (selectedStat === stat) setShowBestOnly(false);
               }}
-              className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-all ${
+              className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
                 selectedStat === stat
                   ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                   : "border-[var(--pt-border-dim)] text-[var(--pt-text-dim)] opacity-70"
@@ -185,7 +185,7 @@ export function EVPokedex() {
             onClick={() =>
               setSelectedAmount(selectedAmount === opt.value ? null : opt.value)
             }
-            className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-all ${
+            className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
               selectedAmount === opt.value
                 ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                 : "border-[var(--pt-border-dim)] text-[var(--pt-text-dim)] opacity-70"
@@ -197,7 +197,7 @@ export function EVPokedex() {
         {selectedStat && (
           <button
             onClick={() => setShowBestOnly(!showBestOnly)}
-            className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-all ${
+            className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
               showBestOnly
                 ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                 : "border-[var(--pt-border-dim)] text-[var(--pt-text-dim)] opacity-70"
@@ -226,7 +226,7 @@ export function EVPokedex() {
         <div className="flex border border-[var(--pt-border-dim)]">
           <button
             onClick={() => setViewMode("card")}
-            className={`px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-colors ${
+            className={`px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
               viewMode === "card"
                 ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                 : "text-[var(--pt-text-dim)]"
@@ -236,7 +236,7 @@ export function EVPokedex() {
           </button>
           <button
             onClick={() => setViewMode("table")}
-            className={`px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-colors ${
+            className={`px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
               viewMode === "table"
                 ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                 : "text-[var(--pt-text-dim)]"
@@ -309,17 +309,17 @@ function PokemonCard({
     >
       <div className="absolute right-2 top-2 flex flex-col items-end gap-0.5">
         {isBest && (
-          <div className="border border-[rgba(255,215,0,0.4)] px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase text-[var(--pt-gold)]">
+          <div className="border border-[rgba(255,215,0,0.4)] px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase text-[var(--pt-gold)]">
             {t("evPokedex.best")}
           </div>
         )}
         {(pokemon as { isLegendary?: boolean }).isLegendary && (
-          <div className="border border-yellow-500/30 px-2 py-0.5 text-[10px] font-bold text-yellow-400/70">
+          <div className="border border-yellow-500/30 px-2 py-0.5 text-ui-base font-bold text-yellow-400/70">
             ★
           </div>
         )}
         {(pokemon as { isMythical?: boolean }).isMythical && (
-          <div className="border border-pink-500/20 px-2 py-0.5 text-[10px] font-bold text-pink-400/70">
+          <div className="border border-pink-500/20 px-2 py-0.5 text-ui-base font-bold text-pink-400/70">
             ✦
           </div>
         )}
@@ -357,7 +357,7 @@ function PokemonCard({
           {pokemon.evYield.map((ev) => (
             <span
               key={ev.stat}
-              className={`px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase ${
+              className={`px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase ${
                 selectedStat === ev.stat
                   ? "border border-[rgba(255,215,0,0.4)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                   : "border border-[var(--pt-border-dim)] text-[var(--pt-text-dim)]"
@@ -399,20 +399,20 @@ function PokemonTable({
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-[var(--pt-border-dim)] bg-[var(--pt-surface)]">
-            <th className="px-3 py-2 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[2px] text-[var(--pt-text-dim)]">#</th>
-            <th className="px-3 py-2 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[2px] text-[var(--pt-text-dim)]">
+            <th className="px-3 py-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-text-dim)]">#</th>
+            <th className="px-3 py-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-text-dim)]">
               Pokémon
             </th>
-            <th className="px-3 py-2 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[2px] text-[var(--pt-text-dim)]">
+            <th className="px-3 py-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-text-dim)]">
               Tipo
             </th>
-            <th className="px-3 py-2 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[2px] text-[var(--pt-text-dim)]">
+            <th className="px-3 py-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-text-dim)]">
               EV Yield
             </th>
             {STAT_NAMES.map((stat) => (
               <th
                 key={stat}
-                className={`px-2 py-2 text-center font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[1px] ${
+                className={`px-2 py-2 text-center font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[1px] ${
                   selectedStat === stat ? "text-[var(--pt-gold)]" : "text-[var(--pt-text-dim)]"
                 }`}
               >
@@ -457,7 +457,7 @@ function PokemonTable({
                   {p.evYield.map((ev) => (
                     <span
                       key={ev.stat}
-                      className={`px-1.5 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase ${
+                      className={`px-1.5 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase ${
                         selectedStat === ev.stat
                           ? "border border-[rgba(255,215,0,0.4)] text-[var(--pt-gold)]"
                           : "border border-[var(--pt-border-dim)] text-[var(--pt-text-dim)]"
@@ -471,7 +471,7 @@ function PokemonTable({
               {STAT_NAMES.map((stat) => (
                 <td
                   key={stat}
-                  className={`px-2 py-2 text-center font-[family-name:var(--font-share-tech-mono)] text-[9px] ${
+                  className={`px-2 py-2 text-center font-[family-name:var(--font-share-tech-mono)] text-ui-sm ${
                     selectedStat === stat
                       ? "font-bold text-[var(--pt-gold)]"
                       : "text-[var(--pt-text-dim)]"

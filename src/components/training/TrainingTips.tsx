@@ -180,7 +180,7 @@ export function TrainingTips() {
               ].map(({ label, value }) => (
                 <div key={label} className="text-center">
                   <div className="text-2xl font-black text-white">{value}</div>
-                  <div className="mt-1 text-[11px] text-[var(--pt-text-dim)] leading-tight">{label}</div>
+                  <div className="mt-1 text-ui-md text-[var(--pt-text-dim)] leading-tight">{label}</div>
                 </div>
               ))}
             </div>

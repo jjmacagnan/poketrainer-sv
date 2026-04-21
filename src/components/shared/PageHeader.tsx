@@ -13,7 +13,7 @@ export function PageHeader({ emoji, title, subtitle, toolNumber }: PageHeaderPro
   return (
     <div className="mb-8 text-center">
       {toolNumber && (
-        <div className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[3px] text-[var(--pt-text-dim)]">
+        <div className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[3px] text-[var(--pt-text-dim)]">
           {toolNumber}
         </div>
       )}

@@ -38,7 +38,7 @@ const HERBA_COLORS: Record<string, string> = {
 function HerbaBadge({ herba }: { herba: string }) {
   return (
     <span
-      className="rounded px-1.5 py-0.5 text-[10px] font-bold text-white"
+      className="rounded px-1.5 py-0.5 text-ui-base font-bold text-white"
       style={{ background: HERBA_COLORS[herba] ?? "#666" }}
     >
       {herba}
@@ -86,7 +86,7 @@ function TypeGuideCard({
             {primary.herba.length > 0 ? (
               primary.herba.map((h, i) => <HerbaBadge key={i} herba={h} />)
             ) : (
-              <span className="text-[10px] font-semibold text-teal-400">{t("sandwich.noHerba")}</span>
+              <span className="text-ui-base font-semibold text-teal-400">{t("sandwich.noHerba")}</span>
             )}
           </div>
         </div>
@@ -94,7 +94,7 @@ function TypeGuideCard({
         {/* Badges */}
         <div className="flex shrink-0 items-center gap-1.5">
           {hasAlts && (
-            <span className="border border-[var(--pt-border-dim)] px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase text-[var(--pt-text-dim)]">
+            <span className="border border-[var(--pt-border-dim)] px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase text-[var(--pt-text-dim)]">
               {t("sandwich.altBadge", { count: entry.recipes.length - 1 })}
             </span>
           )}
@@ -109,7 +109,7 @@ function TypeGuideCard({
       {/* Inline recipe picker */}
       {isSelected && (
         <div className="border-t border-[var(--pt-border-dim)] bg-black/20 p-2">
-          <div className="mb-1.5 px-1 text-[10px] font-bold uppercase tracking-wider text-[var(--pt-text-dim)]">
+          <div className="mb-1.5 px-1 text-ui-base font-bold uppercase tracking-wider text-[var(--pt-text-dim)]">
             {t("sandwich.selectRecipe")}
           </div>
           <div className="grid gap-1.5">
@@ -123,7 +123,7 @@ function TypeGuideCard({
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
                       {i === 0 && (
-                        <span className="border border-[rgba(255,215,0,0.4)] px-1.5 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase text-[var(--pt-gold)]">
+                        <span className="border border-[rgba(255,215,0,0.4)] px-1.5 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase text-[var(--pt-gold)]">
                           {t("sandwich.bestBadge")}
                         </span>
                       )}
@@ -136,16 +136,16 @@ function TypeGuideCard({
                         <HerbaBadge key={j} herba={h} />
                       ))}
                       {recipe.herba.length === 0 && (
-                        <span className="text-[10px] text-teal-400">{t("sandwich.noHerbaMystica")}</span>
+                        <span className="text-ui-base text-teal-400">{t("sandwich.noHerbaMystica")}</span>
                       )}
                     </div>
-                    <div className="mt-1 text-[10px] text-[var(--pt-text-dim)]">
+                    <div className="mt-1 text-ui-base text-[var(--pt-text-dim)]">
                       {recipe.ingredients.join(", ")}
                     </div>
                   </div>
                   <div className="shrink-0 text-right">
                     {recipe.powers.slice(0, 1).map((p, j) => (
-                      <div key={j} className="text-[10px] font-semibold text-gray-300">
+                      <div key={j} className="text-ui-base font-semibold text-gray-300">
                         {p}
                       </div>
                     ))}
@@ -244,7 +244,7 @@ export function SandwichBuilder() {
     <div className="mx-auto max-w-2xl px-4 py-6">
       {/* Header */}
       <div className="mb-8 text-center">
-        <div className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[3px] text-[var(--pt-text-dim)]">#001</div>
+        <div className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[3px] text-[var(--pt-text-dim)]">#001</div>
         <div className="mb-2 text-5xl">🥪</div>
         <h1 className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-2xl uppercase tracking-[2px] text-[var(--pt-gold)]">
           {t("sandwich.title")}
@@ -269,8 +269,8 @@ export function SandwichBuilder() {
             }`}
             style={tab === tb.id ? { borderColor: tb.color } : undefined}
           >
-            <div className="font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[1px]">{tb.label}</div>
-            <div className="text-[10px] font-normal opacity-70">{tb.desc}</div>
+            <div className="font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px]">{tb.label}</div>
+            <div className="text-ui-base font-normal opacity-70">{tb.desc}</div>
           </button>
         ))}
       </div>
@@ -295,7 +295,7 @@ export function SandwichBuilder() {
                 setSelectedType(selectedType === tp ? null : tp);
                 setSelectedEntry(null);
               }}
-              className="border px-3 py-1 text-[11px] font-bold text-white transition-all"
+              className="border px-3 py-1 text-ui-md font-bold text-white transition-all"
               style={{
                 background: selectedType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
                 borderColor: selectedType === tp ? TYPE_COLORS[tp] : "var(--pt-border-dim)",
@@ -392,7 +392,7 @@ export function SandwichBuilder() {
                     {level === 1 && ` ${t("sandwich.eggBudget")}`}
                   </span>
                   {level === 3 && (
-                    <span className="text-[10px] text-[var(--pt-text-dim)]">
+                    <span className="text-ui-base text-[var(--pt-text-dim)]">
                       {t("sandwich.requiresHerba")}
                     </span>
                   )}

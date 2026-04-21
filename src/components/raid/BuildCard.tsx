@@ -34,16 +34,16 @@ export function BuildCard({ boss, onClick }: BuildCardProps) {
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="text-sm font-bold text-gray-100">{boss.name}</span>
-          <span className="rounded-sm bg-[var(--pt-card)] px-1.5 py-0.5 text-[10px] font-bold text-gray-300">
+          <span className="rounded-sm bg-[var(--pt-card)] px-1.5 py-0.5 text-ui-base font-bold text-gray-300">
             {boss.stars}★
           </span>
         </div>
         <div className="mt-1 flex items-center gap-1.5">
-          <span className="text-[10px] font-semibold text-[var(--pt-text-dim)]">{t("raid.teraType").toUpperCase()}</span>
+          <span className="text-ui-base font-semibold text-[var(--pt-text-dim)]">{t("raid.teraType").toUpperCase()}</span>
           <TypeBadge type={boss.teraType as PokemonType} small />
         </div>
         {boss.notes && (
-          <div className="mt-0.5 text-[10px] text-[var(--pt-text-dim)]">{boss.notes}</div>
+          <div className="mt-0.5 text-ui-base text-[var(--pt-text-dim)]">{boss.notes}</div>
         )}
       </div>
     </button>

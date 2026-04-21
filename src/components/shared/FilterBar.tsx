@@ -19,7 +19,7 @@ export function FilterBar({ options, selected, onSelect, allLabel = "Todos" }: F
     <div className="flex flex-wrap justify-center gap-1.5">
       <button
         onClick={() => onSelect(null)}
-        className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-colors ${
+        className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
           !selected
             ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
             : "border-[var(--pt-border-dim)] text-[var(--pt-text-dim)] hover:border-[rgba(255,215,0,0.4)] hover:text-[var(--pt-text)]"
@@ -33,7 +33,7 @@ export function FilterBar({ options, selected, onSelect, allLabel = "Todos" }: F
           <button
             key={opt.value}
             onClick={() => onSelect(isActive ? null : opt.value)}
-            className="border px-3 py-1 text-[11px] font-bold uppercase text-white transition-all"
+            className="border px-3 py-1 text-ui-md font-bold uppercase text-white transition-all"
             style={{
               background: isActive
                 ? opt.color || "var(--pt-gold)"

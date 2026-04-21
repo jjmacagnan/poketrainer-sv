@@ -22,21 +22,21 @@ export default function Home() {
     <div className="mx-auto max-w-3xl px-4 py-16">
       {/* Hero */}
       <div className="mb-12 text-center animate-fade-up">
-        <div className="mb-3 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[5px] text-[var(--pt-gold)]">
+        <div className="mb-3 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[5px] text-[var(--pt-gold)]">
           ▶ POKÉMON SCARLET &amp; VIOLET
         </div>
         <h1 className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-4xl uppercase tracking-[3px] text-[var(--pt-text)] sm:text-5xl">
           POKÉ<span className="text-[var(--pt-gold)]">TRAINER</span>
         </h1>
         <div className="mx-auto mb-4 h-px w-24 bg-gradient-to-r from-transparent via-[var(--pt-gold)] to-transparent" />
-        <p className="font-[family-name:var(--font-share-tech-mono)] text-[10px] uppercase tracking-[3px] text-[var(--pt-text-dim)]">
-          SELECT YOUR TOOL
+        <p className="font-[family-name:var(--font-share-tech-mono)] text-ui-base uppercase tracking-[3px] text-[var(--pt-text-dim)]">
+          {t("home.selectYourTool")}
         </p>
       </div>
 
       {/* Section label */}
-      <div className="mb-4 flex items-center gap-3 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[4px] text-[var(--pt-gold)]">
-        ▶ AVAILABLE TOOLS — 7/8 UNLOCKED
+      <div className="mb-4 flex items-center gap-3 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[4px] text-[var(--pt-gold)]">
+        ▶ {t("home.availableTools")}
         <div className="h-px flex-1 bg-[var(--pt-border-dim)]" />
       </div>
 
@@ -52,30 +52,30 @@ export default function Home() {
             {/* Top accent on hover */}
             <div className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-[var(--pt-gold)] to-[var(--pt-orange)] transition-transform duration-300 group-hover:scale-x-100" />
 
-            <div className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[2px] text-[var(--pt-gold)]">
+            <div className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-gold)]">
               {tool.number}
             </div>
             <div className="mb-2 text-2xl">{tool.emoji}</div>
-            <div className="mb-1.5 font-[family-name:var(--font-share-tech-mono)] text-[10px] uppercase leading-snug tracking-[1px] text-[var(--pt-text)]">
+            <div className="mb-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-base uppercase leading-snug tracking-[1px] text-[var(--pt-text)]">
               {t(tool.titleKey)}
             </div>
-            <p className="text-[11px] leading-relaxed text-[var(--pt-text-dim)]">
+            <p className="text-ui-md leading-relaxed text-[var(--pt-text-dim)]">
               {t(tool.descKey)}
             </p>
-            <div className="mt-3 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[1px] text-[var(--pt-gold)] opacity-0 transition-opacity group-hover:opacity-100">
-              ▶ OPEN →
+            <div className="mt-3 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] text-[var(--pt-gold)] opacity-0 transition-opacity group-hover:opacity-100">
+              ▶ {t("home.openTool")} →
             </div>
           </Link>
         ))}
 
         {/* Locked slot */}
         <div className="relative border border-dashed border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4 opacity-35">
-          <div className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[2px] text-[var(--pt-text-dim)]">
+          <div className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-text-dim)]">
             #???
           </div>
           <div className="mb-2 text-2xl">🔒</div>
-          <div className="font-[family-name:var(--font-share-tech-mono)] text-[10px] uppercase tracking-[1px] text-[var(--pt-text-dim)]">
-            COMING SOON
+          <div className="font-[family-name:var(--font-share-tech-mono)] text-ui-base uppercase tracking-[1px] text-[var(--pt-text-dim)]">
+            {t("home.comingSoon")}
           </div>
         </div>
       </div>

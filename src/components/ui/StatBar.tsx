@@ -23,10 +23,10 @@ export function StatBar({ label, value, max = 255, color }: StatBarProps) {
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      <span className="w-8 shrink-0 text-right font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[1px] text-[var(--pt-text-dim)]">
+      <span className="w-8 shrink-0 text-right font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] text-[var(--pt-text-dim)]">
         {label}
       </span>
-      <span className="w-8 shrink-0 text-right font-[family-name:var(--font-share-tech-mono)] text-[10px] text-[var(--pt-text)]">
+      <span className="w-8 shrink-0 text-right font-[family-name:var(--font-share-tech-mono)] text-ui-base text-[var(--pt-text)]">
         {value}
       </span>
       <div className="relative h-2 flex-1 overflow-hidden bg-white/10">

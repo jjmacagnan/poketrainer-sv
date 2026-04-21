@@ -331,7 +331,7 @@ function artworkUrl(id: number, shiny = false) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase tracking-[3px] text-[var(--pt-gold)]">
+      <p className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[3px] text-[var(--pt-gold)]">
         {title}
       </p>
       {children}
@@ -472,7 +472,7 @@ export function PokemonDetailModal({
             />
             <button
               onClick={() => setShiny(!shiny)}
-              className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[1px] transition-all ${shiny
+              className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] transition-all ${shiny
                   ? "border-[rgba(255,215,0,0.4)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
                   : "border-[var(--pt-border-dim)] text-[var(--pt-text-dim)]"
                 }`}
@@ -488,12 +488,12 @@ export function PokemonDetailModal({
               <span>·</span>
               <span className="capitalize">{pokemon.pokedex}</span>
               {pokemon.isLegendary && (
-                <span className="border border-[rgba(255,215,0,0.3)] px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase text-[var(--pt-gold)]">
+                <span className="border border-[rgba(255,215,0,0.3)] px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase text-[var(--pt-gold)]">
                   Legendary
                 </span>
               )}
               {pokemon.isMythical && (
-                <span className="border border-pink-500/30 px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase text-pink-300">
+                <span className="border border-pink-500/30 px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase text-pink-300">
                   Mythical
                 </span>
               )}
@@ -578,13 +578,13 @@ export function PokemonDetailModal({
                   return (
                     <div key={version} className="group relative">
                       <span
-                        className="inline-flex h-7 w-9 cursor-default items-center justify-center rounded-none text-[10px] font-black text-white"
+                        className="inline-flex h-7 w-9 cursor-default items-center justify-center rounded-none text-ui-base font-black text-white"
                         style={{ backgroundColor: meta.color + "CC", border: `1px solid ${meta.color}` }}
                       >
                         {meta.label}
                       </span>
                       {/* Custom tooltip */}
-                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-none bg-gray-800 px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl ring-1 ring-[var(--pt-border-dim)] transition-opacity duration-150 group-hover:opacity-100">
+                      <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-none bg-gray-800 px-2.5 py-1 text-ui-md font-semibold text-white opacity-0 shadow-xl ring-1 ring-[var(--pt-border-dim)] transition-opacity duration-150 group-hover:opacity-100">
                         {meta.name}
                         <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
                       </div>
@@ -613,11 +613,11 @@ export function PokemonDetailModal({
                       <span className="text-xs text-[var(--pt-text-dim)]">{enc.levels}</span>
                     )}
                     {enc.method && (
-                      <span className="rounded-none bg-[rgba(255,215,0,0.08)] px-1.5 py-0.5 text-[10px] font-semibold text-[var(--pt-gold)]">
+                      <span className="rounded-none bg-[rgba(255,215,0,0.08)] px-1.5 py-0.5 text-ui-base font-semibold text-[var(--pt-gold)]">
                         {enc.method}
                       </span>
                     )}
-                    <span className="ml-auto text-[10px] text-gray-600">
+                    <span className="ml-auto text-ui-base text-gray-600">
                       {enc.versions.join(" / ")}
                     </span>
                   </div>
@@ -639,13 +639,13 @@ export function PokemonDetailModal({
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <div className="text-[10px] font-bold text-emerald-500/70 uppercase">{t("evPokedex.trainingLocation")}</div>
+                      <div className="text-ui-base font-bold text-emerald-500/70 uppercase">{t("evPokedex.trainingLocation")}</div>
                       <div className="text-xs font-semibold text-gray-200">{trainingSpot.location[locale as "pt" | "en"]}</div>
                     </div>
                     <div>
-                      <div className="text-[10px] font-bold text-emerald-500/70 uppercase">{t("evPokedex.sandwichTip")}</div>
+                      <div className="text-ui-base font-bold text-emerald-500/70 uppercase">{t("evPokedex.sandwichTip")}</div>
                       <div className="text-xs font-semibold text-gray-200">{trainingSpot.sandwich[locale as "pt" | "en"]}</div>
-                      <div className="text-[9px] text-emerald-500/60">{trainingSpot.sandwich.effect}</div>
+                      <div className="text-ui-sm text-emerald-500/60">{trainingSpot.sandwich.effect}</div>
                     </div>
                   </div>
                 </div>
@@ -671,13 +671,13 @@ export function PokemonDetailModal({
                         {a.name}
                       </span>
                       {a.isHidden && (
-                        <span className="ml-2 border border-[rgba(255,215,0,0.3)] px-1.5 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-[8px] uppercase text-[var(--pt-gold)]">
+                        <span className="ml-2 border border-[rgba(255,215,0,0.3)] px-1.5 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase text-[var(--pt-gold)]">
                           HIDDEN
                         </span>
                       )}
                     </div>
                     {(abilityData?.shortEffect || abilityData?.flavorText) && (
-                      <p className="mt-1 text-[11px] leading-relaxed text-[var(--pt-text-dim)]">
+                      <p className="mt-1 text-ui-md leading-relaxed text-[var(--pt-text-dim)]">
                         {abilityData.shortEffect || abilityData.flavorText}
                       </p>
                     )}
@@ -693,7 +693,7 @@ export function PokemonDetailModal({
               {pokemon.evYield.map((ev) => (
                 <span
                   key={ev.stat}
-                  className="border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-[family-name:var(--font-share-tech-mono)] text-[10px] uppercase text-emerald-300"
+                  className="border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-base uppercase text-emerald-300"
                 >
                   +{ev.amount} {ev.stat}
                 </span>
@@ -742,7 +742,7 @@ export function PokemonDetailModal({
                               className="inline-flex items-center gap-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-2 py-1 text-xs text-[var(--pt-text)]"
                               title={md?.effect ?? ""}
                             >
-                              <span className="font-mono text-[10px] text-emerald-400/70 w-4 text-center">
+                              <span className="font-mono text-ui-base text-emerald-400/70 w-4 text-center">
                                 {m.level > 0 ? m.level : "—"}
                               </span>
                               {md && (
@@ -753,7 +753,7 @@ export function PokemonDetailModal({
                               )}
                               <span>{formatItemName(m.name)}</span>
                               {md?.power && (
-                                <span className="text-[9px] text-[var(--pt-text-dim)]">{md.power}</span>
+                                <span className="text-ui-sm text-[var(--pt-text-dim)]">{md.power}</span>
                               )}
                             </span>
                           );
@@ -779,7 +779,7 @@ export function PokemonDetailModal({
                               title={md?.effect ?? ""}
                             >
                               {md?.tm !== null && md?.tm !== undefined && (
-                                <span className="font-mono text-[9px] font-bold text-yellow-500/80">
+                                <span className="font-mono text-ui-sm font-bold text-yellow-500/80">
                                   TM{String(md.tm).padStart(3, "0")}
                                 </span>
                               )}
@@ -791,7 +791,7 @@ export function PokemonDetailModal({
                               )}
                               <span>{formatItemName(m.name)}</span>
                               {md?.power && (
-                                <span className="text-[9px] text-[var(--pt-text-dim)]">{md.power}</span>
+                                <span className="text-ui-sm text-[var(--pt-text-dim)]">{md.power}</span>
                               )}
                             </span>
                           );
@@ -824,7 +824,7 @@ export function PokemonDetailModal({
                               )}
                               <span>{formatItemName(m.name)}</span>
                               {md?.power && (
-                                <span className="text-[9px] text-[var(--pt-text-dim)]">{md.power}</span>
+                                <span className="text-ui-sm text-[var(--pt-text-dim)]">{md.power}</span>
                               )}
                             </span>
                           );
@@ -854,7 +854,7 @@ export function PokemonDetailModal({
                               )}
                               <span>{formatItemName(m.name)}</span>
                               {md?.power && (
-                                <span className="text-[9px] text-[var(--pt-text-dim)]">{md.power}</span>
+                                <span className="text-ui-sm text-[var(--pt-text-dim)]">{md.power}</span>
                               )}
                             </span>
                           );
@@ -907,14 +907,14 @@ export function PokemonDetailModal({
                       {itemData?.sprite ? (
                         <img src={itemData.sprite} alt={itemName} className="h-8 w-8 shrink-0 pixelated" />
                       ) : (
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none bg-[var(--pt-card)] text-[10px] text-white/40">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none bg-[var(--pt-card)] text-ui-base text-white/40">
                           ?
                         </div>
                       )}
                       <div className="flex-1">
                         <span className="text-sm font-bold text-gray-200">{itemName}</span>
                         {(itemData?.officialDescription || itemData?.description) && (
-                          <p className="mt-0.5 text-[10px] leading-relaxed text-[var(--pt-text-dim)]">
+                          <p className="mt-0.5 text-ui-base leading-relaxed text-[var(--pt-text-dim)]">
                             {itemData.officialDescription || itemData.description}
                           </p>
                         )}
@@ -958,7 +958,7 @@ export function PokemonDetailModal({
                       <div key={`arrow-${step.from.id}-${step.to.id}`} className="flex flex-col items-center text-center">
                         <span className="text-gray-600">→</span>
                         {step.trigger && (
-                          <span className="max-w-[80px] text-[9px] font-semibold text-[var(--pt-gold)]">
+                          <span className="max-w-[80px] text-ui-sm font-semibold text-[var(--pt-gold)]">
                             {step.trigger}
                           </span>
                         )}
@@ -996,7 +996,7 @@ export function PokemonDetailModal({
                       height={56}
                       className="pixelated"
                     />
-                    <span className="text-[10px] text-[var(--pt-text-dim)]">{v.name}</span>
+                    <span className="text-ui-base text-[var(--pt-text-dim)]">{v.name}</span>
                   </div>
                 ))}
               </div>
@@ -1038,7 +1038,7 @@ function EvoSprite({ id, name, active }: { id: number; name: string; active: boo
         height={48}
         className="pixelated"
       />
-      <span className={`text-[10px] font-semibold capitalize ${active ? "text-[var(--pt-gold)]" : "text-[var(--pt-text-dim)]"}`}>
+      <span className={`text-ui-base font-semibold capitalize ${active ? "text-[var(--pt-gold)]" : "text-[var(--pt-text-dim)]"}`}>
         {name}
       </span>
     </div>

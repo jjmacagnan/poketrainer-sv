@@ -20,6 +20,13 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-outfit);
   --font-display: var(--font-share-tech-mono), monospace;
+
+  /* UI type scale — change here to affect all components */
+  --text-ui-xs:   10px;
+  --text-ui-sm:   11px;
+  --text-ui-base: 12px;
+  --text-ui-md:   13px;
+  --text-ui-lg:   15px;
 }
 
 body {

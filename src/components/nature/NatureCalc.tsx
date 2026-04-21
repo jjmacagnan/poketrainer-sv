@@ -209,7 +209,7 @@ export function NatureCalc() {
                     <td className="px-3 py-2 font-semibold text-gray-100">
                       {nature.name}
                       {!nature.increased && (
-                        <span className="ml-1.5 text-[10px] text-[var(--pt-text-dim)]">
+                        <span className="ml-1.5 text-ui-base text-[var(--pt-text-dim)]">
                           {t("natureCalc.neutral")}
                         </span>
                       )}
@@ -242,14 +242,14 @@ export function NatureCalc() {
                         return (
                           <div className="flex flex-col gap-0.5">
                             <div className="flex items-center gap-1 justify-center">
-                              <span className="text-[9px] text-[var(--pt-gold)]">♥</span>
-                              <span className="text-[10px] text-[var(--pt-text-dim)]">{nature.likes}</span>
+                              <span className="text-ui-sm text-[var(--pt-gold)]">♥</span>
+                              <span className="text-ui-base text-[var(--pt-text-dim)]">{nature.likes}</span>
                             </div>
                             <div className="flex items-center gap-1 justify-center">
-                              <span className="text-[9px] text-red-400">✕</span>
-                              <span className="text-[10px] text-[var(--pt-text-dim)]">{nature.dislikes}</span>
+                              <span className="text-ui-sm text-red-400">✕</span>
+                              <span className="text-ui-base text-[var(--pt-text-dim)]">{nature.dislikes}</span>
                             </div>
-                            <span className="text-[8px] text-[var(--pt-text-dim)]">{isOpen ? "▲" : "▼"}</span>
+                            <span className="text-ui-xs text-[var(--pt-text-dim)]">{isOpen ? "▲" : "▼"}</span>
                           </div>
                         );
                       })()}
@@ -263,16 +263,16 @@ export function NatureCalc() {
                         <td colSpan={7} className="px-3 pb-3 pt-0">
                           <div className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-3">
                             <div className="mb-2 flex items-center gap-1.5">
-                              <span className="font-[family-name:var(--font-share-tech-mono)] text-[10px] font-bold uppercase tracking-[2px] text-[var(--pt-gold)]">
+                              <span className="font-[family-name:var(--font-share-tech-mono)] text-ui-base font-bold uppercase tracking-[2px] text-[var(--pt-gold)]">
                                 {t("natureCalc.berryPreferences")}
                               </span>
                             </div>
                             <div className="grid gap-2 sm:grid-cols-2">
                               <div className="border border-emerald-500/20 bg-emerald-500/5 p-2.5">
                                 <div className="mb-1 flex items-center gap-1">
-                                  <span className="text-[10px] text-[var(--pt-gold)]">♥</span>
-                                  <span className="text-[10px] font-bold text-[var(--pt-gold)]">{t("natureCalc.likesFlavor")}</span>
-                                  <span className="border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-1 py-0.5 text-[9px] font-bold text-[var(--pt-gold)]">
+                                  <span className="text-ui-base text-[var(--pt-gold)]">♥</span>
+                                  <span className="text-ui-base font-bold text-[var(--pt-gold)]">{t("natureCalc.likesFlavor")}</span>
+                                  <span className="border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-1 py-0.5 text-ui-sm font-bold text-[var(--pt-gold)]">
                                     {berryInfo.likeFlavor.localizedName}
                                   </span>
                                 </div>
@@ -280,7 +280,7 @@ export function NatureCalc() {
                                   {berryInfo.likeBerries.map((b) => (
                                     <span
                                       key={b.berry.name}
-                                      className="bg-[rgba(255,215,0,0.06)] px-1.5 py-0.5 text-[9px] text-[var(--pt-gold)]"
+                                      className="bg-[rgba(255,215,0,0.06)] px-1.5 py-0.5 text-ui-sm text-[var(--pt-gold)]"
                                       title={`Potency: ${b.potency}`}
                                     >
                                       {b.berry.name} ({b.potency})
@@ -290,9 +290,9 @@ export function NatureCalc() {
                               </div>
                               <div className="border border-red-500/20 bg-red-500/5 p-2.5">
                                 <div className="mb-1 flex items-center gap-1">
-                                  <span className="text-[10px] text-red-400">✕</span>
-                                  <span className="text-[10px] font-bold text-red-400">{t("natureCalc.dislikesFlavor")}</span>
-                                  <span className="border border-red-500/30 bg-red-500/10 px-1 py-0.5 text-[9px] font-bold text-red-300">
+                                  <span className="text-ui-base text-red-400">✕</span>
+                                  <span className="text-ui-base font-bold text-red-400">{t("natureCalc.dislikesFlavor")}</span>
+                                  <span className="border border-red-500/30 bg-red-500/10 px-1 py-0.5 text-ui-sm font-bold text-red-300">
                                     {berryInfo.dislikeFlavor.localizedName}
                                   </span>
                                 </div>
@@ -300,7 +300,7 @@ export function NatureCalc() {
                                   {berryInfo.dislikeBerries.map((b) => (
                                     <span
                                       key={b.berry.name}
-                                      className="bg-red-500/10 px-1.5 py-0.5 text-[9px] text-red-300/80"
+                                      className="bg-red-500/10 px-1.5 py-0.5 text-ui-sm text-red-300/80"
                                       title={`Potency: ${b.potency}`}
                                     >
                                       {b.berry.name} ({b.potency})
@@ -309,7 +309,7 @@ export function NatureCalc() {
                                 </div>
                               </div>
                             </div>
-                            <p className="mt-1.5 text-[9px] italic text-[var(--pt-text-dim)]">
+                            <p className="mt-1.5 text-ui-sm italic text-[var(--pt-text-dim)]">
                               {t("natureCalc.berryNote")}
                             </p>
                           </div>

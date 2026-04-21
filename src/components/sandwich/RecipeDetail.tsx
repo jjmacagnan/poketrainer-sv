@@ -7,6 +7,8 @@ import { PowerTag } from "@/components/ui/PowerTag";
 import { useI18n } from "@/i18n";
 import { getDominantFlavorOfIngredient, getIngredientFlavors } from "@/lib/ingredient-flavors";
 import { getBerriesByFlavor, getBerry } from "@/lib/berry-utils";
+import { getIngredientSprite } from "@/lib/ingredient-sprites";
+import Image from "next/image";
 import { useState } from "react";
 
 interface RecipeDetailProps {
@@ -67,6 +69,26 @@ function getIngredientEmoji(name: string): string {
   return INGREDIENT_EMOJI[name] ?? "🥬";
 }
 
+function IngredientSprite({ name, size = 32 }: { name: string; size?: number }) {
+  const sprite = getIngredientSprite(name);
+  const emoji = getIngredientEmoji(name);
+  const [failed, setFailed] = useState(false);
+
+  if (sprite && !failed) {
+    return (
+      <Image
+        src={sprite}
+        alt={name}
+        width={size}
+        height={size}
+        onError={() => setFailed(true)}
+        style={{ imageRendering: "pixelated", objectFit: "contain" }}
+      />
+    );
+  }
+  return <span style={{ fontSize: size * 0.7 }}>{emoji}</span>;
+}
+
 const FLAVOR_COLORS: Record<string, string> = {
   spicy: "#FF6B35",
   dry: "#6CB4E4",
@@ -108,7 +130,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
           </h3>
           <button
             onClick={() => setShowFlavorDetails(!showFlavorDetails)}
-            className="rounded px-2 py-0.5 text-[10px] font-semibold text-[var(--pt-text-dim)] transition-colors hover:text-[var(--pt-gold)]"
+            className="rounded px-2 py-0.5 text-ui-base font-semibold text-[var(--pt-text-dim)] transition-colors hover:text-[var(--pt-gold)]"
           >
             {showFlavorDetails ? t("sandwich.hideFlavors") : t("sandwich.showFlavors")}
           </button>
@@ -126,18 +148,18 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
                 className="flex flex-col bg-[var(--pt-card)] px-3.5 py-2.5"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">{getIngredientEmoji(parsed.name)}</span>
+                  <IngredientSprite name={parsed.name} size={32} />
                   <span className="text-sm font-semibold text-gray-100">
                     {parsed.name}
                   </span>
                   {parsed.qty > 1 && (
-                    <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-[var(--pt-text-dim)]">
+                    <span className="rounded bg-white/10 px-1.5 py-0.5 text-ui-base font-bold text-[var(--pt-text-dim)]">
                       ×{parsed.qty}
                     </span>
                   )}
                   {flavorInfo && (
                     <span
-                      className="ml-auto rounded px-1.5 py-0.5 text-[10px] font-bold text-white"
+                      className="ml-auto rounded px-1.5 py-0.5 text-ui-base font-bold text-white"
                       style={{ background: FLAVOR_COLORS[flavorInfo.flavor] ?? "#666" }}
                     >
                       {flavorInfo.flavor}
@@ -151,7 +173,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
                       .map(([flavor, potency]) => (
                         <span
                           key={flavor}
-                          className="rounded px-1.5 py-0.5 text-[9px] font-semibold text-white/80"
+                          className="rounded px-1.5 py-0.5 text-ui-sm font-semibold text-white/80"
                           style={{ background: (FLAVOR_COLORS[flavor] ?? "#666") + "99" }}
                         >
                           {flavor}: {potency}
@@ -172,7 +194,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
             {t("sandwich.berryAlternatives")}
           </h3>
           <div className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-3">
-            <p className="mb-2 text-[11px] text-[var(--pt-text-dim)]">
+            <p className="mb-2 text-ui-md text-[var(--pt-text-dim)]">
               {t("sandwich.berryAltNote")}
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -190,7 +212,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
                 const topBerries = getBerriesByFlavor(flavorName, 15).slice(0, 4);
                 return (
                   <div key={i} className="bg-[var(--pt-card)] px-2.5 py-1.5">
-                    <div className="text-[10px] font-bold text-[var(--pt-text-dim)]">
+                    <div className="text-ui-base font-bold text-[var(--pt-text-dim)]">
                       {herba} →
                     </div>
                     <div className="mt-0.5 flex gap-1">
@@ -199,7 +221,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
                         return (
                           <span
                             key={b.berry.name}
-                            className="rounded px-1 py-0.5 text-[9px] font-semibold text-white/80"
+                            className="rounded px-1 py-0.5 text-ui-sm font-semibold text-white/80"
                             style={{ background: FLAVOR_COLORS[flavorName] + "66" }}
                             title={`Potency: ${b.potency}`}
                           >
@@ -236,9 +258,7 @@ export function RecipeDetail({ recipe, onBack }: RecipeDetailProps) {
                     : "1px solid transparent",
                 }}
               >
-                <span className="text-lg">
-                  {getIngredientEmoji(cond.replace(/ x\d+$/, "").trim())}
-                </span>{" "}
+                <IngredientSprite name={cond.replace(/ x\d+$/, "").trim()} size={32} />{" "}
                 {cond}
               </div>
             ))}

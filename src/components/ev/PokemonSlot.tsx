@@ -211,13 +211,13 @@ export function PokemonSlot({
               <div className="flex shrink-0 gap-0.5">
                 <button
                   onClick={() => updateEV(stat, -1)}
-                  className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-1.5 py-0.5 text-[10px] font-bold text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
+                  className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-1.5 py-0.5 text-ui-base font-bold text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
                 >
                   -1
                 </button>
                 <button
                   onClick={() => updateEV(stat, 1)}
-                  className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-1.5 py-0.5 text-[10px] font-bold text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
+                  className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-1.5 py-0.5 text-ui-base font-bold text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
                 >
                   +1
                 </button>
@@ -226,7 +226,7 @@ export function PokemonSlot({
                   className="group relative flex h-6 w-8 items-center justify-center border border-[var(--pt-border-dim)] bg-[var(--pt-card)] transition-colors hover:border-[var(--pt-gold)]"
                 >
                   <img src={getSprite(STAT_ITEMS[stat].vitamin)} alt={STAT_ITEMS[stat].vitamin} className="h-5 w-5 pixelated" />
-                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-[10px] font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
+                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-ui-base font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
                     +{VITAMIN_AMOUNT} ({STAT_ITEMS[stat].vitamin})
                   </div>
                 </button>
@@ -235,7 +235,7 @@ export function PokemonSlot({
                   className="group relative flex h-6 w-8 items-center justify-center border border-[var(--pt-border-dim)] bg-[var(--pt-card)] transition-colors hover:border-[var(--pt-gold)]"
                 >
                   <img src={getSprite(STAT_ITEMS[stat].berry)} alt={STAT_ITEMS[stat].berry} className="h-5 w-5 pixelated" />
-                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-[10px] font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
+                  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-ui-base font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
                     -{VITAMIN_AMOUNT} ({STAT_ITEMS[stat].berry})
                   </div>
                 </button>
@@ -248,7 +248,7 @@ export function PokemonSlot({
                   <div className="absolute left-8 right-0 z-50 p-1">
                     <div className="border border-emerald-500/30 bg-gray-900 p-3 shadow-2xl ring-1 ring-black">
                       <div className="mb-3 flex items-center justify-between border-b border-[var(--pt-border-dim)] pb-2">
-                        <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
+                        <span className="text-ui-md font-bold text-emerald-400 uppercase tracking-wider">
                           {t("pokemonSlot.whereToTrain", { stat })}
                         </span>
                         <button onClick={() => setActiveFarmingStat(null)} className="text-[var(--pt-text-dim)] hover:text-white transition-colors">✕</button>
@@ -261,8 +261,8 @@ export function PokemonSlot({
                               <img src={target.sprite} alt={target.name} className="h-6 w-6 pixelated shrink-0" />
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between">
-                                  <span className="text-[12px] font-bold text-gray-100 truncate">{target.name}</span>
-                                  <span className="text-[10px] font-black text-emerald-400">+{target.yieldAmount} EV</span>
+                                  <span className="text-ui-base font-bold text-gray-100 truncate">{target.name}</span>
+                                  <span className="text-ui-base font-black text-emerald-400">+{target.yieldAmount} EV</span>
                                 </div>
                               </div>
                             </div>
@@ -270,19 +270,19 @@ export function PokemonSlot({
                             {target.location ? (
                               <div className="bg-emerald-500/5 border border-emerald-500/10 p-2">
                                 <div>
-                                  <div className="text-[9px] font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.farmingSpot")}</div>
-                                  <div className="text-[11px] text-gray-200 leading-tight">{target.location.location[locale as "pt" | "en"]}</div>
+                                  <div className="text-ui-sm font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.farmingSpot")}</div>
+                                  <div className="text-ui-md text-gray-200 leading-tight">{target.location.location[locale as "pt" | "en"]}</div>
                                 </div>
                                 <div className="mt-1.5 pt-1.5 border-t border-emerald-500/10">
-                                  <div className="text-[9px] font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.sandwich")}</div>
-                                  <div className="text-[10px] text-gray-300 leading-tight">
+                                  <div className="text-ui-sm font-bold text-emerald-500/60 uppercase">{t("pokemonSlot.sandwich")}</div>
+                                  <div className="text-ui-base text-gray-300 leading-tight">
                                     {target.location.sandwich[locale as "pt" | "en"]}
-                                    <span className="ml-1 text-[9px] text-emerald-500/50">({target.location.sandwich.effect})</span>
+                                    <span className="ml-1 text-ui-sm text-emerald-500/50">({target.location.sandwich.effect})</span>
                                   </div>
                                 </div>
                               </div>
                             ) : (
-                              <div className="bg-[var(--pt-card)] border border-[var(--pt-border-dim)] p-2 italic text-[10px] text-[var(--pt-text-dim)]">
+                              <div className="bg-[var(--pt-card)] border border-[var(--pt-border-dim)] p-2 italic text-ui-base text-[var(--pt-text-dim)]">
                                 {t("evPokedex.noEncounterData")}
                               </div>
                             )}
@@ -362,7 +362,7 @@ export function PokemonSlot({
               {data.powerItem ? (
                 <img src={getSprite(STAT_ITEMS[data.powerItem].powerItem)} alt="Power Item" className="h-5 w-5 pixelated" />
               ) : (
-                <div className="flex h-5 w-5 items-center justify-center bg-[var(--pt-card)] text-[10px] text-white/30">
+                <div className="flex h-5 w-5 items-center justify-center bg-[var(--pt-card)] text-ui-base text-white/30">
                   ?
                 </div>
               )}

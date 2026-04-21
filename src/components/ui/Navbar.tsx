@@ -38,7 +38,7 @@ export function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`shrink-0 border px-3 py-1.5 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-colors ${
+              className={`shrink-0 border px-3 py-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-md uppercase tracking-[2px] transition-colors ${
                 pathname === item.href
                   ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.06)] text-[var(--pt-gold)]"
                   : "border-transparent text-[var(--pt-text-dim)] hover:border-[var(--pt-border-dim)] hover:text-[var(--pt-text)]"
@@ -55,7 +55,7 @@ export function Navbar() {
             <button
               key={l}
               onClick={() => setLocale(l)}
-              className={`px-2 py-1 font-[family-name:var(--font-share-tech-mono)] text-[9px] uppercase tracking-[2px] transition-all ${
+              className={`px-2 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
                 locale === l
                   ? "bg-[rgba(255,215,0,0.15)] text-[var(--pt-gold)]"
                   : "text-[var(--pt-text-dim)] hover:text-[var(--pt-text)]"

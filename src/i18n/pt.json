@@ -29,6 +29,10 @@
   },
   "home": {
     "tagline": "Ferramentas práticas para Pokémon Scarlet & Violet",
+    "selectYourTool": "SELECIONE SUA FERRAMENTA",
+    "availableTools": "FERRAMENTAS DISPONÍVEIS — 7/8 DESBLOQUEADAS",
+    "openTool": "ABRIR",
+    "comingSoon": "EM BREVE",
     "sandwichTitle": "Sandwich Builder",
     "evPokedexTitle": "Pokédex de EVs",
     "evTrackerTitle": "Tracker de EVs",
@@ -42,8 +46,7 @@
     "raidBuilderDesc": "Monte e compartilhe builds otimizadas para Tera Raids 5★/6★/7★",
     "natureCalcDesc": "Calculadora de natures, stats e sugestão de Mints por role",
     "trainingTipsDesc": "Guia de Power Items, frutas para resetar EVs e como trocar Tera Type",
-    "comunidadeDesc": "Canal no YouTube, servidor Discord e conteúdo sobre Pokémon SV",
-    "openTool": "Acessar"
+    "comunidadeDesc": "Canal no YouTube, servidor Discord e conteúdo sobre Pokémon SV"
   },
   "sandwich": {
     "title": "Sandwich Builder",
