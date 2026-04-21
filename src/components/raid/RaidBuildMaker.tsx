@@ -399,11 +399,16 @@ export function RaidBuildMaker() {
 
     const bossBaseWeaknesses = new Set<string>();
     if (bossPokemon) {
+      const multiplierMap: Record<string, number> = {};
+      TYPES.forEach((t) => { multiplierMap[t] = 1; });
       bossPokemon.types.forEach((baseType) => {
-        const baseTypeData = allTypesData.find(
-          (td) => td.name.toLowerCase() === baseType.toLowerCase()
-        );
-        (baseTypeData?.weaknesses ?? []).forEach((w) => bossBaseWeaknesses.add(w.toLowerCase()));
+        const td = allTypesData.find((x) => x.name.toLowerCase() === baseType.toLowerCase());
+        td?.weaknesses.forEach((w) => { multiplierMap[w.toLowerCase()] = (multiplierMap[w.toLowerCase()] ?? 1) * 2; });
+        td?.resistances.forEach((r) => { multiplierMap[r.toLowerCase()] = (multiplierMap[r.toLowerCase()] ?? 1) * 0.5; });
+        td?.immunities.forEach((i) => { multiplierMap[i.toLowerCase()] = 0; });
+      });
+      Object.entries(multiplierMap).forEach(([type, mult]) => {
+        if (mult > 1) bossBaseWeaknesses.add(type);
       });
     }
 
@@ -461,7 +466,10 @@ export function RaidBuildMaker() {
   const itemFilter = useCallback((i: { name: string }, q: string) => i.name.toLowerCase().includes(q), []);
 
   const selectKnownBoss = useCallback((boss: typeof RAID_BOSSES[number]) => {
-    const pokemon = allPokemon.find((p) => p.nationalDex === boss.nationalDex) ?? null;
+    const pokemon =
+      allPokemon.find((p) => p.name.toLowerCase() === boss.name.toLowerCase()) ??
+      allPokemon.find((p) => p.nationalDex === boss.nationalDex) ??
+      null;
     setBossPokemon(pokemon);
     setBossTeraType(boss.teraType);
     setBossStars(boss.stars);
@@ -628,7 +636,7 @@ export function RaidBuildMaker() {
                 {/* Known boss quick-select chips */}
                 <div className="mt-3 border-t border-[var(--pt-border-dim)] pt-3">
                   <div className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-text-dim)]">
-                    {locale === "pt" ? "Bosses conhecidos" : "Known bosses"}
+                    {t("raid.knownBosses")}
                   </div>
 
                   {/* 7★ chips */}

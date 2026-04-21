@@ -236,7 +236,8 @@
     "aiLoading": "Analisando builds...",
     "aiError": "Falha ao obter recomendações. Tente novamente.",
     "aiTierLabel": "Tier",
-    "aiPoweredBy": "Powered by Gemini"
+    "aiPoweredBy": "Powered by Gemini",
+    "knownBosses": "Bosses conhecidos"
   },
   "comunidade": {
     "title": "Comunidade",
