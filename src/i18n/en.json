@@ -102,6 +102,8 @@
     "hideFlavors": "✕ Hide flavors",
     "berryAlternatives": "🫐 Equivalent berries",
     "berryAltNote": "Berries with similar flavor to the Herba Mystica used in the recipe",
+    "searchByPokemon": "By Pokémon",
+    "searchByPower": "By Power",
     "footer": "Sandwich Builder v1.0",
     "footerNote": "Data based on community-verified recipes",
     "footerSource": "Serebii.net"

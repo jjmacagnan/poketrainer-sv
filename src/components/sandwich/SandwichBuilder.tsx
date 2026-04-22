@@ -16,6 +16,7 @@ import { useI18n } from "@/i18n";
 import { RecipeCard } from "./RecipeCard";
 import { RecipeDetail } from "./RecipeDetail";
 import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
+import { PokemonSandwichSearch } from "./PokemonSandwichSearch";
 
 type Tab = "shiny" | "encounter" | "raid" | "breeding" | "search";
 
@@ -168,6 +169,7 @@ export function SandwichBuilder() {
   const [selectedEntry, setSelectedEntry] = useState<SandwichGuideEntry | null>(null);
   const [searchPower, setSearchPower] = useState("");
   const [searchType, setSearchType] = useState("");
+  const [searchMode, setSearchMode] = useState<"pokemon" | "power">("pokemon");
 
   const filteredGuide = useMemo(() => {
     const data = GUIDE_DATA[tab] ?? [];
@@ -311,49 +313,79 @@ export function SandwichBuilder() {
       {/* Search Tab */}
       {tab === "search" && (
         <div className="mb-5">
-          <div className="mb-4 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
-            <div className="mb-3 text-sm font-bold text-gray-100">
-              {t("sandwich.reverseSearch")}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <select
-                value={searchPower}
-                onChange={(e) => setSearchPower(e.target.value)}
-                className="min-w-[180px] flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
-              >
-                <option value="">{t("sandwich.anyPower")}</option>
-                {MEAL_POWERS.map((p) => (
-                  <option key={p} value={p}>
-                    {p} {t("sandwich.power")}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={searchType}
-                onChange={(e) => setSearchType(e.target.value)}
-                className="min-w-[140px] flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
-              >
-                <option value="">{t("sandwich.anyType")}</option>
-                {TYPES.map((tp) => (
-                  <option key={tp} value={tp}>
-                    {tp}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {/* Mode toggle */}
+          <div className="mb-4 flex gap-0 border border-[var(--pt-border-dim)]">
+            <button
+              onClick={() => setSearchMode("pokemon")}
+              className={`flex-1 border-b-2 px-3 py-2.5 text-center font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] transition-all ${
+                searchMode === "pokemon"
+                  ? "border-b-[var(--pt-gold)] bg-[rgba(255,215,0,0.06)] text-white"
+                  : "border-b-transparent text-[var(--pt-text-dim)] hover:text-[var(--pt-text)]"
+              }`}
+            >
+              {t("sandwich.searchByPokemon")}
+            </button>
+            <button
+              onClick={() => setSearchMode("power")}
+              className={`flex-1 border-b-2 border-l border-l-[var(--pt-border-dim)] px-3 py-2.5 text-center font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] transition-all ${
+                searchMode === "power"
+                  ? "border-b-[var(--pt-gold)] bg-[rgba(255,215,0,0.06)] text-white"
+                  : "border-b-transparent text-[var(--pt-text-dim)] hover:text-[var(--pt-text)]"
+              }`}
+            >
+              {t("sandwich.searchByPower")}
+            </button>
           </div>
 
-          {searchResults.length > 0 ? (
-            <div className="grid gap-2.5">
-              {searchResults.map((r, i) => (
-                <RecipeCard key={i} recipe={r} onSelect={setSelectedRecipe} />
-              ))}
+          {searchMode === "pokemon" ? (
+            <PokemonSandwichSearch onSelectRecipe={setSelectedRecipe} />
+          ) : (
+            <div>
+              <div className="mb-4 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+                <div className="mb-3 text-sm font-bold text-gray-100">
+                  {t("sandwich.reverseSearch")}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <select
+                    value={searchPower}
+                    onChange={(e) => setSearchPower(e.target.value)}
+                    className="min-w-[180px] flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
+                  >
+                    <option value="">{t("sandwich.anyPower")}</option>
+                    {MEAL_POWERS.map((p) => (
+                      <option key={p} value={p}>
+                        {p} {t("sandwich.power")}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={searchType}
+                    onChange={(e) => setSearchType(e.target.value)}
+                    className="min-w-[140px] flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
+                  >
+                    <option value="">{t("sandwich.anyType")}</option>
+                    {TYPES.map((tp) => (
+                      <option key={tp} value={tp}>
+                        {tp}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {searchResults.length > 0 ? (
+                <div className="grid gap-2.5">
+                  {searchResults.map((r, i) => (
+                    <RecipeCard key={i} recipe={r} onSelect={setSelectedRecipe} />
+                  ))}
+                </div>
+              ) : searchPower || searchType ? (
+                <div className="py-10 text-center text-[var(--pt-text-dim)]">
+                  {t("sandwich.noRecipes")}
+                </div>
+              ) : null}
             </div>
-          ) : searchPower || searchType ? (
-            <div className="py-10 text-center text-[var(--pt-text-dim)]">
-              {t("sandwich.noRecipes")}
-            </div>
-          ) : null}
+          )}
         </div>
       )}
 
