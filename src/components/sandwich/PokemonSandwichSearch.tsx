@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import Image from "next/image";
 import { usePokemonSearch } from "@/hooks/usePokemonSearch";
 import { TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
@@ -116,7 +115,8 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
                   onMouseDown={() => handleSelect(p)}
                   className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-white/10"
                 >
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={p.sprite}
                     alt={p.name}
                     width={32}
@@ -150,7 +150,8 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
       {/* Selected Pokémon card */}
       {selectedPokemon && (
         <div className="mb-4 flex items-center gap-3 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2.5">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={selectedPokemon.sprite}
             alt={selectedPokemon.name}
             width={40}
@@ -166,6 +167,7 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
                     <button
                       key={t}
                       onClick={() => setSelectedType(t)}
+                      aria-pressed={selectedType === t}
                       className="rounded-sm px-2.5 py-0.5 text-xs font-bold text-white transition-opacity"
                       style={{
                         background: TYPE_COLORS[t],
@@ -188,6 +190,7 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
           </div>
           <button
             onClick={handleClear}
+            aria-label="Limpar seleção"
             className="shrink-0 text-sm text-[var(--pt-text-dim)] transition-colors hover:text-white"
           >
             ✕
@@ -218,8 +221,8 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
       {/* Recipe results */}
       {selectedPokemon && recipes.length > 0 && (
         <div className="grid gap-2.5">
-          {recipes.map((r, i) => (
-            <RecipeCard key={i} recipe={r} onSelect={onSelectRecipe} />
+          {recipes.map((r) => (
+            <RecipeCard key={`${r.type}-${r.name}`} recipe={r} onSelect={onSelectRecipe} />
           ))}
         </div>
       )}
