@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { wildPokemonData } from "@/data/pokemon-utils";
 import { TYPES, TYPE_COLORS } from "@/data/types";
@@ -132,21 +132,6 @@ export function EVPokedex() {
     });
   }, [searchResults, selectedStat]);
 
-  const prevFiltersRef = useRef({ selectedType, selectedStat, selectedAmount, showBestOnly, search });
-  useEffect(() => {
-    const prev = prevFiltersRef.current;
-    if (
-      prev.selectedType !== selectedType ||
-      prev.selectedStat !== selectedStat ||
-      prev.selectedAmount !== selectedAmount ||
-      prev.showBestOnly !== showBestOnly ||
-      prev.search !== search
-    ) {
-      setPage(0);
-      prevFiltersRef.current = { selectedType, selectedStat, selectedAmount, showBestOnly, search };
-    }
-  }, [selectedType, selectedStat, selectedAmount, showBestOnly, search]);
-
   // Sync filters to URL
   useEffect(() => {
     const params = new URLSearchParams();
@@ -171,7 +156,10 @@ export function EVPokedex() {
       <div className="mb-4">
         <SearchInput
           value={search}
-          onChange={setSearch}
+          onChange={(v) => {
+            setSearch(v);
+            setPage(0);
+          }}
           placeholder={t("evPokedex.searchPlaceholder")}
         />
       </div>
@@ -186,6 +174,7 @@ export function EVPokedex() {
             onClick={() => {
               setSelectedStat(null);
               setShowBestOnly(false);
+              setPage(0);
             }}
             className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
               !selectedStat
@@ -201,6 +190,7 @@ export function EVPokedex() {
               onClick={() => {
                 setSelectedStat(selectedStat === stat ? null : stat);
                 if (selectedStat === stat) setShowBestOnly(false);
+                setPage(0);
               }}
               className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
                 selectedStat === stat
@@ -219,9 +209,10 @@ export function EVPokedex() {
         {EV_AMOUNT_OPTIONS.map((opt) => (
           <button
             key={opt.value}
-            onClick={() =>
-              setSelectedAmount(selectedAmount === opt.value ? null : opt.value)
-            }
+            onClick={() => {
+              setSelectedAmount(selectedAmount === opt.value ? null : opt.value);
+              setPage(0);
+            }}
             className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
               selectedAmount === opt.value
                 ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
@@ -233,7 +224,10 @@ export function EVPokedex() {
         ))}
         {selectedStat && (
           <button
-            onClick={() => setShowBestOnly(!showBestOnly)}
+            onClick={() => {
+              setShowBestOnly(!showBestOnly);
+              setPage(0);
+            }}
             className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
               showBestOnly
                 ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
@@ -250,7 +244,10 @@ export function EVPokedex() {
         <FilterBar
           options={typeFilterOptions}
           selected={selectedType}
-          onSelect={setSelectedType}
+          onSelect={(v) => {
+            setSelectedType(v);
+            setPage(0);
+          }}
           allLabel={t("evPokedex.allTypes")}
         />
       </div>
