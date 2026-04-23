@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import pokemonData from "@/data/generated/pokemon.json";
 import naturesData from "@/data/generated/natures.json";
@@ -235,6 +236,22 @@ export function RaidBuildMaker() {
   const [bossTeraType, setBossTeraType] = useState<PokemonType | null>(null);
   const [bossStars, setBossStars] = useState<5 | 6 | 7 | null>(null);
 
+  // URL parameter hydration
+  const searchParams = useSearchParams();
+  const didApplyUrlParam = useRef(false);
+
+  useEffect(() => {
+    if (didApplyUrlParam.current) return;
+    didApplyUrlParam.current = true;
+    const pokemonParam = searchParams.get("pokemon");
+    if (!pokemonParam) return;
+    const match = allPokemon.find(
+      (p) => p.name.toLowerCase() === pokemonParam.toLowerCase()
+    );
+    if (match) {
+      setBuild((prev) => ({ ...prev, pokemon: match, pokemonFallback: null }));
+    }
+  }, [searchParams, setBuild]);
 
   const totalEvs = Object.values(build.evs).reduce((a, b) => a + b, 0);
 
