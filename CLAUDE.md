@@ -4,8 +4,11 @@
 
 Site de ferramentas para jogadores de Pokémon Scarlet & Violet. Foco em funcionalidades práticas que a comunidade mais consulta durante gameplay.
 
-**Stack:** Next.js 14+ (App Router) / TypeScript / Tailwind CSS
+**Stack:** Next.js 16 (App Router) / TypeScript / Tailwind CSS v4 / React 19
 **Deploy:** Vercel
+**Tema:** Dark mode only
+**i18n:** Português (PT-BR) e Inglês (EN) — implementado com solução customizada em `src/i18n/`
+**PWA:** Instalável como app no celular
 **Repo:** github.com/jjmacagnan/poketrainer-sv
 
 ---
@@ -15,39 +18,60 @@ Site de ferramentas para jogadores de Pokémon Scarlet & Violet. Foco em funcion
 ```
 src/
 ├── app/
-│   ├── layout.tsx                 # Layout com fonte Outfit, Navbar, tema dark
-│   ├── page.tsx                   # Landing com cards das ferramentas
+│   ├── layout.tsx                    # Root layout (Navbar + Footer + PWA)
+│   ├── page.tsx                      # Landing page (grid de ferramentas)
 │   ├── globals.css
-│   ├── sandwich-builder/page.tsx  # Módulo 1 — Sandwich Recipe Builder
-│   ├── ev-pokedex/page.tsx        # Módulo 2 — EV Yield Pokédex
-│   ├── ev-tracker/page.tsx        # Módulo 3 — EV Training Tracker
-│   ├── raid-builder/page.tsx      # Módulo 4 — Tera Raid Build Maker
-│   └── nature-calc/page.tsx       # Módulo 5 — Nature/Stats Calculator
+│   ├── manifest.ts                   # PWA manifest
+│   ├── sandwich-builder/             # Módulo 1 — Sandwich Builder
+│   ├── ev-pokedex/                   # Módulo 2 — EV Yield Pokédex
+│   ├── ev-tracker/                   # Módulo 3 — EV Training Tracker
+│   ├── raid-builder/                 # Módulo 4 — Tera Raid Build Maker
+│   ├── nature-calc/                  # Módulo 5 — Nature/Stats Calculator
+│   ├── comunidade/                   # Página da Comunidade (YouTube + Discord)
+│   ├── termos/                       # Termos de Uso
+│   ├── privacidade/                  # Política de Privacidade
+│   └── aviso-legal/                  # Aviso Legal
 ├── components/
-│   ├── ui/                        # Design system: TypeBadge, PowerTag, Navbar, StatBar
-│   ├── sandwich/                  # RecipeCard, RecipeDetail, SandwichBuilder
-│   ├── ev/                        # EVPokedex, EVTracker components
-│   ├── raid/                      # RaidBuildMaker, BuildCard, BuildExport
-│   └── shared/                    # PageHeader, SearchInput, FilterBar
+│   ├── ui/                           # TypeBadge, StatBar, Navbar, Footer, PowerTag
+│   ├── sandwich/                     # RecipeCard, RecipeDetail, SandwichBuilder, PokemonSandwichSearch
+│   ├── ev/                           # EVPokedex, EVTracker, PokemonSlot, PokemonDetailModal
+│   ├── raid/                         # RaidBuildMaker, BuildCard, BuildExport
+│   ├── nature/                       # NatureCalc
+│   ├── shared/                       # PageHeader, SearchInput, FilterBar, ToolDisclaimer
+│   ├── Providers.tsx                 # I18nProvider wrapper
+│   └── ServiceWorkerRegistration.tsx # PWA service worker
 ├── data/
-│   ├── types.ts                   # TYPES array, TYPE_COLORS map, PokemonType type
-│   ├── sandwich-recipes.ts        # Shiny/Encounter recipes com Herba Mystica info
-│   ├── pokemon-ev-yields.ts       # Todos os Pokémon de Paldea + DLC com EV yields
-│   ├── moves.ts                   # Move list (nome, tipo, categoria, power, PP)
-│   ├── items.ts                   # Held items relevantes (Power Items, Choice, etc.)
-│   ├── abilities.ts               # Abilities relevantes pra raids
-│   ├── natures.ts                 # 25 natures com +/- stat
-│   └── raid-bosses.ts             # 5★/6★/7★ raid bosses com tipo Tera e stats
+│   ├── generated/                    # Dados do PokéAPI (JSON estático gerado pelos scripts fetch-*)
+│   │   ├── pokemon.json              # 685 Pokémon com base stats, EV yields, species data
+│   │   │                             # (isLegendary, isMythical, flavorText, formVariants,
+│   │   │                             #  evolutionChainId, eggGroups, captureRate, etc.)
+│   │   ├── natures.json, moves.json, move-meta.json
+│   │   ├── abilities.json, items.json, berries.json
+│   │   ├── berry-flavors.json, evolution-chains.json
+│   │   └── types.json, version-groups.json
+│   ├── types.ts                      # 18 tipos + TYPE_COLORS map + PokemonType type
+│   ├── sandwich-recipes.ts           # Receitas de sanduíche (Shiny + Encounter + Raid + Breeding)
+│   ├── sandwich-guide.ts             # Guia de sanduíches
+│   ├── items.ts                      # Held items relevantes
+│   ├── raid-bosses.ts                # 5★/6★/7★ raid bosses com tipo Tera e stats
+│   ├── raid-tier-list.ts             # Tier list SS/S/A/B/C para raids
+│   ├── training-locations.ts         # Locais de EV training por stat
+│   └── pokemon-utils.ts             # Utilitários de Pokémon
 ├── lib/
-│   ├── constants.ts               # MAX_EV_PER_STAT=252, MAX_EV_TOTAL=510, etc.
-│   ├── utils.ts                   # Helpers gerais
-│   ├── ev-calculator.ts           # Lógica de cálculo de EVs (Pokérus, Power Items)
-│   ├── stat-calculator.ts         # Fórmula de stat final (Gen 9)
-│   ├── sandwich-solver.ts         # Busca reversa de receitas
-│   └── showdown-parser.ts         # Import/export formato Showdown
-└── hooks/
-    ├── useLocalStorage.ts         # State persistido em localStorage
-    └── usePokemonSearch.ts        # Busca fuzzy por nome de Pokémon
+│   ├── constants.ts                  # MAX_EV_PER_STAT=252, MAX_EV_TOTAL=510, STAT_NAMES, etc.
+│   ├── ev-calculator.ts              # Cálculo de EVs com modifiers (Pokérus, Power Items)
+│   ├── stat-calculator.ts            # Fórmula de stat final Gen 9
+│   ├── showdown-parser.ts            # Import/export formato Pokémon Showdown
+│   ├── berry-utils.ts                # Utilitários de berries
+│   ├── ingredient-flavors.ts         # Sabores de ingredientes de sanduíche
+│   └── farming-logic.ts              # Lógica de farming de EVs
+├── hooks/
+│   ├── useLocalStorage.ts            # State persistido em localStorage
+│   └── usePokemonSearch.ts           # Busca fuzzy por nome de Pokémon
+└── i18n/
+    ├── index.tsx                     # I18nProvider + useI18n (implementação customizada)
+    ├── pt.json                       # Traduções PT-BR
+    └── en.json                       # Traduções EN
 ```
 
 ---
@@ -55,147 +79,88 @@ src/
 ## Design System
 
 - **Tema:** Dark mode only (bg-gray-950, text-gray-100)
-- **Fonte principal:** Outfit (Google Fonts) — variável `--font-outfit`
-- **Cores de tipo:** Cada tipo Pokémon tem cor fixa definida em `TYPE_COLORS` (data/types.ts)
+- **Fonte principal:** Outfit (Google Fonts)
+- **Cores de tipo:** Cada tipo Pokémon tem cor fixa definida em `TYPE_COLORS` (`data/types.ts`)
 - **Componentes reutilizáveis:**
   - `TypeBadge` — badge colorido com nome do tipo
-  - `StatBar` — barra horizontal com fill proporcional (pra EVs e stats)
-  - `PowerTag` — tag de Meal Power com gradiente contextual (dourado pra Sparkling, teal pra Encounter)
+  - `StatBar` — barra horizontal com fill proporcional (EVs e stats)
+  - `PowerTag` — tag de Meal Power com gradiente contextual
 - **Estilo:** Tailwind utility classes. Sem CSS modules. Gradientes nos headers e CTAs.
 - **Responsivo:** Mobile-first. Grid columns se adaptam com `grid-cols-1 sm:grid-cols-2`
 
 ---
 
-## Módulos — Especificações
+## Módulos — Estado Atual
 
-### Módulo 1: Sandwich Builder ✅ (PRONTO)
+### Módulo 1: Sandwich Builder ✅
 **Rota:** `/sandwich-builder`
 
-Montador de sanduíches com receitas curadas pra Shiny Hunt e Encounter Power.
-
-- 3 abas: Shiny Hunt (Sparkling Lv.3), Encounter, Busca Reversa
-- Filtro por tipo Pokémon com badges coloridos
+- 5 abas: Shiny Hunt, Encounter, Raid Power, Breeding, Busca Reversa
+- Toggle de busca Pokémon-first (`PokemonSandwichSearch`): busca por Pokémon e mostra quais sanduíches fazer para ele
+- Filtro por tipo com badges coloridos
 - Card de receita com ingredientes, condimentos, Meal Powers
-- Info de como farmar Herba Mystica (quais raids dão cada tipo)
+- Info de como farmar Herba Mystica por tipo de raid
 - Receitas verificadas pela comunidade (1 ingrediente + 2x Herba = Lv.3)
 
-### Módulo 2: EV Yield Pokédex
+### Módulo 2: EV Yield Pokédex ✅
 **Rota:** `/ev-pokedex`
 
-Lista pesquisável de todos os Pokémon de Paldea + DLC com EVs que dão ao derrotar.
+- 685 Pokémon (Paldea + Kitakami + Blueberry)
+- Busca por nome, filtros por stat, tipo e quantidade de EV yield
+- Indicador de "Melhor Spot" por stat
+- Badges Lendário (★) e Mítico (✦)
+- Toggle card (com sprite) vs tabela compacta
+- Modal de detalhes: base stats, cadeia evolutiva, movepool SV, formas alternativas, locais de encontro
+- Navegação prev/next no modal
 
-**Funcionalidades:**
-- Busca por nome (fuzzy search)
-- Filtro por stat de EV (HP, Atk, Def, SpA, SpD, Spe)
-- Filtro por quantidade de EV yield (1, 2, 3)
-- Filtro por tipo do Pokémon
-- Localização in-game (área/rota onde encontrar)
-- Indicador "Melhor Spot" por stat (ex: "Speed → Rookidee, South Province Area 1")
-- Toggle modo tabela compacta vs modo card com sprite
-- Sprite do Pokémon via URL: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{dex_number}.png`
-
-**Dados necessários (pokemon-ev-yields.ts):**
-```ts
-interface PokemonEVYield {
-  dexNumber: number;
-  name: string;
-  types: PokemonType[];
-  evYield: { stat: StatName; amount: number }[];
-  locations: string[];     // áreas in-game
-  isBestSpot?: boolean;    // flag pra "melhor opção" daquele stat
-}
-```
-
-### Módulo 3: EV Training Tracker
+### Módulo 3: EV Training Tracker ✅
 **Rota:** `/ev-tracker`
 
-Rastrear progresso de EV training de cada Pokémon do time.
-
-**Funcionalidades:**
-- Até 6 slots de Pokémon (time completo)
-- Barra visual por stat (HP/Atk/Def/SpA/SpD/Spe) com limite 252/stat, 510 total
-- Botões +/- com incrementos: manual (1), KO yield, vitamina (+10)
-- Toggles: Pokérus (2x), Power Item (+8 ao stat correspondente), Macho Brace (2x geral)
-- EV restante calculado automaticamente (510 - total usado)
-- Templates pré-definidos: "Physical Sweeper 252 Atk/252 Spe/4 HP", "Bulk 252 HP/252 Def/4 SpD", etc.
-- Botão Reset por Pokémon
+- 6 slots de Pokémon
+- Barra visual por stat (252/stat, 510 total)
+- Modifiers: Pokérus (2x), Power Item (+8), Macho Brace (2x)
+- Templates pré-definidos (Physical Sweeper, Special Attacker, Bulk, etc.)
+- Sugestão de onde farmar cada stat
 - Persistência em localStorage
 
-**Fórmula de EVs por KO:**
-```
-EVs ganhos = (base_yield + power_item_bonus) × pokérus_multiplier
-- power_item_bonus: +8 se segurando Power Item correspondente
-- pokérus_multiplier: 2x se ativo
-- macho_brace: 2x (stacks com Pokérus → 4x com ambos, mas sem Power Item)
-```
-
-### Módulo 4: Tera Raid Build Maker
+### Módulo 4: Tera Raid Build Maker ✅
 **Rota:** `/raid-builder`
 
-Montar e compartilhar builds otimizadas pra Tera Raids 5★/6★/7★.
+- Seletor de Pokémon com artwork oficial, badges Lendário/Mítico e flavor text
+- Seletor de Nature, Ability, Held Item e 4 Moves
+- Distribuição de EVs/IVs com cálculo de stats em tempo real (fórmula Gen 9)
+- Badges de efeito nos moves (Drain, Recoil, Multi-hit, Priority, Flinch, etc.)
+- Matchups defensivos por tipo (com Tera Type)
+- Import/export formato Pokémon Showdown
+- Export como imagem PNG (otimizado para Discord)
+- Guia de Pokémon para raids com tags (Solo Viable, Top Pick, 7★ Ready, Budget Pick, etc.)
 
-**Funcionalidades:**
-- Seletor de Pokémon (busca por nome com sprite)
-- Seletor de: Tera Type, Nature, Ability, Held Item
-- Seletor de 4 moves
-- Distribuição de EVs visual (integrar componente do Módulo 3)
-- IVs: toggle "All 31" ou "Hyper Trained" ou valor manual
-- Cálculo de stats finais em tempo real usando fórmula Gen 9
-- Campo de notas/estratégia (textarea)
-- Seção de "Builds Populares" organizadas por raid boss
-- Exportar build como imagem (html-to-image → PNG pra Discord)
-- Import/export formato Showdown
-- Link compartilhável (state serializado na URL com query params ou hash)
+### Módulo 5: Nature Calculator ✅
+**Rota:** `/nature-calc`
+
+- Tabela visual das 25 natures com highlight de +10%/-10%
+- Calculadora: Base Stat + IV + EV + Nature + Level = stat final
+- Comparador side-by-side entre duas natures no mesmo Pokémon
+- Sugestão de Mint por role
+- Preferências de berry por nature
 
 **Fórmula de stat final Gen 9:**
 ```
-HP = floor((2 × Base + IV + floor(EV/4)) × Level / 100) + Level + 10
+HP    = floor((2 × Base + IV + floor(EV/4)) × Level / 100) + Level + 10
 Other = floor((floor((2 × Base + IV + floor(EV/4)) × Level / 100) + 5) × NatureModifier)
-NatureModifier: 1.1 (positive), 0.9 (negative), 1.0 (neutral)
+NatureModifier: 1.1 (positivo), 0.9 (negativo), 1.0 (neutro)
 ```
-
-### Módulo 5: Nature/Stats Calculator
-**Rota:** `/nature-calc`
-
-Calculadora rápida de natures e stats.
-
-**Funcionalidades:**
-- Tabela visual das 25 natures com highlight de +10%/-10%
-- Seletor de Nature → mostra qual stat sobe e qual desce
-- Calculadora: input Base Stat + IV + EV + Nature + Level → stat final
-- Sugestão de Mint baseada no role (Physical Attacker → Adamant, Special → Modest, etc.)
-- Comparador: mostra diff entre 2 natures no mesmo Pokémon
-
-**Dados (natures.ts):**
-```ts
-interface Nature {
-  name: string;
-  increased: StatName | null;  // null pra neutras
-  decreased: StatName | null;
-  flavor?: { likes: string; dislikes: string };  // Hardy, Bashful, etc. = neutras
-}
-```
-
----
-
-## Prioridade de Implementação
-
-1. ✅ Sandwich Builder (PRONTO)
-2. 🔜 EV Yield Pokédex — dados de todos os Pokémon + filtros + sprites
-3. 🔜 EV Training Tracker — lógica de cálculo + persistência
-4. 🔜 Tera Raid Build Maker — mais complexo, depende de moves/items/abilities
-5. 🔜 Nature Calculator — mais simples, pode ser feito rápido
 
 ---
 
 ## Fontes de Dados
 
-- **PokéAPI** (pokeapi.co): base stats, types, EV yields, moves, abilities → gerar JSON estático no build pra performance
-- **Serebii.net**: localizações in-game, receitas de sanduíche, raid bosses, detalhes de DLC
-- **Bulbapedia**: dados complementares de EV yields e mecânicas
-- **Smogon/Reddit**: builds populares de raids pra seed inicial
+- **PokéAPI** — base stats, types, EV yields, moves, abilities, berries, evolution chains, species data → JSON estático gerado pelos scripts `fetch-*`
+- **Serebii.net** — localizações in-game, mecânicas de Tera Raids, receitas de sanduíche, raid bosses
+- **Bulbapedia** — dados complementares de EV yields e mecânicas
+- **Smogon / Reddit** — tier list e builds baseadas em consenso da comunidade
 
-Para sprites de Pokémon:
+Sprites via GitHub:
 ```
 https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{id}.png
 https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{id}.png
@@ -208,29 +173,32 @@ https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/o
 - Componentes: PascalCase (`RecipeCard.tsx`)
 - Hooks: camelCase com prefixo use (`useLocalStorage.ts`)
 - Data files: kebab-case (`sandwich-recipes.ts`)
-- Todas as páginas em `app/` usam `"use client"` quando têm state
-- Server components quando possível (data fetching no server)
-- Tipagem TypeScript strict — sem `any`
-- Tailwind pra styling, inline styles só quando dinâmico (cores de tipo)
-
----
-
-## Diferenciais do Projeto
-
-- **Bilíngue PT/EN** (futuro — i18n com next-intl)
-- **Sandwich solver reverso** (busca por poder desejado → retorna receitas)
-- **Build export como imagem** otimizada pra Discord
-- **PWA** — funciona offline no celular durante gameplay
-- **Mobile-first** — jogadores usam no celular enquanto jogam
-- **SEO otimizado** — cada ferramenta é uma página indexável
+- Páginas em `app/` usam `"use client"` quando têm state; server components quando possível
+- TypeScript strict — sem `any`
+- Tailwind para styling; inline styles só para valores dinâmicos (cores de tipo)
+- i18n: usar `useI18n()` e chaves de tradução em `pt.json` / `en.json`
 
 ---
 
 ## Comandos Úteis
 
 ```bash
-npm run dev          # Dev server em localhost:3000
-npm run build        # Build de produção
-npm run lint         # ESLint
-npm run start        # Serve build de produção
+npm run dev               # Dev server em localhost:3000
+npm run build             # Build de produção
+npm run lint              # ESLint
+npm run start             # Serve build de produção
+
+# Atualizar dados do PokéAPI:
+npm run fetch-all              # Busca todos os dados sequencialmente
+npm run fetch-pokemon          # Pokémon (685 entradas com species data)
+npm run fetch-natures          # Natures
+npm run fetch-moves            # Moves
+npm run fetch-abilities        # Abilities
+npm run fetch-items            # Items
+npm run fetch-types            # Types
+npm run fetch-berries          # Berries
+npm run fetch-berry-flavors    # Berry Flavors
+npm run fetch-evolution-chains # Evolution Chains
+npm run fetch-move-meta        # Move Meta data
+npm run fetch-version-groups   # Version Groups
 ```
