@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { wildPokemonData } from "@/data/pokemon-utils";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
@@ -65,10 +66,15 @@ const ROWS_PER_PAGE = 100;
 
 export function EVPokedex() {
   const { t } = useI18n();
-  const [search, setSearch] = useState("");
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [selectedStat, setSelectedStat] = useState<StatName | null>(null);
-  const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
+  const [selectedType, setSelectedType] = useState<string | null>(() => searchParams.get("type"));
+  const [selectedStat, setSelectedStat] = useState<StatName | null>(() => {
+    const s = searchParams.get("stat");
+    return s && STAT_NAMES.includes(s as StatName) ? (s as StatName) : null;
+  });
+  const [selectedAmount, setSelectedAmount] = useState<string | null>(() => searchParams.get("amount"));
   const [viewMode, setViewMode] = useState<ViewMode>("card");
   const [showBestOnly, setShowBestOnly] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -140,6 +146,17 @@ export function EVPokedex() {
       prevFiltersRef.current = { selectedType, selectedStat, selectedAmount, showBestOnly, search };
     }
   }, [selectedType, selectedStat, selectedAmount, showBestOnly, search]);
+
+  // Sync filters to URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (search) params.set("q", search);
+    if (selectedType) params.set("type", selectedType);
+    if (selectedStat) params.set("stat", selectedStat);
+    if (selectedAmount) params.set("amount", selectedAmount);
+    const qs = params.toString();
+    window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
+  }, [search, selectedType, selectedStat, selectedAmount]);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
