@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import pokemonData from "@/data/generated/pokemon.json";
 import naturesData from "@/data/generated/natures.json";
@@ -235,6 +236,55 @@ export function RaidBuildMaker() {
   const [bossTeraType, setBossTeraType] = useState<PokemonType | null>(null);
   const [bossStars, setBossStars] = useState<5 | 6 | 7 | null>(null);
 
+  // URL parameter hydration
+  const searchParams = useSearchParams();
+  const didApplyUrlParam = useRef(false);
+
+  useEffect(() => {
+    if (didApplyUrlParam.current) return;
+    didApplyUrlParam.current = true;
+
+    const buildParam = searchParams.get("b");
+    if (buildParam) {
+      try {
+        const json = decodeURIComponent(escape(atob(buildParam)));
+        const data = JSON.parse(json) as {
+          p: number; t: string | null; n: string; a: string;
+          i: string; m: (string | null)[]; e: Record<string, number>;
+          v: Record<string, number>; l: number; o: string;
+        };
+        const pokemon = allPokemon.find((p) => p.nationalDex === data.p) ?? null;
+        const nature = natures.find((n) => n.name === data.n) ?? natures[0];
+        if (pokemon) {
+          setBuild({
+            pokemon,
+            pokemonFallback: null,
+            teraType: data.t as PokemonType | null,
+            nature,
+            ability: data.a,
+            item: data.i,
+            moves: (data.m as (string | null)[]).concat([null, null, null, null]).slice(0, 4) as (string | null)[],
+            evs: data.e as Record<StatName, number>,
+            ivs: data.v as Record<StatName, number>,
+            level: data.l,
+            notes: data.o,
+          });
+        }
+      } catch {
+        // malformed ?b= param — ignore silently
+      }
+      return;
+    }
+
+    const pokemonParam = searchParams.get("pokemon");
+    if (!pokemonParam) return;
+    const match = allPokemon.find(
+      (p) => p.name.toLowerCase() === pokemonParam.toLowerCase()
+    );
+    if (match) {
+      setBuild((prev) => ({ ...prev, pokemon: match, pokemonFallback: null }));
+    }
+  }, [searchParams, setBuild]);
 
   const totalEvs = Object.values(build.evs).reduce((a, b) => a + b, 0);
 
@@ -1500,7 +1550,7 @@ export function RaidBuildMaker() {
           {/* Share Link + Export PNG */}
           {build.pokemon && calcStats && (
             <div className="flex flex-wrap gap-2">
-              {/* <button
+              <button
                 onClick={() => {
                   const data = {
                     p: build.pokemon!.nationalDex,
@@ -1514,15 +1564,14 @@ export function RaidBuildMaker() {
                     l: build.level,
                     o: build.notes,
                   };
-                  const jsonString = JSON.stringify(data);
-                  const hash = btoa(unescape(encodeURIComponent(jsonString)));
+                  const hash = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
                   const url = `${window.location.origin}/raid-builder?b=${hash}`;
                   navigator.clipboard.writeText(url);
                 }}
-                className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-500"
+                className="border border-[var(--pt-border-dim)] px-4 py-2 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] text-[var(--pt-text-dim)] transition-colors hover:border-[var(--pt-gold)] hover:text-[var(--pt-gold)]"
               >
                 {t("raid.copyLink")}
-              </button> */}
+              </button>
               <BuildExport
                 pokemon={build.pokemon}
                 teraType={build.teraType}

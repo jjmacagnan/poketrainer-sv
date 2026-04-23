@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { wildPokemonData } from "@/data/pokemon-utils";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
@@ -60,15 +61,25 @@ for (const stat of STAT_NAMES) {
 
 type ViewMode = "card" | "table";
 
+const CARDS_PER_PAGE = 48;
+const ROWS_PER_PAGE = 100;
+
 export function EVPokedex() {
   const { t } = useI18n();
-  const [search, setSearch] = useState("");
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [selectedStat, setSelectedStat] = useState<StatName | null>(null);
-  const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
+  const [selectedType, setSelectedType] = useState<string | null>(() => searchParams.get("type"));
+  const [selectedStat, setSelectedStat] = useState<StatName | null>(() => {
+    const s = searchParams.get("stat");
+    return s && STAT_NAMES.includes(s as StatName) ? (s as StatName) : null;
+  });
+  const [selectedAmount, setSelectedAmount] = useState<string | null>(() => searchParams.get("amount"));
   const [viewMode, setViewMode] = useState<ViewMode>("card");
   const [showBestOnly, setShowBestOnly] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const [page, setPage] = useState(0);
 
   // Filter pipeline
   const filtered = useMemo(() => {
@@ -121,6 +132,17 @@ export function EVPokedex() {
     });
   }, [searchResults, selectedStat]);
 
+  // Sync filters to URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (search) params.set("q", search);
+    if (selectedType) params.set("type", selectedType);
+    if (selectedStat) params.set("stat", selectedStat);
+    if (selectedAmount) params.set("amount", selectedAmount);
+    const qs = params.toString();
+    window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
+  }, [search, selectedType, selectedStat, selectedAmount]);
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
       <PageHeader
@@ -134,7 +156,10 @@ export function EVPokedex() {
       <div className="mb-4">
         <SearchInput
           value={search}
-          onChange={setSearch}
+          onChange={(v) => {
+            setSearch(v);
+            setPage(0);
+          }}
           placeholder={t("evPokedex.searchPlaceholder")}
         />
       </div>
@@ -149,6 +174,7 @@ export function EVPokedex() {
             onClick={() => {
               setSelectedStat(null);
               setShowBestOnly(false);
+              setPage(0);
             }}
             className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
               !selectedStat
@@ -164,6 +190,7 @@ export function EVPokedex() {
               onClick={() => {
                 setSelectedStat(selectedStat === stat ? null : stat);
                 if (selectedStat === stat) setShowBestOnly(false);
+                setPage(0);
               }}
               className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
                 selectedStat === stat
@@ -182,9 +209,10 @@ export function EVPokedex() {
         {EV_AMOUNT_OPTIONS.map((opt) => (
           <button
             key={opt.value}
-            onClick={() =>
-              setSelectedAmount(selectedAmount === opt.value ? null : opt.value)
-            }
+            onClick={() => {
+              setSelectedAmount(selectedAmount === opt.value ? null : opt.value);
+              setPage(0);
+            }}
             className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
               selectedAmount === opt.value
                 ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
@@ -196,7 +224,10 @@ export function EVPokedex() {
         ))}
         {selectedStat && (
           <button
-            onClick={() => setShowBestOnly(!showBestOnly)}
+            onClick={() => {
+              setShowBestOnly(!showBestOnly);
+              setPage(0);
+            }}
             className={`border px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-all ${
               showBestOnly
                 ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
@@ -213,7 +244,10 @@ export function EVPokedex() {
         <FilterBar
           options={typeFilterOptions}
           selected={selectedType}
-          onSelect={setSelectedType}
+          onSelect={(v) => {
+            setSelectedType(v);
+            setPage(0);
+          }}
           allLabel={t("evPokedex.allTypes")}
         />
       </div>
@@ -225,7 +259,10 @@ export function EVPokedex() {
         </span>
         <div className="flex border border-[var(--pt-border-dim)]">
           <button
-            onClick={() => setViewMode("card")}
+            onClick={() => {
+              setViewMode("card");
+              setPage(0);
+            }}
             className={`px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
               viewMode === "card"
                 ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
@@ -235,7 +272,10 @@ export function EVPokedex() {
             {t("evPokedex.cards")}
           </button>
           <button
-            onClick={() => setViewMode("table")}
+            onClick={() => {
+              setViewMode("table");
+              setPage(0);
+            }}
             className={`px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
               viewMode === "table"
                 ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
@@ -253,22 +293,40 @@ export function EVPokedex() {
           {t("evPokedex.noResults")}
         </div>
       ) : viewMode === "card" ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {sorted.map((pokemon, idx) => (
-            <PokemonCard
-              key={pokemon.nationalDex}
-              pokemon={pokemon}
-              selectedStat={selectedStat}
-              onClick={() => setSelectedIndex(idx)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {sorted
+              .slice(page * CARDS_PER_PAGE, (page + 1) * CARDS_PER_PAGE)
+              .map((pokemon, sliceIdx) => (
+                <PokemonCard
+                  key={pokemon.nationalDex}
+                  pokemon={pokemon}
+                  selectedStat={selectedStat}
+                  onClick={() => setSelectedIndex(page * CARDS_PER_PAGE + sliceIdx)}
+                />
+              ))}
+          </div>
+          <PaginationControls
+            page={page}
+            total={sorted.length}
+            perPage={CARDS_PER_PAGE}
+            onPageChange={setPage}
+          />
+        </>
       ) : (
-        <PokemonTable
-          pokemon={sorted}
-          selectedStat={selectedStat}
-          onSelect={(p) => setSelectedIndex(sorted.findIndex((s) => s.nationalDex === p.nationalDex))}
-        />
+        <>
+          <PokemonTable
+            pokemon={sorted.slice(page * ROWS_PER_PAGE, (page + 1) * ROWS_PER_PAGE)}
+            selectedStat={selectedStat}
+            onSelect={(p) => setSelectedIndex(sorted.findIndex((s) => s.nationalDex === p.nationalDex))}
+          />
+          <PaginationControls
+            page={page}
+            total={sorted.length}
+            perPage={ROWS_PER_PAGE}
+            onPageChange={setPage}
+          />
+        </>
       )}
 
       {/* Detail Modal */}
@@ -278,8 +336,22 @@ export function EVPokedex() {
           onClose={() => setSelectedIndex(null)}
           hasPrev={selectedIndex > 0}
           hasNext={selectedIndex < sorted.length - 1}
-          onPrev={() => setSelectedIndex((i) => (i !== null && i > 0 ? i - 1 : i))}
-          onNext={() => setSelectedIndex((i) => (i !== null && i < sorted.length - 1 ? i + 1 : i))}
+          onPrev={() => setSelectedIndex((i) => {
+            if (i === null || i <= 0) return i;
+            const prev = i - 1;
+            const perPage = viewMode === "card" ? CARDS_PER_PAGE : ROWS_PER_PAGE;
+            const prevPage = Math.floor(prev / perPage);
+            if (prevPage !== page) setPage(prevPage);
+            return prev;
+          })}
+          onNext={() => setSelectedIndex((i) => {
+            if (i === null || i >= sorted.length - 1) return i;
+            const next = i + 1;
+            const perPage = viewMode === "card" ? CARDS_PER_PAGE : ROWS_PER_PAGE;
+            const nextPage = Math.floor(next / perPage);
+            if (nextPage !== page) setPage(nextPage);
+            return next;
+          })}
         />
       )}
 
@@ -492,6 +564,45 @@ function PokemonTable({
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+// ── Pagination Controls ────────────────────────────────────────────────────────
+
+function PaginationControls({
+  page,
+  total,
+  perPage,
+  onPageChange,
+}: {
+  page: number;
+  total: number;
+  perPage: number;
+  onPageChange: (p: number) => void;
+}) {
+  const totalPages = Math.ceil(total / perPage);
+  if (totalPages <= 1) return null;
+
+  return (
+    <div className="mt-6 flex items-center justify-center gap-3">
+      <button
+        onClick={() => onPageChange(page - 1)}
+        disabled={page === 0}
+        className="border border-[var(--pt-border-dim)] px-4 py-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] text-[var(--pt-text-dim)] transition-colors disabled:opacity-30 enabled:hover:border-[var(--pt-gold)] enabled:hover:text-[var(--pt-gold)]"
+      >
+        ←
+      </button>
+      <span className="font-[family-name:var(--font-share-tech-mono)] text-ui-sm text-[var(--pt-text-dim)]">
+        {page + 1} / {totalPages}
+      </span>
+      <button
+        onClick={() => onPageChange(page + 1)}
+        disabled={page >= totalPages - 1}
+        className="border border-[var(--pt-border-dim)] px-4 py-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] text-[var(--pt-text-dim)] transition-colors disabled:opacity-30 enabled:hover:border-[var(--pt-gold)] enabled:hover:text-[var(--pt-gold)]"
+      >
+        →
+      </button>
     </div>
   );
 }

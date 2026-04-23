@@ -40,5 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .worktrees/
-docs/
+.claude/
 .superpowers/
