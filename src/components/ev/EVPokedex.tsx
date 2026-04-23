@@ -273,16 +273,29 @@ export function EVPokedex() {
           {t("evPokedex.noResults")}
         </div>
       ) : viewMode === "card" ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {sorted.map((pokemon, idx) => (
-            <PokemonCard
-              key={pokemon.nationalDex}
-              pokemon={pokemon}
-              selectedStat={selectedStat}
-              onClick={() => setSelectedIndex(idx)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {sorted
+              .slice(page * CARDS_PER_PAGE, (page + 1) * CARDS_PER_PAGE)
+              .map((pokemon) => {
+                const idx = sorted.indexOf(pokemon);
+                return (
+                  <PokemonCard
+                    key={pokemon.nationalDex}
+                    pokemon={pokemon}
+                    selectedStat={selectedStat}
+                    onClick={() => setSelectedIndex(idx)}
+                  />
+                );
+              })}
+          </div>
+          <PaginationControls
+            page={page}
+            total={sorted.length}
+            perPage={CARDS_PER_PAGE}
+            onPageChange={setPage}
+          />
+        </>
       ) : (
         <PokemonTable
           pokemon={sorted}
@@ -512,6 +525,45 @@ function PokemonTable({
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+// ── Pagination Controls ────────────────────────────────────────────────────────
+
+function PaginationControls({
+  page,
+  total,
+  perPage,
+  onPageChange,
+}: {
+  page: number;
+  total: number;
+  perPage: number;
+  onPageChange: (p: number) => void;
+}) {
+  const totalPages = Math.ceil(total / perPage);
+  if (totalPages <= 1) return null;
+
+  return (
+    <div className="mt-6 flex items-center justify-center gap-3">
+      <button
+        onClick={() => onPageChange(page - 1)}
+        disabled={page === 0}
+        className="border border-[var(--pt-border-dim)] px-4 py-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] text-[var(--pt-text-dim)] transition-colors disabled:opacity-30 enabled:hover:border-[var(--pt-gold)] enabled:hover:text-[var(--pt-gold)]"
+      >
+        ←
+      </button>
+      <span className="font-[family-name:var(--font-share-tech-mono)] text-ui-sm text-[var(--pt-text-dim)]">
+        {page + 1} / {totalPages}
+      </span>
+      <button
+        onClick={() => onPageChange(page + 1)}
+        disabled={page >= totalPages - 1}
+        className="border border-[var(--pt-border-dim)] px-4 py-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] text-[var(--pt-text-dim)] transition-colors disabled:opacity-30 enabled:hover:border-[var(--pt-gold)] enabled:hover:text-[var(--pt-gold)]"
+      >
+        →
+      </button>
     </div>
   );
 }
