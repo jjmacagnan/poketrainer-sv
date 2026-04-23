@@ -60,6 +60,9 @@ for (const stat of STAT_NAMES) {
 
 type ViewMode = "card" | "table";
 
+const CARDS_PER_PAGE = 48;
+const ROWS_PER_PAGE = 100;
+
 export function EVPokedex() {
   const { t } = useI18n();
   const [search, setSearch] = useState("");
@@ -69,9 +72,6 @@ export function EVPokedex() {
   const [viewMode, setViewMode] = useState<ViewMode>("card");
   const [showBestOnly, setShowBestOnly] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  const CARDS_PER_PAGE = 48;
-  const ROWS_PER_PAGE = 100;
 
   const [page, setPage] = useState(0);
 
