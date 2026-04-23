@@ -277,17 +277,14 @@ export function EVPokedex() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {sorted
               .slice(page * CARDS_PER_PAGE, (page + 1) * CARDS_PER_PAGE)
-              .map((pokemon) => {
-                const idx = sorted.indexOf(pokemon);
-                return (
-                  <PokemonCard
-                    key={pokemon.nationalDex}
-                    pokemon={pokemon}
-                    selectedStat={selectedStat}
-                    onClick={() => setSelectedIndex(idx)}
-                  />
-                );
-              })}
+              .map((pokemon, sliceIdx) => (
+                <PokemonCard
+                  key={pokemon.nationalDex}
+                  pokemon={pokemon}
+                  selectedStat={selectedStat}
+                  onClick={() => setSelectedIndex(page * CARDS_PER_PAGE + sliceIdx)}
+                />
+              ))}
           </div>
           <PaginationControls
             page={page}
