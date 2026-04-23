@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { wildPokemonData } from "@/data/pokemon-utils";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
@@ -70,6 +70,11 @@ export function EVPokedex() {
   const [showBestOnly, setShowBestOnly] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
+  const CARDS_PER_PAGE = 48;
+  const ROWS_PER_PAGE = 100;
+
+  const [page, setPage] = useState(0);
+
   // Filter pipeline
   const filtered = useMemo(() => {
     let result = allPokemon;
@@ -120,6 +125,21 @@ export function EVPokedex() {
       return a.nationalDex - b.nationalDex;
     });
   }, [searchResults, selectedStat]);
+
+  const prevFiltersRef = useRef({ selectedType, selectedStat, selectedAmount, showBestOnly, search });
+  useEffect(() => {
+    const prev = prevFiltersRef.current;
+    if (
+      prev.selectedType !== selectedType ||
+      prev.selectedStat !== selectedStat ||
+      prev.selectedAmount !== selectedAmount ||
+      prev.showBestOnly !== showBestOnly ||
+      prev.search !== search
+    ) {
+      setPage(0);
+      prevFiltersRef.current = { selectedType, selectedStat, selectedAmount, showBestOnly, search };
+    }
+  }, [selectedType, selectedStat, selectedAmount, showBestOnly, search]);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
