@@ -262,7 +262,10 @@ export function EVPokedex() {
         </span>
         <div className="flex border border-[var(--pt-border-dim)]">
           <button
-            onClick={() => setViewMode("card")}
+            onClick={() => {
+              setViewMode("card");
+              setPage(0);
+            }}
             className={`px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
               viewMode === "card"
                 ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
@@ -272,7 +275,10 @@ export function EVPokedex() {
             {t("evPokedex.cards")}
           </button>
           <button
-            onClick={() => setViewMode("table")}
+            onClick={() => {
+              setViewMode("table");
+              setPage(0);
+            }}
             className={`px-3 py-1 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] transition-colors ${
               viewMode === "table"
                 ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]"
@@ -333,8 +339,22 @@ export function EVPokedex() {
           onClose={() => setSelectedIndex(null)}
           hasPrev={selectedIndex > 0}
           hasNext={selectedIndex < sorted.length - 1}
-          onPrev={() => setSelectedIndex((i) => (i !== null && i > 0 ? i - 1 : i))}
-          onNext={() => setSelectedIndex((i) => (i !== null && i < sorted.length - 1 ? i + 1 : i))}
+          onPrev={() => setSelectedIndex((i) => {
+            if (i === null || i <= 0) return i;
+            const prev = i - 1;
+            const perPage = viewMode === "card" ? CARDS_PER_PAGE : ROWS_PER_PAGE;
+            const prevPage = Math.floor(prev / perPage);
+            if (prevPage !== page) setPage(prevPage);
+            return prev;
+          })}
+          onNext={() => setSelectedIndex((i) => {
+            if (i === null || i >= sorted.length - 1) return i;
+            const next = i + 1;
+            const perPage = viewMode === "card" ? CARDS_PER_PAGE : ROWS_PER_PAGE;
+            const nextPage = Math.floor(next / perPage);
+            if (nextPage !== page) setPage(nextPage);
+            return next;
+          })}
         />
       )}
 
