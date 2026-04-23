@@ -294,11 +294,19 @@ export function EVPokedex() {
           />
         </>
       ) : (
-        <PokemonTable
-          pokemon={sorted}
-          selectedStat={selectedStat}
-          onSelect={(p) => setSelectedIndex(sorted.findIndex((s) => s.nationalDex === p.nationalDex))}
-        />
+        <>
+          <PokemonTable
+            pokemon={sorted.slice(page * ROWS_PER_PAGE, (page + 1) * ROWS_PER_PAGE)}
+            selectedStat={selectedStat}
+            onSelect={(p) => setSelectedIndex(sorted.findIndex((s) => s.nationalDex === p.nationalDex))}
+          />
+          <PaginationControls
+            page={page}
+            total={sorted.length}
+            perPage={ROWS_PER_PAGE}
+            onPageChange={setPage}
+          />
+        </>
       )}
 
       {/* Detail Modal */}
