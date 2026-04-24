@@ -40,7 +40,7 @@ Rastreador de progresso de EV training para o time completo.
 - 6 slots de Pokémon
 - Barra visual por stat com limite 252/stat e 510 total
 - Botões de incremento: manual, vitamina (+10), reset
-- Modifiers: Pokérus (2x), Power Item (+8), Macho Brace (2x)
+- Modifiers: Power Item (+8), Macho Brace (2x) — Pokérus não existe em SV
 - Templates pré-definidos (Physical Sweeper, Special Attacker, Bulk, etc.)
 - Sugestão de onde farmar cada stat
 - Persistência em localStorage

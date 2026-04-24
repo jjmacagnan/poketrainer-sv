@@ -17,6 +17,7 @@ import { RecipeCard } from "./RecipeCard";
 import { RecipeDetail } from "./RecipeDetail";
 import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
 import { PokemonSandwichSearch } from "./PokemonSandwichSearch";
+import { GuideBanner } from "@/components/shared/GuideBanner";
 
 type Tab = "shiny" | "encounter" | "raid" | "breeding" | "search";
 
@@ -253,6 +254,12 @@ export function SandwichBuilder() {
         </h1>
         <p className="text-sm text-[var(--pt-text-dim)]">{t("sandwich.subtitle")}</p>
       </div>
+
+      <GuideBanner
+        ptHref="/guia-sanduiche-shiny"
+        enHref="/shiny-sandwich-guide"
+        label={t("common.guideSandwich")}
+      />
 
       {/* Tabs */}
       <div className="mb-5 flex gap-0 border border-[var(--pt-border-dim)]">
