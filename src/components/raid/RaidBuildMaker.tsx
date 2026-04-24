@@ -22,6 +22,7 @@ import { exportShowdown, parseShowdown } from "@/lib/showdown-parser";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
+import { GuideBanner } from "@/components/shared/GuideBanner";
 import { useI18n } from "@/i18n";
 import { BuildExport } from "./BuildExport";
 
@@ -532,6 +533,12 @@ export function RaidBuildMaker() {
         title={t("raid.title")}
         subtitle={t("raid.subtitle")}
         gradient="linear-gradient(135deg, #8B5CF6, #6D28D9, #4C1D95)"
+      />
+
+      <GuideBanner
+        ptHref="/melhores-builds-tera-raid"
+        enHref="/best-tera-raid-builds"
+        label={t("common.guideRaidBuilds")}
       />
 
       {/* Tabs */}

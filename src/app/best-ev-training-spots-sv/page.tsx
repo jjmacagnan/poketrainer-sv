@@ -27,7 +27,6 @@ export default function BestEvTrainingSpotsPage() {
   return (
     <GuidePage
       content={evSpotsContent}
-      locale="en"
       ptHref="/melhores-spots-ev-sv"
       enHref="/best-ev-training-spots-sv"
     />

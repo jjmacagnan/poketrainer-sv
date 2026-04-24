@@ -22,7 +22,7 @@ export const evSpotsContent: GuideContent = {
       {
         id: "speed",
         heading: "Speed EV — Melhor Spot",
-        body: "Para Speed EVs, o melhor spot é Tagtree Thicket (região leste), onde Flittle e Espathra spawnão em grande quantidade. Ambos dão 1 EV de Speed. Com Koraidon/Miraidon e o Let's Go mode, você pode fazer batalhas automáticas muito rapidamente.",
+        body: "Para Speed EVs, o melhor spot é Tagtree Thicket (região leste), onde Flittle e Espathra spawnão em grande quantidade. Ambos dão 1 EV de Speed. Use batalhas normais — o modo Let's Go (botão R) não conta para EVs em SV.",
         items: [
           { name: "Flittle", detail: "1 Speed EV — South Province Area Five" },
           { name: "Espathra", detail: "2 Speed EV — Area Zero / Tagtree Thicket" },
@@ -87,7 +87,7 @@ export const evSpotsContent: GuideContent = {
       },
       {
         question: "Let's Go mode conta para EVs?",
-        answer: "Sim! Batalhas automáticas no Let's Go mode contam para EVs normalmente. É a forma mais rápida de EV training em SV.",
+        answer: "Não. O modo Let's Go (botão R) não concede EVs em Pokémon Scarlet & Violet. Você precisa entrar em batalhas normais para ganhar EVs.",
       },
       {
         question: "Power Item e Pokérus stackam?",
@@ -128,7 +128,7 @@ export const evSpotsContent: GuideContent = {
       {
         id: "speed",
         heading: "Speed EV — Best Spot",
-        body: "For Speed EVs, Tagtree Thicket (eastern region) is the top spot where Flittle and Espathra spawn in large numbers. Both yield Speed EVs. With Let's Go mode, you can chain battles automatically at high speed.",
+        body: "For Speed EVs, Tagtree Thicket (eastern region) is the top spot where Flittle and Espathra spawn in large numbers. Both yield Speed EVs. Use normal battles — Let's Go mode (R button) does not grant EVs in SV.",
         items: [
           { name: "Flittle", detail: "1 Speed EV — South Province Area Five" },
           { name: "Espathra", detail: "2 Speed EV — Area Zero / Tagtree Thicket" },
@@ -193,7 +193,7 @@ export const evSpotsContent: GuideContent = {
       },
       {
         question: "Does Let's Go mode count for EVs?",
-        answer: "Yes! Auto-battles in Let's Go mode count for EVs normally. It's the fastest EV training method in SV.",
+        answer: "No. Let's Go mode (R button) does not grant EVs in Pokémon Scarlet & Violet. You must engage in normal battles to earn EVs.",
       },
       {
         question: "Do Power Item and Pokérus stack?",

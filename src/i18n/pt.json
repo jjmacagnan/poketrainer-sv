@@ -17,7 +17,11 @@
     "base": "Base",
     "final": "Final",
     "prev": "Ant.",
-    "next": "Próx."
+    "next": "Próx.",
+    "guideRead": "Ler guia completo",
+    "guideSandwich": "Guia: Sanduíches Shiny para Pokémon Scarlet & Violet",
+    "guideEvSpots": "Guia: Melhores spots de EV Training em SV",
+    "guideRaidBuilds": "Guia: Melhores builds para Tera Raids"
   },
   "nav": {
     "home": "Home",
@@ -66,7 +70,7 @@
     "power": "Power",
     "noRecipes": "Nenhuma receita encontrada com esses filtros 😅",
     "shinyTitle": "✨ Shiny Hunt Recipes",
-    "shinyInfo": "Todas dão Sparkling Power Lv.3 + Encounter Power Lv.3. Precisam de 2x Herba Mystica do mesmo tipo.",
+    "shinyInfo": "Todas dão Sparkling Power Lv.3 + Encounter Power Lv.3. Precisam de 2x Herba Mystica (na maioria das receitas do mesmo tipo, mas há exceções como Shiny Rock que usa Salty + Sour).",
     "encounterTitle": "🔍 Encounter Recipes",
     "encounterInfo": "Sem Herba Mystica. Boas pra farm de EVs e completar Pokédex.",
     "noEncounter": "Nenhuma receita de Encounter pra esse tipo ainda 🔧",

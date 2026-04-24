@@ -11,7 +11,7 @@ export const sandwichShinyContent: GuideContent = {
       {
         id: "como-funciona",
         heading: "Como funciona o Sparkling Power",
-        body: "O Meal Power Sparkling aumenta a taxa de encontros com Pokémon Shiny quando ativado no Nível 3. Para atingir o Lv. 3, a receita precisa de 2x Herba Mystica do mesmo tipo. Cada receita funciona por 30 minutos após comer o sanduíche.",
+        body: "O Meal Power Sparkling aumenta a taxa de encontros com Pokémon Shiny quando ativado no Nível 3. Para atingir o Lv. 3, a receita precisa de 2x Herba Mystica. Na maioria dos casos são do mesmo sabor, mas algumas receitas (como Shiny Rock) usam sabores diferentes. Cada receita funciona por 30 minutos após comer o sanduíche.",
         items: [
           { name: "Sparkling Lv. 1", detail: "Pequeno aumento de taxa Shiny" },
           { name: "Sparkling Lv. 2", detail: "Aumento moderado" },
@@ -21,7 +21,7 @@ export const sandwichShinyContent: GuideContent = {
       {
         id: "receitas-basicas",
         heading: "Receita base para qualquer tipo",
-        body: "A fórmula universal é: 1 ingrediente principal + 2x Herba Mystica do mesmo sabor. O ingrediente principal determina o tipo de Pokémon afetado pelo Sparkling Power.",
+        body: "A fórmula é: 1 ingrediente principal + 2x Herba Mystica. O ingrediente principal determina o tipo de Pokémon afetado pelo Sparkling Power. Na maioria dos casos as duas Herbas são do mesmo sabor, mas há exceções — o Shiny Rock usa Salty + Sour porque o Bacon conflita com 2x Salty.",
         items: [
           { name: "Tomate", detail: "Fire-type Sparkling Lv. 3" },
           { name: "Pepino", detail: "Grass-type Sparkling Lv. 3" },
@@ -56,7 +56,7 @@ export const sandwichShinyContent: GuideContent = {
     faq: [
       {
         question: "Preciso de 2x Herba Mystica do mesmo tipo?",
-        answer: "Sim. Para atingir Sparkling Power Lv. 3 você precisa de 2 Herba Mystica do mesmo sabor (ex: 2x Sweet Herba). Misturar sabores diferentes não atinge Lv. 3.",
+        answer: "Na maioria das receitas sim, mas não é uma regra absoluta. O Shiny Rock, por exemplo, usa Salty + Sour — porque o Bacon conflita com 2x Salty e não atinge Lv. 3. O que importa é usar 2x Herba Mystica; o sabor ideal depende do ingrediente.",
       },
       {
         question: "Quanto tempo dura o efeito do sanduíche?",
@@ -90,7 +90,7 @@ export const sandwichShinyContent: GuideContent = {
       {
         id: "how-it-works",
         heading: "How Sparkling Power works",
-        body: "Sparkling Meal Power boosts the Shiny encounter rate when activated at Level 3. To reach Lv. 3, your recipe needs 2x Herba Mystica of the same flavor. The effect lasts 30 minutes after eating.",
+        body: "Sparkling Meal Power boosts the Shiny encounter rate when activated at Level 3. To reach Lv. 3, your recipe needs 2x Herba Mystica. In most cases they are the same flavor, but some recipes (like Shiny Rock) use different flavors. The effect lasts 30 minutes after eating.",
         items: [
           { name: "Sparkling Lv. 1", detail: "Small Shiny rate boost" },
           { name: "Sparkling Lv. 2", detail: "Moderate boost" },
@@ -100,7 +100,7 @@ export const sandwichShinyContent: GuideContent = {
       {
         id: "basic-recipes",
         heading: "Base recipe for any type",
-        body: "The universal formula is: 1 main ingredient + 2x Herba Mystica of the same flavor. The main ingredient determines which Pokémon type gets the Sparkling Power boost.",
+        body: "The formula is: 1 main ingredient + 2x Herba Mystica. The main ingredient determines which Pokémon type gets the Sparkling Power boost. In most cases both Herbas share the same flavor, but there are exceptions — Shiny Rock uses Salty + Sour because Bacon conflicts with 2x Salty.",
         items: [
           { name: "Tomato", detail: "Fire-type Sparkling Lv. 3" },
           { name: "Cucumber", detail: "Grass-type Sparkling Lv. 3" },
@@ -135,7 +135,7 @@ export const sandwichShinyContent: GuideContent = {
     faq: [
       {
         question: "Do I need 2x Herba Mystica of the same flavor?",
-        answer: "Yes. To reach Sparkling Power Lv. 3 you need 2 Herba Mystica of the same flavor (e.g. 2x Sweet Herba). Mixing flavors won't reach Lv. 3.",
+        answer: "Usually yes, but not always. Shiny Rock, for example, uses Salty + Sour — because Bacon conflicts with 2x Salty and won't reach Lv. 3. What matters is using 2x Herba Mystica; the right flavor depends on the ingredient.",
       },
       {
         question: "How long does the sandwich effect last?",

@@ -27,7 +27,6 @@ export default function BestTeraRaidBuildsPage() {
   return (
     <GuidePage
       content={teraRaidBuildsContent}
-      locale="en"
       ptHref="/melhores-builds-tera-raid"
       enHref="/best-tera-raid-builds"
     />

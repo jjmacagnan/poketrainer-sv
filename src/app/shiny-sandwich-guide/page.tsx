@@ -27,7 +27,6 @@ export default function ShinySandwichGuidePage() {
   return (
     <GuidePage
       content={sandwichShinyContent}
-      locale="en"
       ptHref="/guia-sanduiche-shiny"
       enHref="/shiny-sandwich-guide"
     />

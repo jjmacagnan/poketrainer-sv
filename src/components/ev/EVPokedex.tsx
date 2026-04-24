@@ -16,6 +16,7 @@ import { TypeBadge } from "@/components/ui/TypeBadge";
 import { StatBar } from "@/components/ui/StatBar";
 import { PokemonDetailModal } from "./PokemonDetailModal";
 import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
+import { GuideBanner } from "@/components/shared/GuideBanner";
 
 interface Pokemon {
   dexNumber: number;
@@ -150,6 +151,12 @@ export function EVPokedex() {
         title={t("evPokedex.title")}
         subtitle={t("evPokedex.subtitle")}
         gradient="linear-gradient(135deg, #6390F0, #4ECDC4, #7AC74C)"
+      />
+
+      <GuideBanner
+        ptHref="/melhores-spots-ev-sv"
+        enHref="/best-ev-training-spots-sv"
+        label={t("common.guideEvSpots")}
       />
 
       {/* Search */}

@@ -1,14 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { useI18n } from "@/i18n";
 import type { GuideContent } from "@/data/guides/types";
 
 interface GuidePageProps {
   content: GuideContent;
-  locale: "pt" | "en";
   ptHref: string;
   enHref: string;
 }
 
-export default function GuidePage({ content, locale, ptHref, enHref }: GuidePageProps) {
+export default function GuidePage({ content, ptHref, enHref }: GuidePageProps) {
+  const { locale } = useI18n();
   const guide = content[locale];
 
   const BASE_URL = "https://poketrainer.jbit.app.br";
@@ -54,23 +57,6 @@ export default function GuidePage({ content, locale, ptHref, enHref }: GuidePage
       />
 
       <div className="max-w-4xl mx-auto px-4 py-10">
-        {/* Language toggle */}
-        <div className="flex gap-3 mb-6 text-sm">
-          <Link
-            href={ptHref}
-            className={locale === "pt" ? "text-yellow-400 font-semibold" : "text-gray-400 hover:text-gray-200"}
-          >
-            PT-BR
-          </Link>
-          <span className="text-gray-600">|</span>
-          <Link
-            href={enHref}
-            className={locale === "en" ? "text-yellow-400 font-semibold" : "text-gray-400 hover:text-gray-200"}
-          >
-            EN
-          </Link>
-        </div>
-
         {/* H1 */}
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-6 leading-tight">
           {guide.title}
