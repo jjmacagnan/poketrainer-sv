@@ -50,8 +50,8 @@ export const teraRaidBuildsContent: GuideContent = {
         heading: "Miraidon — Build exclusiva de SV",
         body: "Miraidon com Tera Electric e Hadron Engine é devastador contra qualquer boss que não resiste Electric. Electric Terrain + Parabolic Charge para healing enquanto causa dano massivo.",
         items: [
-          { name: "Ability", detail: "Hadron Engine (ativa Electric Terrain)" },
-          { name: "Item", detail: "Booster Energy" },
+          { name: "Ability", detail: "Hadron Engine (ativa Electric Terrain automaticamente)" },
+          { name: "Item", detail: "Life Orb" },
           { name: "Tera Type", detail: "Electric" },
           { name: "Moves", detail: "Parabolic Charge / Electro Drift / Dragon Pulse / Calm Mind" },
           { name: "EVs", detail: "252 SpA / 252 Spe / 4 HP — Timid" },
@@ -64,7 +64,7 @@ export const teraRaidBuildsContent: GuideContent = {
         body: "Em raids multiplayer, um Pokémon de suporte que buffa o time inteiro é extremamente valioso. Grimmsnarl com Reflect/Light Screen, ou Blissey com Helping Hand e Heal Pulse são os mais populares.",
         items: [
           { name: "Grimmsnarl", detail: "Prankster + Reflect/Light Screen/Thunder Wave" },
-          { name: "Blissey", detail: "Helping Hand + Heal Pulse + Soft-Boiled" },
+          { name: "Blissey", detail: "Helping Hand + Heal Pulse + Soft Boiled" },
           { name: "Torkoal", detail: "Drought + Sunny Day para boostar Flutter Mane" },
         ],
       },
@@ -145,8 +145,8 @@ export const teraRaidBuildsContent: GuideContent = {
         heading: "Miraidon — SV-exclusive build",
         body: "Miraidon with Tera Electric and Hadron Engine is devastating against any boss that doesn't resist Electric. Electric Terrain + Parabolic Charge provides healing while dealing massive damage.",
         items: [
-          { name: "Ability", detail: "Hadron Engine (activates Electric Terrain)" },
-          { name: "Item", detail: "Booster Energy" },
+          { name: "Ability", detail: "Hadron Engine (activates Electric Terrain automatically)" },
+          { name: "Item", detail: "Life Orb" },
           { name: "Tera Type", detail: "Electric" },
           { name: "Moves", detail: "Parabolic Charge / Electro Drift / Dragon Pulse / Calm Mind" },
           { name: "EVs", detail: "252 SpA / 252 Spe / 4 HP — Timid" },
@@ -159,7 +159,7 @@ export const teraRaidBuildsContent: GuideContent = {
         body: "In multiplayer raids, a support Pokémon that buffs the entire team is extremely valuable. Grimmsnarl with Reflect/Light Screen, or Blissey with Helping Hand and Heal Pulse are the most popular choices.",
         items: [
           { name: "Grimmsnarl", detail: "Prankster + Reflect/Light Screen/Thunder Wave" },
-          { name: "Blissey", detail: "Helping Hand + Heal Pulse + Soft-Boiled" },
+          { name: "Blissey", detail: "Helping Hand + Heal Pulse + Soft Boiled" },
           { name: "Torkoal", detail: "Drought + Sunny Day to boost Flutter Mane" },
         ],
       },

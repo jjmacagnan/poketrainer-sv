@@ -40,7 +40,7 @@ EV training progress tracker for your full team.
 - 6 Pokémon slots
 - Visual bar per stat with 252/stat and 510 total limits
 - Increment buttons: manual, vitamin (+10), reset
-- Modifiers: Pokérus (2×), Power Item (+8), Macho Brace (2×)
+- Modifiers: Power Item (+8), Macho Brace (2×) — Pokérus does not exist in SV
 - Pre-defined templates (Physical Sweeper, Special Attacker, Bulk, etc.)
 - Suggested farming locations per stat
 - Persisted in localStorage

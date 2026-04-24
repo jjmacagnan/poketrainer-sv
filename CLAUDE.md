@@ -59,7 +59,7 @@ src/
 │   └── pokemon-utils.ts             # Utilitários de Pokémon
 ├── lib/
 │   ├── constants.ts                  # MAX_EV_PER_STAT=252, MAX_EV_TOTAL=510, STAT_NAMES, etc.
-│   ├── ev-calculator.ts              # Cálculo de EVs com modifiers (Pokérus, Power Items)
+│   ├── ev-calculator.ts              # Cálculo de EVs com modifiers (Power Items, Macho Brace)
 │   ├── stat-calculator.ts            # Fórmula de stat final Gen 9
 │   ├── showdown-parser.ts            # Import/export formato Pokémon Showdown
 │   ├── berry-utils.ts                # Utilitários de berries
@@ -118,7 +118,7 @@ src/
 
 - 6 slots de Pokémon
 - Barra visual por stat (252/stat, 510 total)
-- Modifiers: Pokérus (2x), Power Item (+8), Macho Brace (2x)
+- Modifiers: Power Item (+8), Macho Brace (2x) — Pokérus não existe em SV
 - Templates pré-definidos (Physical Sweeper, Special Attacker, Bulk, etc.)
 - Sugestão de onde farmar cada stat
 - Persistência em localStorage
