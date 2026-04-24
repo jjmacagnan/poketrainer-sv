@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://poketrainer.jbit.app.br/melhores-spots-ev-sv",
     languages: {
+      "x-default": "https://poketrainer.jbit.app.br/melhores-spots-ev-sv",
       "pt-BR": "https://poketrainer.jbit.app.br/melhores-spots-ev-sv",
       en: "https://poketrainer.jbit.app.br/best-ev-training-spots-sv",
     },

@@ -100,7 +100,7 @@ export const evSpotsContent: GuideContent = {
     ],
     cta: {
       label: "Abrir EV Pokédex — Filtrar por Stat",
-      href: "/ev-pokedex?stat=spe",
+      href: "/ev-pokedex?stat=Spe",
     },
     relatedLinks: [
       { label: "Guia de Sanduíche Shiny", href: "/guia-sanduiche-shiny" },
@@ -206,7 +206,7 @@ export const evSpotsContent: GuideContent = {
     ],
     cta: {
       label: "Open EV Pokédex — Filter by Stat",
-      href: "/ev-pokedex?stat=spe",
+      href: "/ev-pokedex?stat=Spe",
     },
     relatedLinks: [
       { label: "Shiny Pokémon Sandwich Guide", href: "/shiny-sandwich-guide" },

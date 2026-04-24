@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://poketrainer.jbit.app.br/best-tera-raid-builds",
     languages: {
+      "x-default": "https://poketrainer.jbit.app.br/melhores-builds-tera-raid",
       "pt-BR": "https://poketrainer.jbit.app.br/melhores-builds-tera-raid",
       en: "https://poketrainer.jbit.app.br/best-tera-raid-builds",
     },

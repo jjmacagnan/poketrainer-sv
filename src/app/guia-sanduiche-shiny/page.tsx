@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://poketrainer.jbit.app.br/guia-sanduiche-shiny",
     languages: {
+      "x-default": "https://poketrainer.jbit.app.br/guia-sanduiche-shiny",
       "pt-BR": "https://poketrainer.jbit.app.br/guia-sanduiche-shiny",
       en: "https://poketrainer.jbit.app.br/shiny-sandwich-guide",
     },

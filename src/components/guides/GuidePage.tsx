@@ -11,11 +11,16 @@ interface GuidePageProps {
 export default function GuidePage({ content, locale, ptHref, enHref }: GuidePageProps) {
   const guide = content[locale];
 
+  const BASE_URL = "https://poketrainer.jbit.app.br";
+  const canonicalUrl = `${BASE_URL}${locale === "pt" ? ptHref : enHref}`;
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: guide.title,
     description: guide.description,
+    url: canonicalUrl,
+    datePublished: "2026-04-23",
     inLanguage: locale === "pt" ? "pt-BR" : "en",
     publisher: {
       "@type": "Organization",
