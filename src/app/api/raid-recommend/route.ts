@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+const MAX_BUILDS = 20;
+const MAX_STRING_LEN = 200;
+
 export interface BuildSummary {
   name: string;
   nationalDex: number;
@@ -55,6 +58,32 @@ export async function POST(req: NextRequest) {
 
   if (!bossTeraType || !builds?.length) {
     return NextResponse.json({ error: "bossTeraType and builds are required" }, { status: 400 });
+  }
+
+  if (typeof bossTeraType !== "string" || bossTeraType.length > 20) {
+    return NextResponse.json({ error: "Invalid bossTeraType" }, { status: 400 });
+  }
+
+  if (!Array.isArray(builds) || builds.length > MAX_BUILDS) {
+    return NextResponse.json({ error: `Maximum ${MAX_BUILDS} builds allowed` }, { status: 400 });
+  }
+
+  for (const b of builds) {
+    if (
+      typeof b.name !== "string" ||
+      typeof b.role !== "string" ||
+      typeof b.teraType !== "string" ||
+      typeof b.nature !== "string" ||
+      typeof b.ability !== "string" ||
+      typeof b.item !== "string" ||
+      typeof b.strategy !== "string" ||
+      !Array.isArray(b.tags) ||
+      !Array.isArray(b.moves) ||
+      b.name.length > MAX_STRING_LEN ||
+      b.strategy.length > MAX_STRING_LEN
+    ) {
+      return NextResponse.json({ error: "Invalid build format" }, { status: 400 });
+    }
   }
 
   const buildsText = builds

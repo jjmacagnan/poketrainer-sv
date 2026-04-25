@@ -1,3 +1,5 @@
+import fs from "fs";
+
 const POKEAPI_BASE = "https://pokeapi.co/api/v2";
 const BATCH_SIZE = 20;
 const BATCH_DELAY_MS = 1500; // ~13 req/s, well under rate limit
@@ -42,7 +44,6 @@ export async function fetchBatch<T, R>(
 }
 
 export function writeJsonFile(path: string, data: unknown) {
-  const fs = require("fs");
   fs.writeFileSync(path, JSON.stringify(data, null, 2), "utf-8");
   console.log(`  ✓ Written: ${path}`);
 }
