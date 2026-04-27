@@ -17,6 +17,7 @@ import {
   ENCOUNTER_GUIDE,
   RAID_GUIDE,
   BREEDING_RECIPES,
+  MASS_OUTBREAK_GUIDE,
 } from "@/data/sandwich-guide";
 import type { SandwichRecipe } from "@/data/sandwich-recipes";
 import { RecipeCard } from "./RecipeCard";
@@ -30,7 +31,7 @@ interface Pokemon {
   sprite: string;
 }
 
-type Goal = "shiny" | "encounter" | "raid" | "breeding";
+type Goal = "shiny" | "encounter" | "raid" | "breeding" | "outbreak";
 
 const GUIDE_MAP = {
   shiny: SHINY_GUIDE,
@@ -43,6 +44,7 @@ const GOAL_LABELS: Record<Goal, string> = {
   encounter: "🔍 Encounter",
   raid: "⚔️ Raid",
   breeding: "🥚 Breeding",
+  outbreak: "🌊 Outbreak",
 };
 
 const GOAL_COLORS: Record<Goal, string> = {
@@ -50,6 +52,7 @@ const GOAL_COLORS: Record<Goal, string> = {
   encounter: "#4ECDC4",
   raid: "#E040FB",
   breeding: "#F9A825",
+  outbreak: "#EC4899",
 };
 
 interface PokemonSandwichSearchProps {
@@ -95,6 +98,11 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
     if (!selectedPokemon) return [];
     if (goal === "breeding") return BREEDING_RECIPES;
     const type = selectedType ?? selectedPokemon.types[0];
+    if (goal === "outbreak") {
+      const entry = MASS_OUTBREAK_GUIDE.find((r) => r.type === type);
+      if (!entry) return [];
+      return [{ name: `Mass Outbreak: ${entry.type}`, type: entry.type, ingredients: entry.ingredients, condiments: entry.condiments, powers: entry.powers, herba: [] }];
+    }
     const guide = GUIDE_MAP[goal];
     const entry = guide.find((e) => e.type === type);
     return entry ? [...entry.recipes] : [];
@@ -214,7 +222,7 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
 
       {/* Goal selector */}
       <div className="mb-5 flex gap-0 border border-[var(--pt-border-dim)]">
-        {(["shiny", "encounter", "raid", "breeding"] as Goal[]).map((g, i) => (
+        {(["shiny", "encounter", "raid", "breeding", "outbreak"] as Goal[]).map((g, i) => (
           <button
             key={g}
             onClick={() => setGoal(g)}
