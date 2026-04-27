@@ -157,6 +157,11 @@ interface PokemonFallback {
   nationalDex: number;
 }
 
+interface CustomTierEntry extends RaidTierEntry {
+  isCustom: true;
+  customId: string;
+}
+
 interface BuildState {
   pokemon: Pokemon | null;
   /** Used when a tier list entry Pokémon is not in pokemon.json */
@@ -272,6 +277,13 @@ export function RaidBuildMaker() {
   const [tagFilter, setTagFilter] = useState<RaidTag | "all">("all");
   const [roleFilter, setRoleFilter] = useState<RaidRole | "all">("all");
   const [selectedEntry, setSelectedEntry] = useState<RaidTierEntry | null>(null);
+
+  // Custom tier list entries (user-saved builds)
+  const [customEntries, setCustomEntries] = useLocalStorage<CustomTierEntry[]>("raid-custom-tier-entries", []);
+  const [showSaveTierList, setShowSaveTierList] = useState(false);
+  const [saveBuildName, setSaveBuildName] = useState("");
+  const [saveTags, setSaveTags] = useState<RaidTag[]>([]);
+  const [saveRole, setSaveRole] = useState<RaidRole>("physical");
 
   // Boss Finder state
   const [bossFinderOpen, setBossFinderOpen] = useState(false);
@@ -467,14 +479,55 @@ export function RaidBuildMaker() {
     setTab("build");
   }, [setBuild]);
 
+  const allTierEntries = useMemo(
+    () => [...(customEntries as RaidTierEntry[]), ...RAID_TIER_LIST],
+    [customEntries]
+  );
+
   const filteredTierList = useMemo(() => {
-    return RAID_TIER_LIST.filter((entry) => {
+    return allTierEntries.filter((entry) => {
       if (tagFilter !== "all" && !entry.tags.includes(tagFilter)) return false;
       if (roleFilter !== "all" && entry.role !== roleFilter) return false;
       return true;
     });
-  }, [tagFilter, roleFilter]);
+  }, [allTierEntries, tagFilter, roleFilter]);
 
+  const handleSaveToTierList = useCallback(() => {
+    const pkmName = build.pokemon?.name ?? build.pokemonFallback?.name ?? "";
+    const dex = build.pokemon?.nationalDex ?? build.pokemonFallback?.nationalDex ?? 0;
+    const entry: CustomTierEntry = {
+      isCustom: true,
+      customId: String(Date.now()),
+      name: pkmName,
+      nationalDex: dex,
+      tags: saveTags.length > 0 ? saveTags : ["Niche Pick"],
+      role: saveRole,
+      builds: [{
+        name: saveBuildName.trim() || `Build de ${pkmName}`,
+        teraType: build.teraType ?? "Normal",
+        nature: build.nature.name,
+        ability: build.ability,
+        item: build.item,
+        moves: [
+          build.moves[0] ?? "—",
+          build.moves[1] ?? "—",
+          build.moves[2] ?? "—",
+          build.moves[3] ?? "—",
+        ] as [string, string, string, string],
+        evs: build.evs,
+        strategy: build.notes,
+      }],
+    };
+    setCustomEntries((prev) => [...prev, entry]);
+    setShowSaveTierList(false);
+    setSaveBuildName("");
+    setSaveTags([]);
+    setTab("tierlist");
+  }, [build, saveBuildName, saveTags, saveRole, setCustomEntries]);
+
+  const handleDeleteCustomEntry = useCallback((customId: string) => {
+    setCustomEntries((prev) => prev.filter((e) => e.customId !== customId));
+  }, [setCustomEntries]);
 
   // Boss Finder: score tier list entries by type effectiveness against boss tera type
   const bossRecommendations = useMemo((): {
@@ -490,7 +543,7 @@ export function RaidBuildMaker() {
     );
     const bossWeaknesses = new Set((bossTypeData?.weaknesses ?? []).map((w) => w.toLowerCase()));
 
-    return RAID_TIER_LIST
+    return allTierEntries
       .map((entry) => {
         let bestBuildIndex = 0;
         let bestSeCount = -1;
@@ -523,7 +576,7 @@ export function RaidBuildMaker() {
       .filter((r) => r.seMovesForBoss.length > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 6);
-  }, [bossTeraType, bossStars]);
+  }, [allTierEntries, bossTeraType, bossStars]);
 
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
@@ -967,25 +1020,33 @@ export function RaidBuildMaker() {
 
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {entriesInRole.map((entry) => {
+                    const custom = (entry as CustomTierEntry).isCustom ? (entry as CustomTierEntry) : null;
                     const spriteNum = entry.spriteId ?? entry.nationalDex;
                     const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
                     const primaryBuild = entry.builds[0];
                     const isSelected = selectedEntry?.name === entry.name && selectedEntry?.role === entry.role;
+                    const cardKey = custom ? `custom-${custom.customId}` : `${entry.name}-${entry.role}`;
                     return (
-                      <div key={`${entry.name}-${entry.role}`} className="flex flex-col gap-1">
-                        <button
-                          onClick={() => setSelectedEntry(isSelected ? null : entry)}
-                          className={`group flex items-center gap-3 rounded-none border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-lg ${
-                            isSelected
-                              ? "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)]"
-                              : "border-[var(--pt-border-dim)] bg-[var(--pt-card)] hover:border-[var(--pt-gold)]"
-                          }`}
-                        >
+                      <div key={cardKey} className="flex flex-col gap-1">
+                        <div className={`group flex flex-col rounded-none border transition-all ${
+                          isSelected
+                            ? custom ? "border-emerald-500/60 bg-emerald-500/8" : "border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)]"
+                            : custom ? "border-emerald-500/25 bg-emerald-500/4 hover:border-emerald-500/50" : "border-[var(--pt-border-dim)] bg-[var(--pt-card)] hover:border-[var(--pt-gold)]"
+                        }`}>
+                          <button
+                            onClick={() => setSelectedEntry(isSelected ? null : entry)}
+                            className="flex items-center gap-3 p-3 text-left hover:-translate-y-0.5"
+                          >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={sprite} alt={entry.name} width={48} height={48} className="pixelated" />
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex flex-wrap items-center gap-1.5">
                               <span className="text-sm font-bold text-gray-100">{entry.name}</span>
+                              {custom && (
+                                <span className="rounded px-1.5 py-0.5 text-ui-sm font-bold text-white" style={{ background: "#10B98199" }}>
+                                  {locale === "pt" ? "Minha Build" : "My Build"}
+                                </span>
+                              )}
                               {entry.tags.map((tag) => (
                                 <span
                                   key={tag}
@@ -1006,11 +1067,20 @@ export function RaidBuildMaker() {
                               <span className="text-[var(--pt-gold)]">{entry.builds.length} build{entry.builds.length > 1 ? "s" : ""} →</span>
                             </div>
                           </div>
-                        </button>
+                          </button>
+                          {custom && (
+                            <button
+                              onClick={() => handleDeleteCustomEntry(custom.customId)}
+                              className="border-t border-emerald-500/20 px-3 py-1.5 text-left text-ui-sm text-red-400/70 hover:bg-red-500/10 hover:text-red-400"
+                            >
+                              {locale === "pt" ? "Remover da Tier List" : "Remove from Tier List"}
+                            </button>
+                          )}
+                        </div>
 
                         {/* Build picker — expands below the card */}
                         {isSelected && (
-                          <div className="col-span-full rounded-none border border-[var(--pt-gold)] bg-[var(--pt-surface)] p-2">
+                          <div className={`col-span-full rounded-none border bg-[var(--pt-surface)] p-2 ${custom ? "border-emerald-500/40" : "border-[var(--pt-gold)]"}`}>
                             <div className="mb-1.5 px-1 text-ui-base font-semibold text-[var(--pt-text-dim)]">
                               {locale === "pt" ? "Selecione uma build:" : "Select a build:"}
                             </div>
@@ -1018,7 +1088,7 @@ export function RaidBuildMaker() {
                               <button
                                 key={idx}
                                 onClick={() => loadTierBuild(entry, buildOption)}
-                                className="mb-1 w-full rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-left transition-all hover:border-[var(--pt-gold)] hover:bg-[rgba(255,215,0,0.08)] last:mb-0"
+                                className={`mb-1 w-full rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-left transition-all last:mb-0 ${custom ? "hover:border-emerald-500/40 hover:bg-emerald-500/8" : "hover:border-[var(--pt-gold)] hover:bg-[rgba(255,215,0,0.08)]"}`}
                               >
                                 <div className="flex items-center justify-between">
                                   <span className="text-xs font-semibold text-gray-200">{buildOption.name}</span>
@@ -1605,6 +1675,99 @@ export function RaidBuildMaker() {
                 defenses={defenses}
               />
             </div>
+          )}
+
+          {/* Save to Tier List */}
+          {(build.pokemon || build.pokemonFallback) && (
+            <>
+              <button
+                onClick={() => setShowSaveTierList(!showSaveTierList)}
+                className="border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[2px] text-emerald-400 transition-colors hover:bg-emerald-500/20"
+              >
+                {locale === "pt" ? "Salvar na Tier List" : "Save to Tier List"}
+              </button>
+
+              {showSaveTierList && (
+                <div className="rounded-none border border-emerald-500/30 bg-emerald-500/5 p-4">
+                  <div className="mb-3 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-emerald-400">
+                    {locale === "pt" ? "Cadastrar build na Tier List" : "Register build in Tier List"}
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="mb-1 text-ui-base text-[var(--pt-text-dim)]">
+                        {locale === "pt" ? "Nome da build" : "Build name"}
+                      </div>
+                      <input
+                        type="text"
+                        value={saveBuildName}
+                        onChange={(e) => setSaveBuildName(e.target.value)}
+                        placeholder={`Build de ${build.pokemon?.name ?? build.pokemonFallback?.name ?? "Pokémon"}`}
+                        className="w-full rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100 placeholder-[var(--pt-text-dim)] outline-none focus:border-emerald-500/50"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="mb-1 text-ui-base text-[var(--pt-text-dim)]">Role</div>
+                      <div className="flex flex-wrap gap-1">
+                        {ROLES.map((role) => (
+                          <button
+                            key={role}
+                            onClick={() => setSaveRole(role)}
+                            className={`rounded-none border px-3 py-1.5 text-xs font-bold transition-all ${
+                              saveRole === role
+                                ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-300"
+                                : "border-[var(--pt-border-dim)] bg-[var(--pt-card)] text-[var(--pt-text-dim)] hover:text-white"
+                            }`}
+                          >
+                            {ROLE_LABELS[role].emoji} {locale === "pt" ? ROLE_LABELS[role].pt : ROLE_LABELS[role].en}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="mb-1 text-ui-base text-[var(--pt-text-dim)]">Tags</div>
+                      <div className="flex flex-wrap gap-1">
+                        {ALL_TAGS.map((tag) => {
+                          const active = saveTags.includes(tag);
+                          return (
+                            <button
+                              key={tag}
+                              onClick={() => setSaveTags((prev) =>
+                                active ? prev.filter((t) => t !== tag) : [...prev, tag]
+                              )}
+                              className="rounded px-2 py-0.5 text-xs font-bold text-white transition-all"
+                              style={{
+                                background: active ? TAG_COLORS[tag] + "CC" : "rgba(255,255,255,0.05)",
+                                border: `1px solid ${active ? TAG_COLORS[tag] : "rgba(255,255,255,0.1)"}`,
+                                opacity: active ? 1 : 0.5,
+                              }}
+                            >
+                              {locale === "pt" ? TAG_NAMES[tag].pt : TAG_NAMES[tag].en}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        onClick={handleSaveToTierList}
+                        className="rounded-none border border-emerald-500/50 bg-emerald-500/15 px-4 py-2 text-sm font-bold text-emerald-300 hover:bg-emerald-500/25"
+                      >
+                        {locale === "pt" ? "Salvar" : "Save"}
+                      </button>
+                      <button
+                        onClick={() => setShowSaveTierList(false)}
+                        className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-4 py-2 text-sm text-[var(--pt-text-dim)] hover:text-white"
+                      >
+                        {locale === "pt" ? "Cancelar" : "Cancel"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
