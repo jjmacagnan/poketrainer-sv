@@ -1300,8 +1300,7 @@ export const BREEDING_RECIPES: SandwichRecipe[] = [
   },
 ];
 
-// Excludes MASS_OUTBREAK_GUIDE and VGC_ANY_HERBA_GUIDE — those use MassOutbreakRecipe (no name/herba fields).
-// Deduplicates by name: SHINY_GUIDE > ENCOUNTER_GUIDE > RAID_GUIDE > UTILITY > BREEDING (first occurrence wins).
+// Deduplicates by name: SHINY_GUIDE > ENCOUNTER_GUIDE > RAID_GUIDE > UTILITY > BREEDING > OUTBREAK (first wins).
 const _seen = new Set<string>();
 export const ALL_RECIPES: SandwichRecipe[] = [
   ...SHINY_GUIDE.flatMap((e) => e.recipes),
@@ -1309,6 +1308,14 @@ export const ALL_RECIPES: SandwichRecipe[] = [
   ...RAID_GUIDE.flatMap((e) => e.recipes),
   ...UTILITY_RECIPES,
   ...BREEDING_RECIPES,
+  ...MASS_OUTBREAK_GUIDE.map((r) => ({
+    name: `Mass Outbreak: ${r.type}`,
+    type: r.type,
+    ingredients: r.ingredients,
+    condiments: r.condiments,
+    powers: r.powers,
+    herba: [] as string[],
+  })),
 ].filter((r) => {
   if (_seen.has(r.name)) return false;
   _seen.add(r.name);
