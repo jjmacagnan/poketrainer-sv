@@ -212,16 +212,20 @@ export function SandwichBuilder() {
     return data.filter((e) => e.type === selectedType);
   }, [tab, selectedType]);
 
+  const recipeIndex = useMemo(
+    () => ALL_RECIPES.map((r) => ({ ...r, _search: r.powers.join(" ").toLowerCase() })),
+    []
+  );
+
   const searchResults = useMemo(() => {
     if (!searchPower && !searchType) return [];
-    return ALL_RECIPES.filter((r) => {
-      const matchPower =
-        !searchPower ||
-        r.powers.some((p) => p.toLowerCase().includes(searchPower.toLowerCase()));
+    const needle = searchPower.toLowerCase();
+    return recipeIndex.filter((r) => {
+      const matchPower = !searchPower || r._search.includes(needle);
       const matchType = !searchType || r.type === searchType;
       return matchPower && matchType;
     });
-  }, [searchPower, searchType]);
+  }, [recipeIndex, searchPower, searchType]);
 
   const filteredOutbreakGuide = useMemo(() => {
     if (!selectedType) return MASS_OUTBREAK_GUIDE;

@@ -1057,6 +1057,7 @@ export const RAID_GUIDE: SandwichGuideEntry[] = [
     type: "Fighting",
     recipes: [
       {
+        // Powers verified via Serebii.net/scarletviolet/sandwich.shtml
         name: "Ultra Marmalade Sandwich #26",
         type: "Fighting",
         ingredients: ["Cheese x1", "Butter x1", "Cream Cheese x1"],
@@ -1078,6 +1079,7 @@ export const RAID_GUIDE: SandwichGuideEntry[] = [
     type: "Normal",
     recipes: [
       {
+        // Powers verified via Serebii.net/scarletviolet/sandwich.shtml
         name: "Ultra Peanut Butter Sandwich #18",
         type: "Normal",
         ingredients: ["Banana x1", "Butter x1", "Jam x1"],
@@ -1300,24 +1302,35 @@ export const BREEDING_RECIPES: SandwichRecipe[] = [
   },
 ];
 
-// Deduplicates by name: SHINY_GUIDE > ENCOUNTER_GUIDE > RAID_GUIDE > UTILITY > BREEDING > OUTBREAK (first wins).
-const _seen = new Set<string>();
-export const ALL_RECIPES: SandwichRecipe[] = [
-  ...SHINY_GUIDE.flatMap((e) => e.recipes),
-  ...ENCOUNTER_GUIDE.flatMap((e) => e.recipes),
-  ...RAID_GUIDE.flatMap((e) => e.recipes),
-  ...UTILITY_RECIPES,
-  ...BREEDING_RECIPES,
-  ...MASS_OUTBREAK_GUIDE.map((r) => ({
-    name: `Mass Outbreak: ${r.type}`,
-    type: r.type,
-    ingredients: r.ingredients,
-    condiments: r.condiments,
-    powers: r.powers,
-    herba: [] as string[],
-  })),
-].filter((r) => {
-  if (_seen.has(r.name)) return false;
-  _seen.add(r.name);
-  return true;
-});
+// Strip the "#N" recipe number suffix so "Great Pickle Sandwich #20" and "Great Pickle Sandwich #21"
+// are treated as distinct, while true duplicates (same base name) are collapsed correctly.
+function recipeKey(name: string): string {
+  return name.replace(/\s+#\d+$/, "").toLowerCase();
+}
+
+// Deduplicates by base name: SHINY_GUIDE > ENCOUNTER_GUIDE > RAID_GUIDE > UTILITY > BREEDING > OUTBREAK (first wins).
+export const ALL_RECIPES: SandwichRecipe[] = (() => {
+  const seen = new Set<string>();
+  return [
+    ...SHINY_GUIDE.flatMap((e) => e.recipes),
+    ...ENCOUNTER_GUIDE.flatMap((e) => e.recipes),
+    ...RAID_GUIDE.flatMap((e) => e.recipes),
+    ...UTILITY_RECIPES,
+    ...BREEDING_RECIPES,
+    // Outbreak entries have no name/herba in source — synthesized here for search.
+    // herba is intentionally empty: any two Herba Mystica work, shown via condiments.
+    ...MASS_OUTBREAK_GUIDE.map((r) => ({
+      name: `Mass Outbreak: ${r.type}`,
+      type: r.type,
+      ingredients: r.ingredients,
+      condiments: r.condiments,
+      powers: r.powers,
+      herba: [] as string[],
+    })),
+  ].filter((r) => {
+    const key = recipeKey(r.name);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+})();

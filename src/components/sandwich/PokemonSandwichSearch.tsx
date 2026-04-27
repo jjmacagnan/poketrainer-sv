@@ -101,6 +101,7 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
     if (goal === "outbreak") {
       const entry = MASS_OUTBREAK_GUIDE.find((r) => r.type === type);
       if (!entry) return [];
+      // herba intentionally empty: outbreak recipes accept any 2 Herba Mystica (shown via condiments).
       return [{ name: `Mass Outbreak: ${entry.type}`, type: entry.type, ingredients: entry.ingredients, condiments: entry.condiments, powers: entry.powers, herba: [] }];
     }
     const guide = GUIDE_MAP[goal];

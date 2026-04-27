@@ -19,7 +19,8 @@
     "fetch-evolution-chains": "tsx scripts/fetch-evolution-chains.ts",
     "fetch-move-meta": "tsx scripts/fetch-move-meta.ts",
     "fetch-version-groups": "tsx scripts/fetch-version-groups.ts",
-    "fetch-all": "npm run fetch-pokemon && npm run fetch-natures && npm run fetch-moves && npm run fetch-abilities && npm run fetch-items && npm run fetch-types && npm run fetch-berries && npm run fetch-berry-flavors && npm run fetch-evolution-chains && npm run fetch-move-meta && npm run fetch-version-groups"
+    "fetch-all": "npm run fetch-pokemon && npm run fetch-natures && npm run fetch-moves && npm run fetch-abilities && npm run fetch-items && npm run fetch-types && npm run fetch-berries && npm run fetch-berry-flavors && npm run fetch-evolution-chains && npm run fetch-move-meta && npm run fetch-version-groups",
+    "test": "vitest run"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.87.0",
@@ -35,10 +36,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/runner": "^4.1.5",
     "eslint": "^9",
     "eslint-config-next": "16.2.3",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.5"
   }
 }
