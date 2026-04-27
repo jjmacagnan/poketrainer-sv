@@ -86,7 +86,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Ogerpon",
     nationalDex: 1017,
-    tags: ["Solo Viable", "Top Pick"],
+    tags: ["Top Pick"],
     role: "physical",
     builds: [
       {
@@ -167,12 +167,22 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
         evs: { HP: 252, Atk: 252, Def: 0, SpA: 0, SpD: 4, Spe: 0 },
         strategy: "Fighting tera para boostar Drain Punch. Vital Spirit previne sleep. Rage Fist acumula BP. Close Combat para burst de dano máximo.",
       },
+      {
+        name: "Ghost Tera Vital Spirit Build",
+        teraType: "Ghost",
+        nature: "Adamant",
+        ability: "Vital Spirit",
+        item: "Shell Bell",
+        moves: ["Rage Fist", "Drain Punch", "Bulk Up", "Screech"],
+        evs: { HP: 252, Atk: 252, Def: 0, SpA: 0, SpD: 4, Spe: 0 },
+        strategy: "Versão recomendada pelo Amiibo Doctor: Vital Spirit previne sleep, Ghost Tera imuniza a Fighting (bloqueia Drain Punch e Body Press do boss). Rage Fist acumula BP com cada hit recebido. Screech acelera o break do shield antes de Terastalizar.",
+      },
     ],
   },
   {
     name: "Iron Hands",
     nationalDex: 992,
-    tags: ["Niche Pick", "Budget Pick"],
+    tags: ["Top Pick", "Budget Pick"],
     role: "physical",
     builds: [
       {
@@ -237,9 +247,9 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
         nature: "Adamant",
         ability: "Huge Power",
         item: "Shell Bell",
-        moves: ["Belly Drum", "Play Rough", "Liquidation", "Helping Hand"],
-        evs: { HP: 252, Atk: 252, Def: 0, SpA: 0, SpD: 4, Spe: 0 },
-        strategy: "Huge Power dobra o Atk. Belly Drum + Shell Bell para sustain. Play Rough e Liquidation dão cobertura excelente. Um dos melhores counters para raids 7★.",
+        moves: ["Belly Drum", "Play Rough", "Waterfall", "Recover"],
+        evs: { HP: 4, Atk: 0, Def: 252, SpA: 0, SpD: 252, Spe: 0 },
+        strategy: "EVs defensivos: com Huge Power o Atk já é absurdo sem investimento — invista em bulk para sobreviver ao Belly Drum com 50% HP. Recover recupera HP após o Drum. Waterfall é STAB Water confiável. Play Rough para cobertura Fairy.",
       },
       {
         name: "Fairy Tera Play Rough Build",
@@ -481,7 +491,83 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     ],
   },
 
+  // ── A ──
+  {
+    name: "Kingambit",
+    nationalDex: 983,
+    tags: ["Top Pick", "7★ Ready"],
+    role: "physical",
+    builds: [
+      {
+        name: "Dark Tera Bulk Up Build",
+        teraType: "Dark",
+        nature: "Adamant",
+        ability: "Supreme Overlord",
+        item: "Shell Bell",
+        moves: ["Bulk Up", "Sucker Punch", "Iron Head", "Kowtow Cleave"],
+        evs: { HP: 252, Atk: 252, Def: 4, SpA: 0, SpD: 0, Spe: 0 },
+        strategy: "Supreme Overlord boostra Atk baseado no número de aliados fainted — em multiplayer o bônus é enorme. Sucker Punch com prioridade para KOs seguros. Kowtow Cleave 100% accuracy Dark STAB. Iron Head para coverage Fairy/Ice.",
+      },
+      {
+        name: "Steel Tera Iron Head Build",
+        teraType: "Steel",
+        nature: "Adamant",
+        ability: "Defiant",
+        item: "Shell Bell",
+        moves: ["Iron Head", "Sucker Punch", "Bulk Up", "King's Shield"],
+        evs: { HP: 252, Atk: 252, Def: 4, SpA: 0, SpD: 0, Spe: 0 },
+        strategy: "Steel tera para STAB Iron Head contra Fairy/Ice/Rock. Defiant pune debuffs com +2 Atk. King's Shield força Defiant caso boss use contact moves. Sucker Punch com prioridade.",
+      },
+    ],
+  },
+
   // ── B ──
+  {
+    name: "Great Tusk",
+    nationalDex: 986,
+    tags: ["Budget Pick"],
+    role: "physical",
+    builds: [
+      {
+        name: "Ground Tera Bulk Up Build",
+        teraType: "Ground",
+        nature: "Adamant",
+        ability: "Protosynthesis",
+        item: "Shell Bell",
+        moves: ["Earthquake", "Bulk Up", "Headlong Rush", "Ice Spinner"],
+        evs: { HP: 252, Atk: 252, Def: 4, SpA: 0, SpD: 0, Spe: 0 },
+        strategy: "Ground tera + Earthquake é STAB devastador. Bulk Up para setup gradual. Headlong Rush para dano máximo com Ground STAB. Ice Spinner remove terrain adversário e coverage Dragon/Flying.",
+      },
+    ],
+  },
+  {
+    name: "Slither Wing",
+    nationalDex: 1010,
+    tags: ["Budget Pick"],
+    role: "physical",
+    builds: [
+      {
+        name: "Bug Tera Bulk Up Build",
+        teraType: "Bug",
+        nature: "Adamant",
+        ability: "Protosynthesis",
+        item: "Shell Bell",
+        moves: ["Bulk Up", "Close Combat", "X-Scissor", "Earthquake"],
+        evs: { HP: 252, Atk: 252, Def: 4, SpA: 0, SpD: 0, Spe: 0 },
+        strategy: "Paradox Pokémon com excelente bulk físico. Bug tera para STAB X-Scissor devastador contra Psychic/Dark. Close Combat para Fighting STAB. Earthquake para cobertura ampla. Bulk Up para setup.",
+      },
+      {
+        name: "Fighting Tera Close Combat Build",
+        teraType: "Fighting",
+        nature: "Adamant",
+        ability: "Protosynthesis",
+        item: "Shell Bell",
+        moves: ["Close Combat", "X-Scissor", "Bulk Up", "Earthquake"],
+        evs: { HP: 252, Atk: 252, Def: 4, SpA: 0, SpD: 0, Spe: 0 },
+        strategy: "Fighting tera para STAB Close Combat massivo. X-Scissor para Bug coverage. Bulk Up para escalar dano e defesa. Earthquake para Ground coverage.",
+      },
+    ],
+  },
   {
     name: "Urshifu",
     nationalDex: 892,
@@ -940,6 +1026,34 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     ],
   },
   {
+    name: "Raging Bolt",
+    nationalDex: 1021,
+    tags: ["Solo Viable", "Top Pick"],
+    role: "special",
+    builds: [
+      {
+        name: "Electric Tera Rising Voltage Build",
+        teraType: "Electric",
+        nature: "Modest",
+        ability: "Protosynthesis",
+        item: "Shell Bell",
+        moves: ["Rising Voltage", "Calm Mind", "Electric Terrain", "Dragon Pulse"],
+        evs: { HP: 252, Atk: 0, Def: 0, SpA: 252, SpD: 4, Spe: 0 },
+        strategy: "Rising Voltage dobra de poder em Electric Terrain — base 140 BP com boost. Protosynthesis ativa com Sunny Day ou Booster Energy. Calm Mind para escalar. Dragon Pulse para coverage Dragon. SpA base 137 é excepcionalmente alto.",
+      },
+      {
+        name: "Dragon Tera Dragon Pulse Build",
+        teraType: "Dragon",
+        nature: "Modest",
+        ability: "Protosynthesis",
+        item: "Shell Bell",
+        moves: ["Dragon Pulse", "Rising Voltage", "Calm Mind", "Electric Terrain"],
+        evs: { HP: 252, Atk: 0, Def: 0, SpA: 252, SpD: 4, Spe: 0 },
+        strategy: "Dragon tera para STAB Dragon Pulse. Rising Voltage ainda causa dano alto em Electric Terrain. Calm Mind para escalar. Bulk natural de Dragon facilita o setup.",
+      },
+    ],
+  },
+  {
     name: "Magearna",
     nationalDex: 801,
     tags: ["Top Pick", "7★ Ready"],
@@ -951,9 +1065,9 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
         nature: "Modest",
         ability: "Soul Heart",
         item: "Shell Bell",
-        moves: ["Flash Cannon", "Calm Mind", "Reflect", "Light Screen"],
+        moves: ["Flash Cannon", "Calm Mind", "Metal Sound", "Reflect"],
         evs: { HP: 252, Atk: 0, Def: 0, SpA: 252, SpD: 4, Spe: 0 },
-        strategy: "Flash Cannon é o golpe principal confiável. Calm Mind escala dano e bulk especial; screens são escolhidas conforme o boss físico ou especial.",
+        strategy: "Flash Cannon é o golpe principal — NÃO use Fleur Cannon (baixa SpA próprio). Metal Sound derruba SpD do boss em -2, amplificando dano de todo o time. Calm Mind escala. Reflect para bosses físicos.",
       },
       {
         name: "Fairy Tera Dazzling Gleam Build",
@@ -1311,7 +1425,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
   {
     name: "Kyogre",
     nationalDex: 382,
-    tags: ["Niche Pick"],
+    tags: ["Solo Viable", "Top Pick"],
     role: "special",
     builds: [
       {
@@ -1450,7 +1564,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
     name: "Galarian Moltres",
     nationalDex: 146,
     spriteId: 10171,
-    tags: ["Niche Pick"],
+    tags: ["Top Pick", "7★ Ready"],
     role: "special",
     builds: [
       {
