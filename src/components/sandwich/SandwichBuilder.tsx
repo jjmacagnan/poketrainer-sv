@@ -3,22 +3,6 @@
 import { useState, useMemo } from "react";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
-
-const TYPE_ID: Record<string, number> = {
-  Normal: 1, Fighting: 2, Flying: 3, Poison: 4, Ground: 5,
-  Rock: 6, Bug: 7, Ghost: 8, Steel: 9, Fire: 10,
-  Water: 11, Grass: 12, Electric: 13, Psychic: 14, Ice: 15,
-  Dragon: 16, Dark: 17, Fairy: 18,
-};
-const SV_SYMBOL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small";
-
-const typeFilterOptions = TYPES.map((tp) => ({
-  value: tp,
-  label: tp,
-  color: TYPE_COLORS[tp],
-  icon: `${SV_SYMBOL}/${TYPE_ID[tp]}.png`,
-}));
-
 import { ALL_RECIPES } from "@/data/sandwich-guide";
 import { MEAL_POWERS } from "@/data/sandwich-recipes";
 import type { SandwichRecipe } from "@/data/sandwich-recipes";
@@ -40,6 +24,21 @@ import { FilterBar } from "@/components/shared/FilterBar";
 import { PokemonSandwichSearch } from "./PokemonSandwichSearch";
 import { GuideBanner } from "@/components/shared/GuideBanner";
 import { PageHeader } from "@/components/shared/PageHeader";
+
+const TYPE_ID: Record<string, number> = {
+  Normal: 1, Fighting: 2, Flying: 3, Poison: 4, Ground: 5,
+  Rock: 6, Bug: 7, Ghost: 8, Steel: 9, Fire: 10,
+  Water: 11, Grass: 12, Electric: 13, Psychic: 14, Ice: 15,
+  Dragon: 16, Dark: 17, Fairy: 18,
+};
+const SV_SYMBOL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small";
+
+const typeFilterOptions = TYPES.map((tp) => ({
+  value: tp,
+  label: tp,
+  color: TYPE_COLORS[tp],
+  icon: `${SV_SYMBOL}/${TYPE_ID[tp]}.png`,
+}));
 
 type Tab = "shiny" | "outbreak" | "encounter" | "raid" | "breeding" | "utility" | "search";
 
