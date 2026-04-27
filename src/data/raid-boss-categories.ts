@@ -7,7 +7,7 @@ export type BossAttackCategory = "physical" | "special" | "both";
 // Moves that directly reduce physical damage taken or boost physical bulk.
 export const PHYSICAL_DEFENSIVE_COUNTER_MOVES = new Set([
   "Iron Defense", "Bulk Up", "Reflect", "Chilling Water",
-  "Breaking Swipe", "Cotton Defense", "Stockpile", "Defense Curl",
+  "Breaking Swipe", "Cotton Guard", "Stockpile", "Defense Curl",
   "Will O Wisp",
 ]);
 

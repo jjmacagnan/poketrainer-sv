@@ -539,8 +539,14 @@ export function RaidBuildMaker() {
   // Boss Finder: score tier list entries by type effectiveness against boss tera type
   const bossRecommendations = useMemo((): BossRecommendation[] => {
     if (!bossTeraType) return [];
-    return getBossRecommendations(allTierEntries, bossTeraType, bossStars, bossAttackCategory);
-  }, [allTierEntries, bossTeraType, bossStars, bossAttackCategory]);
+    return getBossRecommendations(
+      allTierEntries,
+      bossTeraType,
+      bossStars,
+      bossAttackCategory,
+      (bossPokemon?.types ?? []) as PokemonType[],
+    );
+  }, [allTierEntries, bossTeraType, bossStars, bossAttackCategory, bossPokemon]);
 
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
