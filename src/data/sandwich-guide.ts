@@ -1301,10 +1301,16 @@ export const BREEDING_RECIPES: SandwichRecipe[] = [
 ];
 
 // Excludes MASS_OUTBREAK_GUIDE and VGC_ANY_HERBA_GUIDE — those use MassOutbreakRecipe (no name/herba fields).
+// Deduplicates by name: SHINY_GUIDE > ENCOUNTER_GUIDE > RAID_GUIDE > UTILITY > BREEDING (first occurrence wins).
+const _seen = new Set<string>();
 export const ALL_RECIPES: SandwichRecipe[] = [
   ...SHINY_GUIDE.flatMap((e) => e.recipes),
   ...ENCOUNTER_GUIDE.flatMap((e) => e.recipes),
   ...RAID_GUIDE.flatMap((e) => e.recipes),
   ...UTILITY_RECIPES,
   ...BREEDING_RECIPES,
-];
+].filter((r) => {
+  if (_seen.has(r.name)) return false;
+  _seen.add(r.name);
+  return true;
+});
