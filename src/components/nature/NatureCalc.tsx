@@ -10,7 +10,7 @@ import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
 import { useI18n } from "@/i18n";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
-import { getBerriesByFlavor, getBerry } from "@/lib/berry-utils";
+import { getBerriesByFlavor } from "@/lib/berry-utils";
 
 interface BerryFlavor {
   id: number;

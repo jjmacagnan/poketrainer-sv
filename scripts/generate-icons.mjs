@@ -8,14 +8,6 @@
 import { createWriteStream } from "fs";
 import { deflateSync } from "zlib";
 
-function adler32(buf) {
-  let s1 = 1, s2 = 0;
-  for (const b of buf) {
-    s1 = (s1 + b) % 65521;
-    s2 = (s2 + s1) % 65521;
-  }
-  return (s2 << 16) | s1;
-}
 
 function crc32(buf) {
   const table = [];

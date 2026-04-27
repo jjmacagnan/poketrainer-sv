@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useI18n } from "@/i18n";
 import { BuyMeCoffeeLink } from './BuyMeCoffeeLink';
 
@@ -79,11 +80,7 @@ export function Footer() {
             {/* Linha 2: Favicon + PokéTrainer SV + Tagline */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center gap-2">
-                <img
-                  src="/favicon.ico"
-                  alt="Favicon"
-                  className="h-4 w-4"
-                />
+                <Image src="/favicon.ico" alt="Favicon" width={16} height={16} className="h-4 w-4" />
                 <p className="font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-sm text-white/90">
                   PokéTrainer SV
                 </p>
