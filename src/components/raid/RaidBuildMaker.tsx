@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
+import { TypeChartGrid } from "./TypeChartGrid";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import pokemonData from "@/data/generated/pokemon.json";
 import naturesData from "@/data/generated/natures.json";
@@ -256,6 +257,40 @@ function SearchDropdown<T>({
   );
 }
 
+function MatchupPills({
+  items,
+  emptyLabel,
+}: {
+  items: (PokemonType | TypeMatchupGroup)[];
+  emptyLabel: string;
+}) {
+  if (items.length === 0) {
+    return <span className="text-ui-base text-[var(--pt-text-dim)]">{emptyLabel}</span>;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-1">
+      {items.map((item) => {
+        const type = typeof item === "string" ? item : item.type;
+        const multiplier = typeof item === "string" ? null : item.multiplier;
+        return (
+          <span
+            key={`${type}-${multiplier ?? "plain"}`}
+            className="inline-flex items-center gap-1 rounded-none border px-2 py-1 text-ui-sm font-bold text-white"
+            style={{
+              background: TYPE_COLORS[type] + "33",
+              borderColor: TYPE_COLORS[type] + "99",
+            }}
+          >
+            {type}
+            {multiplier !== null && <span className="text-white/70">{multiplier}x</span>}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 // ── Tier List Helpers ────────────────────────────────────────────────────────
 
 const ALL_TAGS: RaidTag[] = ["Solo Viable", "Top Pick", "7★ Ready", "Budget Pick", "Support Star", "Niche Pick"];
@@ -267,6 +302,60 @@ const ROLE_LABELS: Record<RaidRole, { pt: string; en: string; emoji: string }> =
   support:  { pt: "Suporte", en: "Support", emoji: "🛡️" },
 };
 
+interface TypeMatchupGroup {
+  type: PokemonType;
+  multiplier: number;
+}
+
+function getIncomingMultiplier(attackingType: PokemonType, defenderTypes: PokemonType[]) {
+  return defenderTypes.reduce((multiplier, defenderType) => {
+    const defenderData = allTypesData.find((type) => type.name === defenderType);
+    if (!defenderData) return multiplier;
+
+    if (defenderData.immunities.includes(attackingType)) return 0;
+    if (defenderData.weaknesses.includes(attackingType)) return multiplier * 2;
+    if (defenderData.resistances.includes(attackingType)) return multiplier * 0.5;
+    return multiplier;
+  }, 1);
+}
+
+function getDefensiveTypeMatchups(defenderTypes: PokemonType[]) {
+  const groups = {
+    superEffective: [] as TypeMatchupGroup[],
+    notVeryEffective: [] as TypeMatchupGroup[],
+    noEffect: [] as TypeMatchupGroup[],
+    normal: [] as TypeMatchupGroup[],
+  };
+
+  TYPES.forEach((attackingType) => {
+    const multiplier = getIncomingMultiplier(attackingType, defenderTypes);
+    const matchup = { type: attackingType, multiplier };
+    if (multiplier === 0) groups.noEffect.push(matchup);
+    else if (multiplier > 1) groups.superEffective.push(matchup);
+    else if (multiplier < 1) groups.notVeryEffective.push(matchup);
+    else groups.normal.push(matchup);
+  });
+
+  return groups;
+}
+
+function getOffensiveTypeMatchups(attackingType: PokemonType) {
+  const groups = {
+    superEffective: [] as PokemonType[],
+    notVeryEffective: [] as PokemonType[],
+    noEffect: [] as PokemonType[],
+  };
+
+  allTypesData.forEach((defenderData) => {
+    const defenderType = defenderData.name as PokemonType;
+    if (defenderData.weaknesses.includes(attackingType)) groups.superEffective.push(defenderType);
+    if (defenderData.resistances.includes(attackingType)) groups.notVeryEffective.push(defenderType);
+    if (defenderData.immunities.includes(attackingType)) groups.noEffect.push(defenderType);
+  });
+
+  return groups;
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export function RaidBuildMaker() {
@@ -275,7 +364,7 @@ export function RaidBuildMaker() {
   const [showImport, setShowImport] = useState(false);
   const [importText, setImportText] = useState("");
   const [showExport, setShowExport] = useState(false);
-  const [tab, setTab] = useState<"build" | "tierlist">("build");
+  const [tab, setTab] = useState<"build" | "tierlist" | "typechart">("build");
   const [tagFilter, setTagFilter] = useState<RaidTag | "all">("all");
   const [roleFilter, setRoleFilter] = useState<RaidRole | "all">("all");
   const [selectedEntry, setSelectedEntry] = useState<RaidTierEntry | null>(null);
@@ -292,6 +381,8 @@ export function RaidBuildMaker() {
   const [bossPokemon, setBossPokemon] = useState<Pokemon | null>(null);
   const [bossTeraType, setBossTeraType] = useState<PokemonType | null>(null);
   const [bossStars, setBossStars] = useState<5 | 6 | 7 | null>(null);
+  const [typeChartPokemon, setTypeChartPokemon] = useState<Pokemon | null>(null);
+  const [typeChartTypes, setTypeChartTypes] = useState<PokemonType[]>(["Dragon"]);
 
   // URL parameter hydration
   const searchParams = useSearchParams();
@@ -548,6 +639,31 @@ export function RaidBuildMaker() {
     );
   }, [allTierEntries, bossTeraType, bossStars, bossAttackCategory, bossPokemon]);
 
+  const typeChartMatchups = useMemo(
+    () => getDefensiveTypeMatchups(typeChartTypes),
+    [typeChartTypes],
+  );
+
+  const offensiveTypeMatchups = useMemo(
+    () => typeChartTypes.map((type) => ({ type, matchups: getOffensiveTypeMatchups(type) })),
+    [typeChartTypes],
+  );
+
+  const handleTypeChartPokemonSelect = useCallback((pokemon: Pokemon) => {
+    setTypeChartPokemon(pokemon);
+    setTypeChartTypes(pokemon.types as PokemonType[]);
+  }, []);
+
+  const toggleTypeChartType = useCallback((type: PokemonType) => {
+    setTypeChartPokemon(null);
+    setTypeChartTypes((current) => {
+      if (current.includes(type)) {
+        return current.length === 1 ? current : current.filter((item) => item !== type);
+      }
+      return [...current, type].slice(-2);
+    });
+  }, []);
+
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
   const itemFilter = useCallback((i: { name: string }, q: string) => i.name.toLowerCase().includes(q), []);
@@ -594,6 +710,14 @@ export function RaidBuildMaker() {
           }`}
         >
           {t("raid.tabTierList")}
+        </button>
+        <button
+          onClick={() => setTab("typechart")}
+          className={`flex-1 rounded-none px-4 py-2.5 text-sm font-bold transition-all ${
+            tab === "typechart" ? "bg-[rgba(255,215,0,0.08)] text-[var(--pt-gold)]" : "text-[var(--pt-text-dim)]"
+          }`}
+        >
+          {locale === "pt" ? "Tipos" : "Types"}
         </button>
       </div>
 
@@ -1116,6 +1240,175 @@ export function RaidBuildMaker() {
               {t("common.noResults")}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Type Chart Tab */}
+      {tab === "typechart" && (
+        <div className="space-y-5">
+          <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto]">
+              {/* Pokémon search */}
+              <div>
+                <div className="mb-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-gold)]">
+                  {locale === "pt" ? "Verificar Pokémon" : "Check Pokémon"}
+                </div>
+                <SearchDropdown
+                  items={allPokemon}
+                  value={typeChartPokemon?.name || ""}
+                  onSelect={handleTypeChartPokemonSelect}
+                  renderItem={(pokemon) => (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={pokemon.sprite} alt={pokemon.name} width={24} height={24} />
+                      <span className="font-semibold text-gray-100">{pokemon.name}</span>
+                      <span className="text-xs text-[var(--pt-text-dim)]">#{pokemon.nationalDex}</span>
+                    </>
+                  )}
+                  getLabel={(pokemon) => pokemon.name}
+                  placeholder={locale === "pt" ? "Buscar Pokémon..." : "Search Pokémon..."}
+                  filterFn={pokemonFilter}
+                />
+              </div>
+
+              {/* Selected Pokémon + types preview */}
+              {(typeChartPokemon || typeChartTypes.length > 0) && (
+                <div className="flex items-center gap-3 sm:justify-end">
+                  {typeChartPokemon && (
+                    <div className="flex flex-col items-center gap-1">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={typeChartPokemon.sprite}
+                        alt={typeChartPokemon.name}
+                        width={56}
+                        height={56}
+                        style={{ imageRendering: "pixelated" }}
+                      />
+                      <span className="text-[10px] font-bold text-gray-300">{typeChartPokemon.name}</span>
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-1">
+                    {typeChartTypes.map((type) => (
+                      <TypeBadge key={type} type={type} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Type selector */}
+            <div className="mt-4">
+              <div className="mb-1.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-gold)]">
+                {locale === "pt" ? "Ou escolha até 2 tipos" : "Or choose up to 2 types"}
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {TYPES.map((type) => {
+                  const selected = typeChartTypes.includes(type);
+                  return (
+                    <button
+                      key={type}
+                      onClick={() => toggleTypeChartType(type)}
+                      className="rounded-none border px-2.5 py-1 text-ui-base font-bold text-white transition-all"
+                      style={{
+                        background: selected ? TYPE_COLORS[type] : "rgba(255,255,255,0.05)",
+                        borderColor: selected ? TYPE_COLORS[type] : "rgba(255,255,255,0.1)",
+                        opacity: selected ? 1 : 0.55,
+                      }}
+                    >
+                      {type}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Type Flow Chart */}
+          <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+            <div className="mb-3 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-gold)]">
+              {locale === "pt" ? "Tabela de efetividade" : "Type flow chart"}
+            </div>
+            <TypeChartGrid highlightTypes={typeChartTypes} />
+          </div>
+
+          <div className="grid gap-3 lg:grid-cols-3">
+            <div className="rounded-none border border-red-500/30 bg-red-500/8 p-4">
+              <div className="mb-2 text-sm font-bold text-red-300">
+                {locale === "pt" ? "Super efetivo contra você" : "Super effective against you"}
+              </div>
+              <MatchupPills
+                items={typeChartMatchups.superEffective}
+                emptyLabel={locale === "pt" ? "Nenhuma fraqueza." : "No weaknesses."}
+              />
+            </div>
+
+            <div className="rounded-none border border-sky-500/30 bg-sky-500/8 p-4">
+              <div className="mb-2 text-sm font-bold text-sky-300">
+                {locale === "pt" ? "Não muito efetivo contra você" : "Not very effective against you"}
+              </div>
+              <MatchupPills
+                items={typeChartMatchups.notVeryEffective}
+                emptyLabel={locale === "pt" ? "Nenhuma resistência." : "No resistances."}
+              />
+            </div>
+
+            <div className="rounded-none border border-zinc-500/40 bg-zinc-500/10 p-4">
+              <div className="mb-2 text-sm font-bold text-zinc-200">
+                {locale === "pt" ? "Sem efeito contra você" : "No effect against you"}
+              </div>
+              <MatchupPills
+                items={typeChartMatchups.noEffect}
+                emptyLabel={locale === "pt" ? "Nenhuma imunidade." : "No immunities."}
+              />
+            </div>
+          </div>
+
+          <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
+            <div className="mb-3 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[2px] text-[var(--pt-gold)]">
+              {locale === "pt" ? "Referência ofensiva dos tipos selecionados" : "Offensive reference for selected types"}
+            </div>
+            <div className="grid gap-3 lg:grid-cols-2">
+              {offensiveTypeMatchups.map(({ type, matchups }) => (
+                <div key={type} className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-surface)] p-3">
+                  <div className="mb-3 flex items-center gap-2">
+                    <TypeBadge type={type} small />
+                    <span className="text-sm font-bold text-gray-100">
+                      {locale === "pt" ? "Golpes deste tipo" : "Moves of this type"}
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="mb-1 text-ui-base font-bold text-red-300">
+                        {locale === "pt" ? "Super efetivo" : "Super effective"}
+                      </div>
+                      <MatchupPills
+                        items={matchups.superEffective}
+                        emptyLabel={locale === "pt" ? "Nenhum tipo." : "No types."}
+                      />
+                    </div>
+                    <div>
+                      <div className="mb-1 text-ui-base font-bold text-sky-300">
+                        {locale === "pt" ? "Não muito efetivo" : "Not very effective"}
+                      </div>
+                      <MatchupPills
+                        items={matchups.notVeryEffective}
+                        emptyLabel={locale === "pt" ? "Nenhum tipo." : "No types."}
+                      />
+                    </div>
+                    <div>
+                      <div className="mb-1 text-ui-base font-bold text-zinc-200">
+                        {locale === "pt" ? "Sem efeito" : "No effect"}
+                      </div>
+                      <MatchupPills
+                        items={matchups.noEffect}
+                        emptyLabel={locale === "pt" ? "Nenhum tipo." : "No types."}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
