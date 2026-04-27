@@ -1299,3 +1299,11 @@ export const BREEDING_RECIPES: SandwichRecipe[] = [
     herba: [],
   },
 ];
+
+export const ALL_RECIPES: SandwichRecipe[] = [
+  ...SHINY_GUIDE.flatMap((e) => e.recipes),
+  ...ENCOUNTER_GUIDE.flatMap((e) => e.recipes),
+  ...RAID_GUIDE.flatMap((e) => e.recipes),
+  ...UTILITY_RECIPES,
+  ...BREEDING_RECIPES,
+];
