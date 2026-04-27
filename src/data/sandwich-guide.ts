@@ -1061,7 +1061,7 @@ export const RAID_GUIDE: SandwichGuideEntry[] = [
         type: "Fighting",
         ingredients: ["Cheese x1", "Butter x1", "Cream Cheese x1"],
         condiments: ["Marmalade x1"],
-        powers: ["Raid Power: Fighting Lv.1", "Egg Power Lv.2", "Item Drop Power: Poison Lv.1"],
+        powers: ["Egg Power Lv.2", "Item Drop Power: Poison Lv.2", "Raid Power: Fighting Lv.1"],
         herba: [],
       },
       {
@@ -1082,7 +1082,7 @@ export const RAID_GUIDE: SandwichGuideEntry[] = [
         type: "Normal",
         ingredients: ["Banana x1", "Butter x1", "Jam x1"],
         condiments: ["Peanut Butter x1"],
-        powers: ["Raid Power: Normal Lv.2", "Egg Power Lv.2", "Exp. Point Power: Normal Lv.1"],
+        powers: ["Egg Power Lv.2", "Raid Power: Normal Lv.2", "Item Drop Power: Bug Lv.1"],
         herba: [],
       },
     ],
