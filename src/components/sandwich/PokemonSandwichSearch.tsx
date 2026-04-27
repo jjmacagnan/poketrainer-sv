@@ -44,7 +44,7 @@ const GOAL_LABELS: Record<Goal, string> = {
   encounter: "🔍 Encounter",
   raid: "⚔️ Raid",
   breeding: "🥚 Breeding",
-  outbreak: "🌊 Outbreak",
+  outbreak: "🌟 Outbreak",
 };
 
 const GOAL_COLORS: Record<Goal, string> = {
