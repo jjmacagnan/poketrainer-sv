@@ -11,6 +11,14 @@ const TYPE_ID: Record<string, number> = {
   Dragon: 16, Dark: 17, Fairy: 18,
 };
 const SV_SYMBOL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small";
+
+const typeFilterOptions = TYPES.map((tp) => ({
+  value: tp,
+  label: tp,
+  color: TYPE_COLORS[tp],
+  icon: `${SV_SYMBOL}/${TYPE_ID[tp]}.png`,
+}));
+
 import { ALL_RECIPES, MEAL_POWERS } from "@/data/sandwich-recipes";
 import type { SandwichRecipe } from "@/data/sandwich-recipes";
 import {
@@ -18,22 +26,29 @@ import {
   ENCOUNTER_GUIDE,
   RAID_GUIDE,
   BREEDING_RECIPES,
+  UTILITY_RECIPES,
+  MASS_OUTBREAK_GUIDE,
+  VGC_ANY_HERBA_GUIDE,
 } from "@/data/sandwich-guide";
-import type { SandwichGuideEntry } from "@/data/sandwich-guide";
+import type { SandwichGuideEntry, UtilityRecipeGoal } from "@/data/sandwich-guide";
 import { useI18n } from "@/i18n";
 import { RecipeCard } from "./RecipeCard";
 import { RecipeDetail } from "./RecipeDetail";
 import { ToolDisclaimer } from "@/components/shared/ToolDisclaimer";
+import { FilterBar } from "@/components/shared/FilterBar";
 import { PokemonSandwichSearch } from "./PokemonSandwichSearch";
 import { GuideBanner } from "@/components/shared/GuideBanner";
+import { PageHeader } from "@/components/shared/PageHeader";
 
-type Tab = "shiny" | "encounter" | "raid" | "breeding" | "search";
+type Tab = "shiny" | "outbreak" | "encounter" | "raid" | "breeding" | "utility" | "search";
 
 const GUIDE_DATA: Record<Tab, SandwichGuideEntry[]> = {
   shiny: SHINY_GUIDE,
+  outbreak: [],
   encounter: ENCOUNTER_GUIDE,
   raid: RAID_GUIDE,
   breeding: [],
+  utility: [],
   search: [],
 };
 
@@ -172,6 +187,15 @@ function TypeGuideCard({
   );
 }
 
+const UTILITY_GOAL_LABELS: Record<UtilityRecipeGoal, string> = {
+  egg: "Egg",
+  raid: "Raid",
+  encounter: "Encounter",
+  catching: "Catching",
+  "item-drop": "Item Drop",
+  shiny: "Shiny",
+};
+
 export function SandwichBuilder() {
   const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("shiny");
@@ -199,6 +223,16 @@ export function SandwichBuilder() {
     });
   }, [searchPower, searchType]);
 
+  const filteredOutbreakGuide = useMemo(() => {
+    if (!selectedType) return MASS_OUTBREAK_GUIDE;
+    return MASS_OUTBREAK_GUIDE.filter((recipe) => recipe.type === selectedType);
+  }, [selectedType]);
+
+  const filteredVgcAnyHerbaGuide = useMemo(() => {
+    if (!selectedType) return VGC_ANY_HERBA_GUIDE;
+    return VGC_ANY_HERBA_GUIDE.filter((recipe) => recipe.type === selectedType);
+  }, [selectedType]);
+
   // Detail view
   if (selectedRecipe) {
     return (
@@ -213,9 +247,11 @@ export function SandwichBuilder() {
 
   const tabs: { id: Tab; label: string; desc: string; color: string }[] = [
     { id: "shiny", label: t("sandwich.tabShiny"), desc: t("sandwich.tabShinyDesc"), color: "#FFD700" },
+    { id: "outbreak", label: t("sandwich.tabOutbreak"), desc: t("sandwich.tabOutbreakDesc"), color: "#EC4899" },
     { id: "encounter", label: t("sandwich.tabEncounter"), desc: t("sandwich.tabEncounterDesc"), color: "#4ECDC4" },
     { id: "raid", label: t("sandwich.tabRaid"), desc: t("sandwich.tabRaidDesc"), color: "#E040FB" },
     { id: "breeding", label: t("sandwich.tabBreeding"), desc: t("sandwich.tabBreedingDesc"), color: "#F9A825" },
+    { id: "utility", label: t("sandwich.tabUtility"), desc: t("sandwich.tabUtilityDesc"), color: "#60A5FA" },
     { id: "search", label: t("sandwich.tabSearch"), desc: t("sandwich.tabSearchDesc"), color: "#90CAF9" },
   ];
 
@@ -226,6 +262,13 @@ export function SandwichBuilder() {
       gradient: "linear-gradient(135deg, rgba(255,215,0,0.07), rgba(255,107,107,0.07))",
       border: "1px solid rgba(255,215,0,0.2)",
       titleColor: "text-yellow-400",
+    },
+    outbreak: {
+      title: t("sandwich.outbreakTitle"),
+      info: t("sandwich.outbreakInfo"),
+      gradient: "linear-gradient(135deg, rgba(236,72,153,0.07), rgba(255,215,0,0.06))",
+      border: "1px solid rgba(236,72,153,0.2)",
+      titleColor: "text-pink-400",
     },
     encounter: {
       title: t("sandwich.encounterTitle"),
@@ -248,22 +291,26 @@ export function SandwichBuilder() {
       border: "1px solid rgba(249,168,37,0.2)",
       titleColor: "text-yellow-500",
     },
+    utility: {
+      title: t("sandwich.utilityTitle"),
+      info: t("sandwich.utilityInfo"),
+      gradient: "linear-gradient(135deg, rgba(96,165,250,0.07), rgba(78,205,196,0.07))",
+      border: "1px solid rgba(96,165,250,0.2)",
+      titleColor: "text-sky-400",
+    },
     search: { title: "", info: "", gradient: "", border: "", titleColor: "" },
   };
 
   const banner = tabBanners[tab];
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6">
-      {/* Header */}
-      <div className="mb-8 text-center">
-        <div className="mb-1 font-[family-name:var(--font-share-tech-mono)] text-ui-xs uppercase tracking-[3px] text-[var(--pt-text-dim)]">#001</div>
-        <div className="mb-2 text-5xl">🥪</div>
-        <h1 className="mb-2 font-[family-name:var(--font-share-tech-mono)] text-2xl uppercase tracking-[2px] text-[var(--pt-gold)]">
-          {t("sandwich.title")}
-        </h1>
-        <p className="text-sm text-[var(--pt-text-dim)]">{t("sandwich.subtitle")}</p>
-      </div>
+    <div className="mx-auto max-w-4xl px-4 py-6">
+      <PageHeader
+        emoji="🥪"
+        title={t("sandwich.title")}
+        subtitle={t("sandwich.subtitle")}
+        toolNumber="#001"
+      />
 
       <GuideBanner
         ptHref="/guia-sanduiche-shiny"
@@ -272,7 +319,7 @@ export function SandwichBuilder() {
       />
 
       {/* Tabs */}
-      <div className="mb-5 flex gap-0 border border-[var(--pt-border-dim)]">
+      <div className="mb-6 grid gap-1 rounded-none bg-[var(--pt-card)] p-1 sm:grid-cols-5">
         {tabs.map((tb) => (
           <button
             key={tb.id}
@@ -281,7 +328,7 @@ export function SandwichBuilder() {
               setSelectedType(null);
               setSelectedEntry(null);
             }}
-            className={`flex-1 px-2 py-2.5 text-center text-sm font-bold transition-all border-b-2 ${
+            className={`rounded-none border-b-2 px-2 py-2.5 text-center text-sm font-bold transition-all ${
               tab === tb.id
                 ? "bg-[rgba(255,215,0,0.06)] text-white"
                 : "border-transparent text-[var(--pt-text-dim)] hover:text-[var(--pt-text)]"
@@ -295,37 +342,17 @@ export function SandwichBuilder() {
       </div>
 
       {/* Type Filter — only for tabs that group by Pokémon type */}
-      {tab !== "search" && tab !== "breeding" && (
-        <div className="mb-5 flex flex-wrap justify-center gap-1.5">
-          <button
-            onClick={() => { setSelectedType(null); setSelectedEntry(null); }}
-            className={`border px-3 py-1 text-xs font-semibold transition-colors ${
-              !selectedType
-                ? "border-white/30 bg-white/15 text-white"
-                : "border-[var(--pt-border-dim)] bg-[var(--pt-card)] text-[var(--pt-text-dim)]"
-            }`}
-          >
-            {t("sandwich.allTypes")}
-          </button>
-          {TYPES.map((tp) => (
-            <button
-              key={tp}
-              onClick={() => {
-                setSelectedType(selectedType === tp ? null : tp);
-                setSelectedEntry(null);
-              }}
-              className="inline-flex items-center gap-1 border px-3 py-1 text-ui-md font-bold text-white transition-all"
-              style={{
-                background: selectedType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
-                borderColor: selectedType === tp ? TYPE_COLORS[tp] : "var(--pt-border-dim)",
-                opacity: selectedType === tp ? 1 : 0.6,
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`${SV_SYMBOL}/${TYPE_ID[tp]}.png`} alt="" aria-hidden style={{ height: 13, width: "auto", display: "block" }} />
-              {tp}
-            </button>
-          ))}
+      {tab !== "search" && tab !== "breeding" && tab !== "utility" && (
+        <div className="mb-5">
+          <FilterBar
+            options={typeFilterOptions}
+            selected={selectedType}
+            onSelect={(value) => {
+              setSelectedType(value as PokemonType | null);
+              setSelectedEntry(null);
+            }}
+            allLabel={t("sandwich.allTypes")}
+          />
         </div>
       )}
 
@@ -333,10 +360,10 @@ export function SandwichBuilder() {
       {tab === "search" && (
         <div className="mb-5">
           {/* Mode toggle */}
-          <div className="mb-4 flex gap-0 border border-[var(--pt-border-dim)]">
+          <div className="mb-4 grid gap-1 rounded-none bg-[var(--pt-card)] p-1 sm:grid-cols-2">
             <button
               onClick={() => setSearchMode("pokemon")}
-              className={`flex-1 border-b-2 px-3 py-2.5 text-center font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] transition-all ${
+              className={`rounded-none border-b-2 px-3 py-2.5 text-center font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] transition-all ${
                 searchMode === "pokemon"
                   ? "border-b-[var(--pt-gold)] bg-[rgba(255,215,0,0.06)] text-white"
                   : "border-b-transparent text-[var(--pt-text-dim)] hover:text-[var(--pt-text)]"
@@ -346,7 +373,7 @@ export function SandwichBuilder() {
             </button>
             <button
               onClick={() => setSearchMode("power")}
-              className={`flex-1 border-b-2 border-l border-l-[var(--pt-border-dim)] px-3 py-2.5 text-center font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] transition-all ${
+              className={`rounded-none border-b-2 px-3 py-2.5 text-center font-[family-name:var(--font-share-tech-mono)] text-ui-sm uppercase tracking-[1px] transition-all ${
                 searchMode === "power"
                   ? "border-b-[var(--pt-gold)] bg-[rgba(255,215,0,0.06)] text-white"
                   : "border-b-transparent text-[var(--pt-text-dim)] hover:text-[var(--pt-text)]"
@@ -364,11 +391,11 @@ export function SandwichBuilder() {
                 <div className="mb-3 text-sm font-bold text-gray-100">
                   {t("sandwich.reverseSearch")}
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid gap-2 sm:grid-cols-2">
                   <select
                     value={searchPower}
                     onChange={(e) => setSearchPower(e.target.value)}
-                    className="min-w-[180px] flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
+                    className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
                   >
                     <option value="">{t("sandwich.anyPower")}</option>
                     {MEAL_POWERS.map((p) => (
@@ -380,7 +407,7 @@ export function SandwichBuilder() {
                   <select
                     value={searchType}
                     onChange={(e) => setSearchType(e.target.value)}
-                    className="min-w-[140px] flex-1 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
+                    className="w-full border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-sm text-gray-100"
                   >
                     <option value="">{t("sandwich.anyType")}</option>
                     {TYPES.map((tp) => (
@@ -393,7 +420,7 @@ export function SandwichBuilder() {
               </div>
 
               {searchResults.length > 0 ? (
-                <div className="grid gap-2.5">
+                <div className="grid items-start gap-3 lg:grid-cols-2">
                   {searchResults.map((r, i) => (
                     <RecipeCard key={i} recipe={r} onSelect={setSelectedRecipe} />
                   ))}
@@ -448,7 +475,7 @@ export function SandwichBuilder() {
                     </span>
                   )}
                 </div>
-                <div className="grid gap-2">
+                <div className="grid items-start gap-3 lg:grid-cols-2">
                   {recipes.map((r, i) => (
                     <RecipeCard key={i} recipe={r} onSelect={setSelectedRecipe} />
                   ))}
@@ -459,8 +486,193 @@ export function SandwichBuilder() {
         </div>
       )}
 
+      {/* Mass Outbreak tab */}
+      {tab === "outbreak" && (
+        <div>
+          <div
+            className="mb-4 p-3.5 text-sm text-[var(--pt-text-dim)]"
+            style={{ background: banner.gradient, border: banner.border }}
+          >
+            <strong className={banner.titleColor}>{banner.title}</strong> —{" "}
+            {banner.info}
+          </div>
+
+          <div className="grid items-start gap-3 lg:grid-cols-2">
+            {filteredOutbreakGuide.map((recipe) => (
+              <button
+                key={recipe.type}
+                onClick={() =>
+                  setSelectedRecipe({
+                    name: `Mass Outbreak ${recipe.type}`,
+                    type: recipe.type,
+                    ingredients: recipe.ingredients,
+                    condiments: recipe.condiments,
+                    powers: recipe.powers,
+                    herba: [],
+                  })
+                }
+                className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-3 text-left transition-colors hover:border-pink-500/40 hover:bg-pink-500/8"
+              >
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  <span
+                    className="inline-flex items-center gap-1 rounded-sm px-2.5 py-1 text-xs font-bold text-white"
+                    style={{ background: TYPE_COLORS[recipe.type] }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`${SV_SYMBOL}/${TYPE_ID[recipe.type]}.png`} alt="" aria-hidden style={{ height: 12, width: "auto", display: "block" }} />
+                    {recipe.type}
+                  </span>
+                  <span className="text-sm font-bold text-gray-100">
+                    Mass Outbreak
+                  </span>
+                </div>
+                <p className="mb-2 text-xs text-[var(--pt-text-dim)]">{recipe.note}</p>
+                <div className="mb-2">
+                  <div className="mb-1 text-ui-base font-bold text-[var(--pt-gold)]">
+                    {t("sandwich.ingredients")}
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {recipe.ingredients.map((ingredient) => (
+                      <span key={ingredient} className="border border-[var(--pt-border-dim)] bg-black/20 px-1.5 py-0.5 text-ui-sm text-gray-200">
+                        {ingredient}
+                      </span>
+                    ))}
+                    {recipe.condiments.map((condiment) => (
+                      <span key={condiment} className="border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-1.5 py-0.5 text-ui-sm text-[var(--pt-gold)]">
+                        {condiment}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {recipe.powers.map((power) => (
+                    <span key={power} className="border border-pink-500/30 bg-pink-500/10 px-1.5 py-0.5 text-ui-sm text-pink-300">
+                      {power}
+                    </span>
+                  ))}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div className="mb-2 mt-5 flex items-center gap-2">
+            <span className="border border-[var(--pt-border-dim)] bg-black/20 px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs font-bold uppercase tracking-[2px] text-[var(--pt-text-dim)]">
+              VGC
+            </span>
+            <h3 className="text-sm font-bold text-gray-100">{t("sandwich.vgcAnyHerbaTitle")}</h3>
+          </div>
+          <p className="mb-3 text-xs text-[var(--pt-text-dim)]">{t("sandwich.vgcAnyHerbaInfo")}</p>
+
+          <div className="grid items-start gap-3 lg:grid-cols-2">
+            {filteredVgcAnyHerbaGuide.map((recipe) => (
+              <button
+                key={recipe.type}
+                onClick={() =>
+                  setSelectedRecipe({
+                    name: `VGC Any Herba ${recipe.type}`,
+                    type: recipe.type,
+                    ingredients: recipe.ingredients,
+                    condiments: recipe.condiments,
+                    powers: recipe.powers,
+                    herba: [],
+                  })
+                }
+                className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-3 text-left transition-colors hover:border-yellow-500/40 hover:bg-yellow-500/8"
+              >
+                <div className="mb-2 flex flex-wrap items-center gap-2">
+                  <span
+                    className="inline-flex items-center gap-1 rounded-sm px-2.5 py-1 text-xs font-bold text-white"
+                    style={{ background: TYPE_COLORS[recipe.type] }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`${SV_SYMBOL}/${TYPE_ID[recipe.type]}.png`} alt="" aria-hidden style={{ height: 12, width: "auto", display: "block" }} />
+                    {recipe.type}
+                  </span>
+                  <span className="text-sm font-bold text-gray-100">
+                    Any Herba
+                  </span>
+                </div>
+                <p className="mb-2 text-xs text-[var(--pt-text-dim)]">{recipe.note}</p>
+                <div className="mb-2">
+                  <div className="mb-1 text-ui-base font-bold text-[var(--pt-gold)]">
+                    {t("sandwich.ingredients")}
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {recipe.ingredients.map((ingredient) => (
+                      <span key={ingredient} className="border border-[var(--pt-border-dim)] bg-black/20 px-1.5 py-0.5 text-ui-sm text-gray-200">
+                        {ingredient}
+                      </span>
+                    ))}
+                    {recipe.condiments.map((condiment) => (
+                      <span key={condiment} className="border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-1.5 py-0.5 text-ui-sm text-[var(--pt-gold)]">
+                        {condiment}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {recipe.powers.map((power) => (
+                    <span key={power} className="border border-yellow-500/30 bg-yellow-500/10 px-1.5 py-0.5 text-ui-sm text-yellow-300">
+                      {power}
+                    </span>
+                  ))}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Utility picks tab */}
+      {tab === "utility" && (
+        <div>
+          <div
+            className="mb-4 p-3.5 text-sm text-[var(--pt-text-dim)]"
+            style={{ background: banner.gradient, border: banner.border }}
+          >
+            <strong className={banner.titleColor}>{banner.title}</strong> —{" "}
+            {banner.info}
+          </div>
+
+          <div className="grid items-start gap-3 lg:grid-cols-2">
+            {UTILITY_RECIPES.map((recipe) => (
+              <div key={recipe.name} className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-3">
+                <button
+                  onClick={() => setSelectedRecipe(recipe)}
+                  className="w-full text-left"
+                >
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <span
+                      className="rounded-none border px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs font-bold uppercase tracking-[2px] text-white"
+                      style={{
+                        borderColor: TYPE_COLORS[recipe.type] + "99",
+                        background: TYPE_COLORS[recipe.type] + "33",
+                      }}
+                    >
+                      {UTILITY_GOAL_LABELS[recipe.goal]}
+                    </span>
+                    <span className="text-sm font-bold text-gray-100">{recipe.name}</span>
+                  </div>
+                  <p className="mb-2 text-xs text-[var(--pt-text-dim)]">{recipe.note}</p>
+                  <div className="mb-2 text-ui-base text-gray-300">
+                    {recipe.ingredients.concat(recipe.condiments).join(" · ")}
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {recipe.powers.map((power) => (
+                      <span key={power} className="border border-[var(--pt-border-dim)] bg-black/20 px-1.5 py-0.5 text-ui-sm text-[var(--pt-text-dim)]">
+                        {power}
+                      </span>
+                    ))}
+                  </div>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Guide tabs (shiny / encounter / raid) */}
-      {tab !== "search" && tab !== "breeding" && (
+      {tab !== "search" && tab !== "breeding" && tab !== "utility" && tab !== "outbreak" && (
         <div>
           {/* Info banner */}
           {banner.title && (
@@ -474,7 +686,7 @@ export function SandwichBuilder() {
           )}
 
           {/* Type entry cards */}
-          <div className="grid gap-2.5">
+          <div className="grid items-start gap-3 lg:grid-cols-2">
             {filteredGuide.map((entry) => (
               <TypeGuideCard
                 key={entry.type}
@@ -507,6 +719,7 @@ export function SandwichBuilder() {
         note={t("sandwich.footerNote")}
         sources={[
           { label: t("sandwich.footerSource"), url: "https://www.serebii.net/scarletviolet/sandwich.shtml" },
+          { label: "VGC", url: "https://www.videogameschronicle.com/guide/shiny-sandwich-pokemon-scarlet-and-violet-all-shiny-sandwich-recipes/" },
         ]}
       />
     </div>

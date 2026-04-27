@@ -15,6 +15,21 @@ export interface SandwichGuideEntry {
   recipes: [SandwichRecipe, ...SandwichRecipe[]];
 }
 
+export type UtilityRecipeGoal = "egg" | "raid" | "encounter" | "catching" | "item-drop" | "shiny";
+
+export interface UtilitySandwichRecipe extends SandwichRecipe {
+  goal: UtilityRecipeGoal;
+  note: string;
+}
+
+export interface MassOutbreakRecipe {
+  type: PokemonType;
+  ingredients: string[];
+  condiments: string[];
+  powers: string[];
+  note: string;
+}
+
 // ─── Shiny Hunting (Sparkling Power Lv.3) ────────────────────────────────────
 // Primary recipes are the "optimal" (fewest ingredients) from community sources.
 // Alternatives use different Herba Mystica combos for flexibility.
@@ -59,6 +74,14 @@ export const SHINY_GUIDE: SandwichGuideEntry[] = [
         condiments: ["Sweet Herba Mystica x2"],
         powers: ["Sparkling Power: Fire Lv.3", "Encounter Power: Fire Lv.3", "Egg Power Lv.3"],
         herba: ["Sweet", "Sweet"],
+      },
+      {
+        name: "Basil Sandwich (VGC)",
+        type: "Fire",
+        ingredients: ["Basil x1"],
+        condiments: ["Salty Herba Mystica x1", "Sweet Herba Mystica x1"],
+        powers: ["Sparkling Power: Fire Lv.3", "Encounter Power: Fire Lv.3", "Title Power: Fire Lv.3"],
+        herba: ["Salty", "Sweet"],
       },
     ],
   },
@@ -146,6 +169,14 @@ export const SHINY_GUIDE: SandwichGuideEntry[] = [
         powers: ["Sparkling Power: Poison Lv.3", "Encounter Power: Poison Lv.3", "Title Power: Poison Lv.3"],
         herba: ["Salty", "Spicy"],
       },
+      {
+        name: "Noodles Sandwich (VGC)",
+        type: "Poison",
+        ingredients: ["Noodles x1"],
+        condiments: ["Salty Herba Mystica x2"],
+        powers: ["Sparkling Power: Poison Lv.3", "Encounter Power: Poison Lv.3", "Title Power: Poison Lv.3"],
+        herba: ["Salty", "Salty"],
+      },
     ],
   },
   {
@@ -210,6 +241,14 @@ export const SHINY_GUIDE: SandwichGuideEntry[] = [
         condiments: ["Salty Herba Mystica x1", "Sour Herba Mystica x1"],
         powers: ["Sparkling Power: Rock Lv.3", "Encounter Power: Rock Lv.3", "Title Power: Rock Lv.3"],
         herba: ["Salty", "Sour"],
+      },
+      {
+        name: "Jalapeno Sandwich (VGC)",
+        type: "Rock",
+        ingredients: ["Jalapeno x1"],
+        condiments: ["Salty Herba Mystica x2"],
+        powers: ["Sparkling Power: Rock Lv.3", "Encounter Power: Rock Lv.3", "Title Power: Rock Lv.3"],
+        herba: ["Salty", "Salty"],
       },
     ],
   },
@@ -288,6 +327,269 @@ export const SHINY_GUIDE: SandwichGuideEntry[] = [
   },
 ];
 
+// ─── Mass Outbreak Shiny Hunting ─────────────────────────────────────────────
+// These prioritize Sparkling Power during outbreaks, where Encounter Power is
+// less important because the target species is already spawning in bulk.
+
+export const MASS_OUTBREAK_GUIDE: MassOutbreakRecipe[] = [
+  {
+    type: "Bug",
+    ingredients: ["Cherry Tomatoes x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Bug Lv.3"],
+    note: "Use during Bug-type mass outbreaks.",
+  },
+  {
+    type: "Dark",
+    ingredients: ["Smoked Fillet x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Dark Lv.3"],
+    note: "Use during Dark-type mass outbreaks.",
+  },
+  {
+    type: "Dragon",
+    ingredients: ["Avocado x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Dragon Lv.3"],
+    note: "Use during Dragon-type mass outbreaks.",
+  },
+  {
+    type: "Electric",
+    ingredients: ["Yellow Bell Pepper x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Electric Lv.3"],
+    note: "Use during Electric-type mass outbreaks.",
+  },
+  {
+    type: "Fairy",
+    ingredients: ["Tomato x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Fairy Lv.3"],
+    note: "Use during Fairy-type mass outbreaks.",
+  },
+  {
+    type: "Fighting",
+    ingredients: ["Pickle x2", "Potato Tortilla x2", "Strawberry x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Fighting Lv.3"],
+    note: "Use any one listed ingredient pair during Fighting-type mass outbreaks.",
+  },
+  {
+    type: "Fire",
+    ingredients: ["Red Bell Pepper x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Fire Lv.3"],
+    note: "Use during Fire-type mass outbreaks.",
+  },
+  {
+    type: "Flying",
+    ingredients: ["Egg x2", "Apple x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Flying Lv.3"],
+    note: "Use either listed ingredient pair during Flying-type mass outbreaks.",
+  },
+  {
+    type: "Ghost",
+    ingredients: ["Red Onion x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Ghost Lv.3"],
+    note: "Use during Ghost-type mass outbreaks.",
+  },
+  {
+    type: "Grass",
+    ingredients: ["Lettuce x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Grass Lv.3"],
+    note: "Use during Grass-type mass outbreaks.",
+  },
+  {
+    type: "Ground",
+    ingredients: ["Ham x2", "Pineapple x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Ground Lv.3"],
+    note: "Use either listed ingredient pair during Ground-type mass outbreaks.",
+  },
+  {
+    type: "Ice",
+    ingredients: ["Klawf Stick x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Ice Lv.3"],
+    note: "Use during Ice-type mass outbreaks.",
+  },
+  {
+    type: "Normal",
+    ingredients: ["Cheese x2", "Banana x2", "Rice x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Normal Lv.3"],
+    note: "Use any one listed ingredient pair during Normal-type mass outbreaks.",
+  },
+  {
+    type: "Poison",
+    ingredients: ["Noodles x2", "Green Bell Pepper x2", "Kiwi x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Poison Lv.3"],
+    note: "Use any one listed ingredient pair during Poison-type mass outbreaks.",
+  },
+  {
+    type: "Psychic",
+    ingredients: ["Onion x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Psychic Lv.3"],
+    note: "Use during Psychic-type mass outbreaks.",
+  },
+  {
+    type: "Rock",
+    ingredients: ["Jalapeno x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Rock Lv.3"],
+    note: "Use during Rock-type mass outbreaks.",
+  },
+  {
+    type: "Steel",
+    ingredients: ["Hamburger x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Steel Lv.3"],
+    note: "Use during Steel-type mass outbreaks.",
+  },
+  {
+    type: "Water",
+    ingredients: ["Cucumber x2"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Water Lv.3"],
+    note: "Use during Water-type mass outbreaks.",
+  },
+];
+
+// VGC's flexible shiny list uses larger ingredient stacks and any two Herba.
+export const VGC_ANY_HERBA_GUIDE: MassOutbreakRecipe[] = [
+  {
+    type: "Normal",
+    ingredients: ["Hamburger x1", "Cucumber x1", "Smoked Fillet x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Normal Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Fire",
+    ingredients: ["Hamburger x1", "Onion x1", "Prosciutto x1", "Red Bell Pepper x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Fire Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Water",
+    ingredients: ["Hamburger x1", "Cucumber x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Water Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Grass",
+    ingredients: ["Hamburger x1", "Lettuce x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Grass Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Flying",
+    ingredients: ["Hamburger x1", "Prosciutto x2", "Rice x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Flying Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Fighting",
+    ingredients: ["Hamburger x1", "Pickle x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Fighting Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Poison",
+    ingredients: ["Green Bell Pepper x1", "Hamburger x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Poison Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Electric",
+    ingredients: ["Hamburger x1", "Prosciutto x1", "Yellow Bell Pepper x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Electric Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Ground",
+    ingredients: ["Hamburger x1", "Ham x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Ground Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Rock",
+    ingredients: ["Bacon x1", "Hamburger x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Rock Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Psychic",
+    ingredients: ["Hamburger x1", "Onion x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Psychic Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Ice",
+    ingredients: ["Hamburger x1", "Klawf Stick x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Ice Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Bug",
+    ingredients: ["Cherry Tomatoes x1", "Hamburger x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Bug Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Ghost",
+    ingredients: ["Hamburger x1", "Prosciutto x1", "Red Onion x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Ghost Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Steel",
+    ingredients: ["Hamburger x2", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Steel Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Dragon",
+    ingredients: ["Avocado x1", "Hamburger x1", "Prosciutto x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Dragon Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Dark",
+    ingredients: ["Hamburger x1", "Prosciutto x1", "Smoked Fillet x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Dark Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+  {
+    type: "Fairy",
+    ingredients: ["Hamburger x1", "Prosciutto x1", "Tomato x1"],
+    condiments: ["Any Herba Mystica x2"],
+    powers: ["Sparkling Power: Fairy Lv.3"],
+    note: "VGC flexible shiny recipe.",
+  },
+];
+
 // ─── Encounter (No Herba / Best Spots) ────────────────────────────────────────
 // Sandwiches for boosting wild encounter rates. Sorted by Encounter Power level.
 
@@ -321,7 +623,7 @@ export const ENCOUNTER_GUIDE: SandwichGuideEntry[] = [
         type: "Fire",
         ingredients: ["Pickle x1"],
         condiments: ["Olive Oil x1"],
-        powers: ["Encounter Power: Fire Lv.1", "Item Drop Power: Ground Lv.1", "Exp. Point Power: Fighting Lv.1"],
+        powers: ["Teensy Power: Fighting Lv.1", "Encounter Power: Fire Lv.1", "Catching Power: Ghost Lv.1"],
         herba: [],
       },
     ],
@@ -538,7 +840,7 @@ export const ENCOUNTER_GUIDE: SandwichGuideEntry[] = [
         type: "Dragon",
         ingredients: ["Avocado x1", "Smoked Fillet x1", "Tomato x1"],
         condiments: ["Salt x1"],
-        powers: ["Encounter Power: Dragon Lv.2", "Exp. Point Power: Dark Lv.1", "Catching Power: Flying Lv.1"],
+        powers: ["Encounter Power: Dragon Lv.2", "Catching Power: Fairy Lv.1", "Exp. Point Power: Dark Lv.1"],
         herba: [],
       },
       {
@@ -716,8 +1018,8 @@ export const RAID_GUIDE: SandwichGuideEntry[] = [
         name: "Ultra Five-Alarm Sandwich #122",
         type: "Fire",
         ingredients: ["Chorizo x1", "Onion x1", "Green Bell Pepper x1", "Basil x1", "Jalapeno x1"],
-        condiments: ["Mustard x1", "Chili Sauce x1", "Pepper x1"],
-        powers: ["Raid Power: Fire Lv.2", "Encounter Power: Dragon Lv.1", "Exp. Point Power: Rock Lv.1"],
+        condiments: ["Mustard x1", "Ketchup x1", "Pepper x1"],
+        powers: ["Humungo Power: Poison Lv.2", "Raid Power: Fire Lv.2", "Exp. Point Power: Dragon Lv.1"],
         herba: [],
       },
       {
@@ -836,6 +1138,82 @@ export const RAID_GUIDE: SandwichGuideEntry[] = [
         herba: [],
       },
     ],
+  },
+];
+
+// ─── Utility Picks ────────────────────────────────────────────────────────────
+// Cross-category recipes highlighted by external guides for specific goals.
+
+export const UTILITY_RECIPES: UtilitySandwichRecipe[] = [
+  {
+    name: "Great Peanut Butter Sandwich #17",
+    type: "Normal",
+    goal: "egg",
+    note: "Best low-cost Egg Power Lv.2 pick for breeding sessions.",
+    ingredients: ["Banana x1", "Butter x1"],
+    condiments: ["Peanut Butter x1"],
+    powers: ["Egg Power Lv.2", "Raid Power: Electric Lv.1", "Exp. Point Power: Normal Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Ultra Five-Alarm Sandwich #122",
+    type: "Fire",
+    goal: "raid",
+    note: "Fire Raid Power Lv.2 without Herba Mystica.",
+    ingredients: ["Chorizo x1", "Onion x1", "Green Bell Pepper x1", "Basil x1", "Jalapeno x1"],
+    condiments: ["Mustard x1", "Ketchup x1", "Pepper x1"],
+    powers: ["Humungo Power: Poison Lv.2", "Raid Power: Fire Lv.2", "Exp. Point Power: Dragon Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Pickle Sandwich #20",
+    type: "Fire",
+    goal: "encounter",
+    note: "Early-game Charcadet helper with Encounter Power: Fire.",
+    ingredients: ["Pickle x1"],
+    condiments: ["Olive Oil x1"],
+    powers: ["Teensy Power: Fighting Lv.1", "Encounter Power: Fire Lv.1", "Catching Power: Ghost Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Zesty Sandwich #56",
+    type: "Water",
+    goal: "encounter",
+    note: "Budget Water encounter recipe with no Herba Mystica.",
+    ingredients: ["Jalapeno x1", "Onion x1", "Herbed Sausage x1"],
+    condiments: ["Chili Sauce x1"],
+    powers: ["Humungo Power: Psychic Lv.1", "Exp. Point Power: Fighting Lv.1", "Encounter Power: Water Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Great Avocado Sandwich #45",
+    type: "Dragon",
+    goal: "encounter",
+    note: "Dragon Encounter Power Lv.2 for Frigibax/Baxcalibur hunts.",
+    ingredients: ["Avocado x1", "Smoked Fillet x1", "Tomato x1"],
+    condiments: ["Salt x1"],
+    powers: ["Encounter Power: Dragon Lv.2", "Catching Power: Fairy Lv.1", "Exp. Point Power: Dark Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Great Potato Salad Sandwich #53",
+    type: "Dragon",
+    goal: "catching",
+    note: "Catching Power: Dragon Lv.2 for Koraidon/Miraidon.",
+    ingredients: ["Potato Salad x1", "Cucumber x1", "Red Bell Pepper x1", "Avocado x1"],
+    condiments: ["Mayonnaise x1"],
+    powers: ["Catching Power: Dragon Lv.2", "Encounter Power: Ghost Lv.1", "Humungo Power: Bug Lv.1"],
+    herba: [],
+  },
+  {
+    name: "Ultra Jam Sandwich #14",
+    type: "Dark",
+    goal: "catching",
+    note: "Catching Power: Dark Lv.2 for the Treasures of Ruin.",
+    ingredients: ["Strawberry x1", "Pineapple x1"],
+    condiments: ["Jam x1", "Yogurt x1"],
+    powers: ["Catching Power: Dark Lv.2", "Item Drop Power: Ground Lv.2", "Egg Power Lv.1"],
+    herba: [],
   },
 ];
 
