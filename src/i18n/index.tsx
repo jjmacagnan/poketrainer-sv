@@ -29,7 +29,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     try {
       const saved = localStorage.getItem("poketrainer-locale") as Locale | null;
       if (saved === "pt" || saved === "en") {
-        setLocaleState(saved);
+        queueMicrotask(() => setLocaleState(saved));
       }
     } catch {
       // localStorage unavailable (private mode, quota exceeded, etc.)

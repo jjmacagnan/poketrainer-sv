@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import Image from "next/image";
 import { wildPokemonData } from "@/data/pokemon-utils";
-import { STAT_NAMES } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useI18n } from "@/i18n";
@@ -131,8 +131,7 @@ export function EVTracker() {
               onClick={() => selectPokemon(p)}
               className="flex items-center gap-3 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2 text-left transition-colors hover:border-[rgba(255,215,0,0.5)] hover:bg-[rgba(255,215,0,0.02)]"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={p.sprite}
                 alt={p.name}
                 width={36}

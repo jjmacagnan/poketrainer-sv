@@ -12,13 +12,50 @@ import itemsData from "@/data/generated/items.json";
 import movesData from "@/data/generated/moves.json";
 
 const abilitiesList = abilitiesData as { name: string; shortEffect: string; flavorText: string }[];
-const itemsList = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
+const extraItems: { name: string; description: string; officialDescription: string; sprite: string }[] = [
+  {
+    name: "Earth Plate",
+    description: "Boosts Ground-type moves and changes Arceus's type.",
+    officialDescription: "An item to be held by a Pokemon. It boosts the power of Ground-type moves.",
+    sprite: "",
+  },
+  {
+    name: "Pixie Plate",
+    description: "Boosts Fairy-type moves and changes Arceus's type.",
+    officialDescription: "An item to be held by a Pokemon. It boosts the power of Fairy-type moves.",
+    sprite: "",
+  },
+  {
+    name: "Spooky Plate",
+    description: "Boosts Ghost-type moves and changes Arceus's type.",
+    officialDescription: "An item to be held by a Pokemon. It boosts the power of Ghost-type moves.",
+    sprite: "",
+  },
+  {
+    name: "Heat Rock",
+    description: "Extends harsh sunlight created by the holder.",
+    officialDescription: "An item to be held by a Pokemon. It extends the duration of Sunny Day.",
+    sprite: "",
+  },
+];
+const itemsList = [
+  ...(itemsData as { name: string; description: string; officialDescription: string; sprite: string }[]),
+  ...extraItems,
+];
 const movesList = movesData as { name: string; effect?: string }[];
 
 const STAT_COLORS: Record<StatName, string> = {
   HP: "#FF5959", Atk: "#F5AC78", Def: "#FAE078",
   SpA: "#9DB7F5", SpD: "#A7DB8D", Spe: "#FA92B2",
 };
+
+const TYPE_ID: Record<string, number> = {
+  Normal: 1, Fighting: 2, Flying: 3, Poison: 4, Ground: 5,
+  Rock: 6, Bug: 7, Ghost: 8, Steel: 9, Fire: 10,
+  Water: 11, Grass: 12, Electric: 13, Psychic: 14, Ice: 15,
+  Dragon: 16, Dark: 17, Fairy: 18,
+};
+const SV_SYMBOL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small";
 
 interface BuildExportProps {
   pokemon: {
@@ -51,8 +88,13 @@ export function BuildExport({
   const itemData = itemsList.find(i => i.name === item);
 
   useEffect(() => {
-    if (!itemData?.sprite) { setItemSpriteB64(null); return; }
     let cancelled = false;
+    if (!itemData?.sprite) {
+      queueMicrotask(() => {
+        if (!cancelled) setItemSpriteB64(null);
+      });
+      return () => { cancelled = true; };
+    }
     fetch(itemData.sprite)
       .then(r => r.blob())
       .then(blob => new Promise<string>((res, rej) => {
@@ -142,8 +184,18 @@ export function BuildExport({
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
                       }}
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`${SV_SYMBOL}/${TYPE_ID[type]}.png`}
+                        alt=""
+                        crossOrigin="anonymous"
+                        style={{ height: 10, width: "auto", display: "block" }}
+                      />
                       {type}
                     </span>
                   ))}
@@ -160,8 +212,18 @@ export function BuildExport({
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
                       }}
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`${SV_SYMBOL}/${TYPE_ID[teraType]}.png`}
+                        alt=""
+                        crossOrigin="anonymous"
+                        style={{ height: 10, width: "auto", display: "block" }}
+                      />
                       {teraType}
                     </span>
                   </div>
@@ -212,9 +274,11 @@ export function BuildExport({
                   <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
                     <span style={{ fontSize: 8, fontFamily: "monospace", letterSpacing: 2, color: "#f87171", marginRight: 4, textTransform: "uppercase" }}>WEAK</span>
                     {defenses.weaknesses.map(w => (
-                      <div key={w.type} style={{ display: "flex", alignItems: "center", border: "1px solid rgba(248,113,113,0.3)", padding: "2px 6px" }}>
+                      <div key={w.type} style={{ display: "flex", alignItems: "center", gap: 3, border: "1px solid rgba(248,113,113,0.3)", padding: "2px 6px" }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={`${SV_SYMBOL}/${TYPE_ID[w.type]}.png`} alt="" crossOrigin="anonymous" style={{ height: 9, width: "auto", display: "block" }} />
                         <span style={{ color: TYPE_COLORS[w.type as PokemonType], fontSize: 9, fontWeight: 700 }}>{w.type.toUpperCase()}</span>
-                        <span style={{ marginLeft: 4, fontSize: 9, fontWeight: 700, color: "#f87171" }}>×{w.mult}</span>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: "#f87171" }}>×{w.mult}</span>
                       </div>
                     ))}
                   </div>
@@ -223,7 +287,9 @@ export function BuildExport({
                   <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
                     <span style={{ fontSize: 8, fontFamily: "monospace", letterSpacing: 2, color: "#4ade80", marginRight: 4, textTransform: "uppercase" }}>RESIST</span>
                     {defenses.resistances.map(r => (
-                      <div key={r} style={{ border: "1px solid rgba(74,222,128,0.3)", padding: "2px 6px" }}>
+                      <div key={r} style={{ display: "flex", alignItems: "center", gap: 3, border: "1px solid rgba(74,222,128,0.3)", padding: "2px 6px" }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={`${SV_SYMBOL}/${TYPE_ID[r]}.png`} alt="" crossOrigin="anonymous" style={{ height: 9, width: "auto", display: "block" }} />
                         <span style={{ color: TYPE_COLORS[r as PokemonType], fontSize: 9, fontWeight: 700 }}>{r.toUpperCase()}</span>
                       </div>
                     ))}

@@ -51,9 +51,6 @@ interface OutputMoveMeta {
   statChanges: { change: number; stat: string }[];
 }
 
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
 
 async function fetchMoveMeta(id: number): Promise<OutputMoveMeta> {
   const data = await fetchApi<MoveMetaResponse>(`/move/${id}/`);

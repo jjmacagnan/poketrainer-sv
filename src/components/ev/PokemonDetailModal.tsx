@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { TypeBadge } from "@/components/ui/TypeBadge";
 import { StatBar } from "@/components/ui/StatBar";
 import type { PokemonType } from "@/data/types";
@@ -950,7 +951,7 @@ export function PokemonDetailModal({
                       className="flex items-start gap-3 rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] px-3 py-2"
                     >
                       {itemData?.sprite ? (
-                        <img src={itemData.sprite} alt={itemName} className="h-8 w-8 shrink-0 pixelated" />
+                        <Image src={itemData.sprite} alt={itemName} width={32} height={32} className="h-8 w-8 shrink-0 pixelated" />
                       ) : (
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-none bg-[var(--pt-card)] text-ui-base text-white/40">
                           ?

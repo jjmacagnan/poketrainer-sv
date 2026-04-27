@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { STAT_NAMES, STAT_LABELS, MAX_EV_PER_STAT, MAX_EV_TOTAL } from "@/lib/constants";
+import Image from "next/image";
+import { STAT_NAMES, MAX_EV_PER_STAT, MAX_EV_TOTAL } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { clampEVs, VITAMIN_AMOUNT } from "@/lib/ev-calculator";
 import { useI18n } from "@/i18n";
@@ -107,8 +108,7 @@ export function PokemonSlot({
           className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden border border-[var(--pt-border-dim)] bg-[var(--pt-card)] transition-colors hover:border-[var(--pt-gold)]"
         >
           {data.sprite ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={data.sprite}
               alt={data.name}
               width={40}
@@ -225,7 +225,7 @@ export function PokemonSlot({
                   onClick={() => updateEV(stat, VITAMIN_AMOUNT)}
                   className="group relative flex h-6 w-8 items-center justify-center border border-[var(--pt-border-dim)] bg-[var(--pt-card)] transition-colors hover:border-[var(--pt-gold)]"
                 >
-                  <img src={getSprite(STAT_ITEMS[stat].vitamin)} alt={STAT_ITEMS[stat].vitamin} className="h-5 w-5 pixelated" />
+                  <Image src={getSprite(STAT_ITEMS[stat].vitamin)} alt={STAT_ITEMS[stat].vitamin} width={20} height={20} className="h-5 w-5 pixelated" />
                   <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-ui-base font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
                     +{VITAMIN_AMOUNT} ({STAT_ITEMS[stat].vitamin})
                   </div>
@@ -234,7 +234,7 @@ export function PokemonSlot({
                   onClick={() => updateEV(stat, -VITAMIN_AMOUNT)}
                   className="group relative flex h-6 w-8 items-center justify-center border border-[var(--pt-border-dim)] bg-[var(--pt-card)] transition-colors hover:border-[var(--pt-gold)]"
                 >
-                  <img src={getSprite(STAT_ITEMS[stat].berry)} alt={STAT_ITEMS[stat].berry} className="h-5 w-5 pixelated" />
+                  <Image src={getSprite(STAT_ITEMS[stat].berry)} alt={STAT_ITEMS[stat].berry} width={20} height={20} className="h-5 w-5 pixelated" />
                   <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-ui-base font-bold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
                     -{VITAMIN_AMOUNT} ({STAT_ITEMS[stat].berry})
                   </div>
@@ -258,7 +258,7 @@ export function PokemonSlot({
                         {targets.map((target, idx) => (
                           <div key={target.name} className={`space-y-2 pb-2 ${idx !== targets.length - 1 ? "border-b border-white/5" : ""}`}>
                             <div className="flex items-center gap-2">
-                              <img src={target.sprite} alt={target.name} className="h-6 w-6 pixelated shrink-0" />
+                              <Image src={target.sprite} alt={target.name} width={24} height={24} className="h-6 w-6 pixelated shrink-0" />
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between">
                                   <span className="text-ui-base font-bold text-gray-100 truncate">{target.name}</span>
@@ -354,13 +354,13 @@ export function PokemonSlot({
                   : "border-[var(--pt-border-dim)] bg-[var(--pt-card)] text-[var(--pt-text-dim)]"
               }`}
             >
-              <img src={getSprite("Macho Brace")} alt="Macho Brace" className="h-4 w-4 pixelated" />
+              <Image src={getSprite("Macho Brace")} alt="Macho Brace" width={16} height={16} className="h-4 w-4 pixelated" />
               {t("pokemonSlot.machoBrace")} {data.machoBrace ? "(2×)" : ""}
             </button>
 
             <div className="flex items-center gap-2 border border-[var(--pt-border-dim)] bg-[var(--pt-card)] pr-3 pl-1 py-0.5">
               {data.powerItem ? (
-                <img src={getSprite(STAT_ITEMS[data.powerItem].powerItem)} alt="Power Item" className="h-5 w-5 pixelated" />
+                <Image src={getSprite(STAT_ITEMS[data.powerItem].powerItem)} alt="Power Item" width={20} height={20} className="h-5 w-5 pixelated" />
               ) : (
                 <div className="flex h-5 w-5 items-center justify-center bg-[var(--pt-card)] text-ui-base text-white/30">
                   ?

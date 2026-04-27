@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useI18n } from "@/i18n";
+import { useI18n, type Locale } from "@/i18n";
 import type { YouTubeVideo } from "@/app/api/youtube/route";
 
 function YouTubeIcon() {
@@ -21,9 +21,17 @@ function DiscordIcon() {
   );
 }
 
-function formatRelativeDate(iso: string): string {
+function formatRelativeDate(iso: string, locale: Locale): string {
   const diff = Date.now() - new Date(iso).getTime();
   const days = Math.floor(diff / 86_400_000);
+  if (locale === "en") {
+    if (days === 0) return "today";
+    if (days === 1) return "yesterday";
+    if (days < 7) return `${days} days ago`;
+    if (days < 30) return `${Math.floor(days / 7)}w ago`;
+    if (days < 365) return `${Math.floor(days / 30)} months ago`;
+    return `${Math.floor(days / 365)} years ago`;
+  }
   if (days === 0) return "hoje";
   if (days === 1) return "ontem";
   if (days < 7) return `${days} dias atrás`;
@@ -45,7 +53,7 @@ function VideoSkeleton() {
 }
 
 export default function ComunidadePage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [configured, setConfigured] = useState(false);
@@ -193,7 +201,7 @@ export default function ComunidadePage() {
                     {video.title}
                   </p>
                   <p className="mt-1 text-xs text-gray-500">
-                    {formatRelativeDate(video.publishedAt)}
+                    {formatRelativeDate(video.publishedAt, locale)}
                   </p>
                 </div>
               </a>

@@ -38,7 +38,7 @@ async function fetchItem(itemInfo: typeof HELD_ITEMS[0]): Promise<OutputItem> {
       officialDescription: engFlavor ? engFlavor.text.replace(/\n/g, " ") : itemInfo.description,
       sprite: data.sprites.default || ""
     };
-  } catch (err) {
+  } catch {
     console.error(`\n  ⚠ Failed to fetch item ${itemInfo.name}: maybe not in PokeAPI yet?`);
     return {
       name: itemInfo.name,
@@ -74,7 +74,7 @@ async function main() {
         }
       }
     }
-  } catch (err) {
+  } catch {
     console.log("⚠ Could not read pokemon.json, skipping dynamic wild items.");
   }
 

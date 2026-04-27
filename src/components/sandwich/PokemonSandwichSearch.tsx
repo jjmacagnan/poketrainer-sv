@@ -4,11 +4,20 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { usePokemonSearch } from "@/hooks/usePokemonSearch";
 import { TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
+
+const TYPE_ID: Record<string, number> = {
+  Normal: 1, Fighting: 2, Flying: 3, Poison: 4, Ground: 5,
+  Rock: 6, Bug: 7, Ghost: 8, Steel: 9, Fire: 10,
+  Water: 11, Grass: 12, Electric: 13, Psychic: 14, Ice: 15,
+  Dragon: 16, Dark: 17, Fairy: 18,
+};
+const SV_SYMBOL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small";
 import {
   SHINY_GUIDE,
   ENCOUNTER_GUIDE,
   RAID_GUIDE,
   BREEDING_RECIPES,
+  MASS_OUTBREAK_GUIDE,
 } from "@/data/sandwich-guide";
 import type { SandwichRecipe } from "@/data/sandwich-recipes";
 import { RecipeCard } from "./RecipeCard";
@@ -22,7 +31,7 @@ interface Pokemon {
   sprite: string;
 }
 
-type Goal = "shiny" | "encounter" | "raid" | "breeding";
+type Goal = "shiny" | "encounter" | "raid" | "breeding" | "outbreak";
 
 const GUIDE_MAP = {
   shiny: SHINY_GUIDE,
@@ -35,6 +44,7 @@ const GOAL_LABELS: Record<Goal, string> = {
   encounter: "🔍 Encounter",
   raid: "⚔️ Raid",
   breeding: "🥚 Breeding",
+  outbreak: "🌟 Outbreak",
 };
 
 const GOAL_COLORS: Record<Goal, string> = {
@@ -42,6 +52,7 @@ const GOAL_COLORS: Record<Goal, string> = {
   encounter: "#4ECDC4",
   raid: "#E040FB",
   breeding: "#F9A825",
+  outbreak: "#EC4899",
 };
 
 interface PokemonSandwichSearchProps {
@@ -87,6 +98,12 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
     if (!selectedPokemon) return [];
     if (goal === "breeding") return BREEDING_RECIPES;
     const type = selectedType ?? selectedPokemon.types[0];
+    if (goal === "outbreak") {
+      const entry = MASS_OUTBREAK_GUIDE.find((r) => r.type === type);
+      if (!entry) return [];
+      // herba intentionally empty: outbreak recipes accept any 2 Herba Mystica (shown via condiments).
+      return [{ name: `Mass Outbreak: ${entry.type}`, type: entry.type, ingredients: entry.ingredients, condiments: entry.condiments, powers: entry.powers, herba: [] }];
+    }
     const guide = GUIDE_MAP[goal];
     const entry = guide.find((e) => e.type === type);
     return entry ? [...entry.recipes] : [];
@@ -128,9 +145,11 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
                     {p.types.map((t) => (
                       <span
                         key={t}
-                        className="rounded-sm px-2 py-0.5 text-xs font-bold text-white"
+                        className="inline-flex items-center gap-1 rounded-sm px-2 py-0.5 text-xs font-bold text-white"
                         style={{ background: TYPE_COLORS[t] }}
                       >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={`${SV_SYMBOL}/${TYPE_ID[t]}.png`} alt="" aria-hidden style={{ height: 12, width: "auto", display: "block" }} />
                         {t}
                       </span>
                     ))}
@@ -168,20 +187,24 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
                       key={t}
                       onClick={() => setSelectedType(t)}
                       aria-pressed={selectedType === t}
-                      className="rounded-sm px-2.5 py-0.5 text-xs font-bold text-white transition-opacity"
+                      className="inline-flex items-center gap-1 rounded-sm px-2.5 py-0.5 text-xs font-bold text-white transition-opacity"
                       style={{
                         background: TYPE_COLORS[t],
                         opacity: selectedType === t ? 1 : 0.4,
                       }}
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`${SV_SYMBOL}/${TYPE_ID[t]}.png`} alt="" aria-hidden style={{ height: 12, width: "auto", display: "block" }} />
                       {t}
                     </button>
                   ))
                 ) : (
                   <span
-                    className="rounded-sm px-2.5 py-0.5 text-xs font-bold text-white"
+                    className="inline-flex items-center gap-1 rounded-sm px-2.5 py-0.5 text-xs font-bold text-white"
                     style={{ background: TYPE_COLORS[selectedPokemon.types[0]] }}
                   >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`${SV_SYMBOL}/${TYPE_ID[selectedPokemon.types[0]]}.png`} alt="" aria-hidden style={{ height: 12, width: "auto", display: "block" }} />
                     {selectedPokemon.types[0]}
                   </span>
                 )}
@@ -200,7 +223,7 @@ export function PokemonSandwichSearch({ onSelectRecipe }: PokemonSandwichSearchP
 
       {/* Goal selector */}
       <div className="mb-5 flex gap-0 border border-[var(--pt-border-dim)]">
-        {(["shiny", "encounter", "raid", "breeding"] as Goal[]).map((g, i) => (
+        {(["shiny", "encounter", "raid", "breeding", "outbreak"] as Goal[]).map((g, i) => (
           <button
             key={g}
             onClick={() => setGoal(g)}

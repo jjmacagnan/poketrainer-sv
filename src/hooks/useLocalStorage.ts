@@ -9,7 +9,10 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   useEffect(() => {
     try {
       const item = window.localStorage.getItem(key);
-      if (item !== null) setStoredValue(JSON.parse(item) as T);
+      if (item !== null) {
+        const parsed = JSON.parse(item) as T;
+        queueMicrotask(() => setStoredValue(parsed));
+      }
     } catch {
       // localStorage unavailable or JSON parse error
     }

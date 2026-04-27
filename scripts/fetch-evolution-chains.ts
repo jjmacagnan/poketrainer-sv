@@ -78,16 +78,6 @@ interface OutputEvolutionChain {
   chain: OutputChainLink;
 }
 
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-function formatName(name: string): string {
-  return name
-    .split("-")
-    .map((part) => capitalize(part))
-    .join(" ");
-}
 
 function simplifyEvolutionDetail(detail: EvolutionDetail): OutputEvolutionDetail {
   return {
