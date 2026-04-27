@@ -12,7 +12,36 @@ import itemsData from "@/data/generated/items.json";
 import movesData from "@/data/generated/moves.json";
 
 const abilitiesList = abilitiesData as { name: string; shortEffect: string; flavorText: string }[];
-const itemsList = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
+const extraItems: { name: string; description: string; officialDescription: string; sprite: string }[] = [
+  {
+    name: "Earth Plate",
+    description: "Boosts Ground-type moves and changes Arceus's type.",
+    officialDescription: "An item to be held by a Pokemon. It boosts the power of Ground-type moves.",
+    sprite: "",
+  },
+  {
+    name: "Pixie Plate",
+    description: "Boosts Fairy-type moves and changes Arceus's type.",
+    officialDescription: "An item to be held by a Pokemon. It boosts the power of Fairy-type moves.",
+    sprite: "",
+  },
+  {
+    name: "Spooky Plate",
+    description: "Boosts Ghost-type moves and changes Arceus's type.",
+    officialDescription: "An item to be held by a Pokemon. It boosts the power of Ghost-type moves.",
+    sprite: "",
+  },
+  {
+    name: "Heat Rock",
+    description: "Extends harsh sunlight created by the holder.",
+    officialDescription: "An item to be held by a Pokemon. It extends the duration of Sunny Day.",
+    sprite: "",
+  },
+];
+const itemsList = [
+  ...(itemsData as { name: string; description: string; officialDescription: string; sprite: string }[]),
+  ...extraItems,
+];
 const movesList = movesData as { name: string; effect?: string }[];
 
 const STAT_COLORS: Record<StatName, string> = {
@@ -51,8 +80,13 @@ export function BuildExport({
   const itemData = itemsList.find(i => i.name === item);
 
   useEffect(() => {
-    if (!itemData?.sprite) { setItemSpriteB64(null); return; }
     let cancelled = false;
+    if (!itemData?.sprite) {
+      queueMicrotask(() => {
+        if (!cancelled) setItemSpriteB64(null);
+      });
+      return () => { cancelled = true; };
+    }
     fetch(itemData.sprite)
       .then(r => r.blob())
       .then(blob => new Promise<string>((res, rej) => {

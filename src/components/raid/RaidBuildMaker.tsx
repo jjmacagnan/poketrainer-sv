@@ -99,8 +99,50 @@ const natures = naturesData as Nature[];
 const allMoves = movesData as Move[];
 const allMoveMeta = moveMetaData as MoveMeta[];
 const abilities = abilitiesData as { name: string; effect: string; shortEffect: string; flavorText: string }[];
-const HELD_ITEMS = itemsData as { name: string; description: string; officialDescription: string; sprite: string }[];
+const EXTRA_HELD_ITEMS: { name: string; description: string; officialDescription: string; sprite: string }[] = [
+  {
+    name: "Earth Plate",
+    description: "Boosts Ground-type moves and changes Arceus's type.",
+    officialDescription: "An item to be held by a Pokémon. It boosts the power of Ground-type moves.",
+    sprite: "",
+  },
+  {
+    name: "Pixie Plate",
+    description: "Boosts Fairy-type moves and changes Arceus's type.",
+    officialDescription: "An item to be held by a Pokémon. It boosts the power of Fairy-type moves.",
+    sprite: "",
+  },
+  {
+    name: "Spooky Plate",
+    description: "Boosts Ghost-type moves and changes Arceus's type.",
+    officialDescription: "An item to be held by a Pokémon. It boosts the power of Ghost-type moves.",
+    sprite: "",
+  },
+  {
+    name: "Heat Rock",
+    description: "Extends harsh sunlight created by the holder.",
+    officialDescription: "An item to be held by a Pokémon. It extends the duration of Sunny Day.",
+    sprite: "",
+  },
+];
+const HELD_ITEMS = [
+  ...(itemsData as { name: string; description: string; officialDescription: string; sprite: string }[]),
+  ...EXTRA_HELD_ITEMS,
+];
 const allTypesData = typesData as { name: string; weaknesses: string[]; resistances: string[]; immunities: string[] }[];
+
+function normalizeLookupName(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function findMoveByName(name: string) {
+  const normalized = normalizeLookupName(name);
+  return allMoves.find((move) => normalizeLookupName(move.name) === normalized);
+}
+
+function isDamagingMove(move: Move | undefined) {
+  return Boolean(move && move.power !== null && move.power > 0 && move.category.toLowerCase() !== "status");
+}
 
 const STAT_COLORS: Record<StatName, string> = {
   HP: "#FF5959", Atk: "#F5AC78", Def: "#FAE078",
@@ -335,7 +377,7 @@ export function RaidBuildMaker() {
 
   const updateEV = useCallback((stat: StatName, delta: number) => {
     setBuild((prev) => ({ ...prev, evs: clampEVs(prev.evs, stat, delta) }));
-  }, []);
+  }, [setBuild]);
 
   const handleImport = useCallback(() => {
     const parsed = parseShowdown(importText);
@@ -364,7 +406,7 @@ export function RaidBuildMaker() {
     });
     setShowImport(false);
     setImportText("");
-  }, [importText]);
+  }, [importText, setBuild]);
 
   const pokemonName = build.pokemon?.name ?? build.pokemonFallback?.name ?? "";
 
@@ -423,7 +465,7 @@ export function RaidBuildMaker() {
     });
     setSelectedEntry(null);
     setTab("build");
-  }, []);
+  }, [setBuild]);
 
   const filteredTierList = useMemo(() => {
     return RAID_TIER_LIST.filter((entry) => {
@@ -448,21 +490,6 @@ export function RaidBuildMaker() {
     );
     const bossWeaknesses = new Set((bossTypeData?.weaknesses ?? []).map((w) => w.toLowerCase()));
 
-    const bossBaseWeaknesses = new Set<string>();
-    if (bossPokemon) {
-      const multiplierMap: Record<string, number> = {};
-      TYPES.forEach((t) => { multiplierMap[t] = 1; });
-      bossPokemon.types.forEach((baseType) => {
-        const td = allTypesData.find((x) => x.name.toLowerCase() === baseType.toLowerCase());
-        td?.weaknesses.forEach((w) => { multiplierMap[w.toLowerCase()] = (multiplierMap[w.toLowerCase()] ?? 1) * 2; });
-        td?.resistances.forEach((r) => { multiplierMap[r.toLowerCase()] = (multiplierMap[r.toLowerCase()] ?? 1) * 0.5; });
-        td?.immunities.forEach((i) => { multiplierMap[i.toLowerCase()] = 0; });
-      });
-      Object.entries(multiplierMap).forEach(([type, mult]) => {
-        if (mult > 1) bossBaseWeaknesses.add(type);
-      });
-    }
-
     return RAID_TIER_LIST
       .map((entry) => {
         let bestBuildIndex = 0;
@@ -472,28 +499,14 @@ export function RaidBuildMaker() {
         entry.builds.forEach((build, idx) => {
           const seMoves: string[] = [];
           for (const moveName of build.moves) {
-            const moveData = allMoves.find(
-              (m) => m.name.toLowerCase() === moveName.toLowerCase()
-            );
-            if (moveData && bossWeaknesses.has(moveData.type.toLowerCase())) {
+            const moveData = findMoveByName(moveName);
+            if (isDamagingMove(moveData) && bossWeaknesses.has(moveData!.type.toLowerCase())) {
               seMoves.push(moveName);
             }
           }
-          let baseTypeBonus = 0;
-          if (bossBaseWeaknesses.size > 0) {
-            for (const moveName of build.moves) {
-              const moveData = allMoves.find(
-                (m) => m.name.toLowerCase() === moveName.toLowerCase()
-              );
-              if (moveData && bossBaseWeaknesses.has(moveData.type.toLowerCase())) {
-                baseTypeBonus += 0.5;
-              }
-            }
-          }
 
-          const totalForBuild = seMoves.length + baseTypeBonus;
-          if (totalForBuild > bestSeCount) {
-            bestSeCount = totalForBuild;
+          if (seMoves.length > bestSeCount) {
+            bestSeCount = seMoves.length;
             bestBuildIndex = idx;
             seMovesForBoss = seMoves;
           }
@@ -507,10 +520,10 @@ export function RaidBuildMaker() {
 
         return { entry, score, seMovesForBoss, bestBuildIndex };
       })
-      .filter((r) => r.score > 0)
+      .filter((r) => r.seMovesForBoss.length > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 6);
-  }, [bossTeraType, bossStars, bossPokemon]);
+  }, [bossTeraType, bossStars]);
 
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
@@ -821,7 +834,7 @@ export function RaidBuildMaker() {
                               <div className="mt-1 flex flex-wrap items-center gap-0.5">
                                 <span className="text-ui-sm font-bold text-green-400">{t("raid.coverageLabel")}</span>
                                 {seMovesForBoss.map((mv) => {
-                                  const moveData = allMoves.find((m) => m.name.toLowerCase() === mv.toLowerCase());
+                                  const moveData = findMoveByName(mv);
                                   return (
                                     <span
                                       key={mv}
@@ -1362,7 +1375,7 @@ export function RaidBuildMaker() {
                       filterFn={moveFilter}
                     />
                     {move && (() => {
-                      const selectedMove = allMoves.find((m) => m.name === move);
+                      const selectedMove = findMoveByName(move);
                       const moveKey = move.toLowerCase().replace(/ /g, "-");
                       const meta = allMoveMeta.find((m) => m.name === moveKey);
                       if (!selectedMove) return null;
