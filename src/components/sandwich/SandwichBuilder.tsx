@@ -3,6 +3,14 @@
 import { useState, useMemo } from "react";
 import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
+
+const TYPE_ID: Record<string, number> = {
+  Normal: 1, Fighting: 2, Flying: 3, Poison: 4, Ground: 5,
+  Rock: 6, Bug: 7, Ghost: 8, Steel: 9, Fire: 10,
+  Water: 11, Grass: 12, Electric: 13, Psychic: 14, Ice: 15,
+  Dragon: 16, Dark: 17, Fairy: 18,
+};
+const SV_SYMBOL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small";
 import { ALL_RECIPES, MEAL_POWERS } from "@/data/sandwich-recipes";
 import type { SandwichRecipe } from "@/data/sandwich-recipes";
 import {
@@ -73,9 +81,11 @@ function TypeGuideCard({
       >
         {/* Type badge */}
         <span
-          className="shrink-0 rounded-sm px-2.5 py-1 text-xs font-bold text-white"
+          className="inline-flex shrink-0 items-center gap-1 rounded-sm px-2.5 py-1 text-xs font-bold text-white"
           style={{ background: typeColor }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={`${SV_SYMBOL}/${TYPE_ID[entry.type]}.png`} alt="" aria-hidden style={{ height: 12, width: "auto", display: "block" }} />
           {entry.type}
         </span>
 
@@ -304,13 +314,15 @@ export function SandwichBuilder() {
                 setSelectedType(selectedType === tp ? null : tp);
                 setSelectedEntry(null);
               }}
-              className="border px-3 py-1 text-ui-md font-bold text-white transition-all"
+              className="inline-flex items-center gap-1 border px-3 py-1 text-ui-md font-bold text-white transition-all"
               style={{
                 background: selectedType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
                 borderColor: selectedType === tp ? TYPE_COLORS[tp] : "var(--pt-border-dim)",
                 opacity: selectedType === tp ? 1 : 0.6,
               }}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`${SV_SYMBOL}/${TYPE_ID[tp]}.png`} alt="" aria-hidden style={{ height: 13, width: "auto", display: "block" }} />
               {tp}
             </button>
           ))}

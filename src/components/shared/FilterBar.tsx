@@ -5,6 +5,7 @@ interface FilterOption {
   value: string;
   label: string;
   color?: string;
+  icon?: string;
 }
 
 interface FilterBarProps {
@@ -33,7 +34,7 @@ export function FilterBar({ options, selected, onSelect, allLabel = "Todos" }: F
           <button
             key={opt.value}
             onClick={() => onSelect(isActive ? null : opt.value)}
-            className="border px-3 py-1 text-ui-md font-bold uppercase text-white transition-all"
+            className="inline-flex items-center gap-1 border px-3 py-1 text-ui-md font-bold uppercase text-white transition-all"
             style={{
               background: isActive
                 ? opt.color || "var(--pt-gold)"
@@ -48,6 +49,10 @@ export function FilterBar({ options, selected, onSelect, allLabel = "Todos" }: F
               opacity: isActive ? 1 : 0.75,
             }}
           >
+            {opt.icon && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={opt.icon} alt="" aria-hidden style={{ height: 12, width: "auto", display: "block" }} />
+            )}
             {opt.label}
           </button>
         );
