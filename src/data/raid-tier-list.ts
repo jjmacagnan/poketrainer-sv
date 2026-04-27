@@ -155,7 +155,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
         item: "Shell Bell",
         moves: ["Rage Fist", "Drain Punch", "Bulk Up", "Screech"],
         evs: { HP: 252, Atk: 252, Def: 0, SpA: 0, SpD: 4, Spe: 0 },
-        strategy: "Rage Fist ganha 50 BP a cada hit recebido — perfeito para raids longas. Bulk Up para defesa e ataque. Drain Punch para sustain. Screech para baixar Def do boss.",
+        strategy: "Rage Fist ganha 50 BP a cada hit recebido — perfeito para raids longas. Bulk Up para defesa e ataque. Drain Punch para sustain. Screech para baixar Def do boss. Ghost Tera concede imunidade a Fighting — bloqueia Drain Punch e Body Press de bosses como Chesnaught 7★ Tera Rock.",
       },
       {
         name: "Fighting Tera Drain Punch Build",
