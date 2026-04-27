@@ -11,6 +11,8 @@ export interface RaidBuild {
   ability: string;
   item: string;
   moves: [string, string, string, string];
+  /** Overrides for moves whose effective raid type differs from PokéAPI's base type. */
+  effectiveMoveTypes?: Partial<Record<string, PokemonType>>;
   evs: Record<StatName, number>;
   strategy: string;
 }
@@ -106,6 +108,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
         ability: "Water Absorb",
         item: "Shell Bell",
         moves: ["Ivy Cudgel", "Horn Leech", "Swords Dance", "Play Rough"],
+        effectiveMoveTypes: { "Ivy Cudgel": "Water" },
         evs: { HP: 252, Atk: 252, Def: 0, SpA: 0, SpD: 4, Spe: 0 },
         strategy: "Water mask versão de Ogerpon. Water Absorb cura Water hits. Ivy Cudgel muda para Water STAB. Swords Dance para setup massivo.",
       },
@@ -314,6 +317,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
         ability: "Multitype",
         item: "Earth Plate",
         moves: ["Judgment", "Swords Dance", "Extreme Speed", "Close Combat"],
+        effectiveMoveTypes: { Judgment: "Ground" },
         evs: { HP: 252, Atk: 252, Def: 4, SpA: 0, SpD: 0, Spe: 0 },
         strategy: "Earth Plate transforma Judgment em Ground STAB. Swords Dance para setup. Extreme Speed com prioridade +2. Close Combat para Fighting coverage.",
       },
@@ -951,6 +955,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
         ability: "Multitype",
         item: "Spooky Plate",
         moves: ["Judgment", "Calm Mind", "Recover", "Acid Spray"],
+        effectiveMoveTypes: { Judgment: "Ghost" },
         evs: { HP: 252, Atk: 0, Def: 0, SpA: 252, SpD: 4, Spe: 0 },
         strategy: "Modelo flexível da fonte: troque Tera Type e Plate conforme a fraqueza do boss. Judgment vira o tipo da Plate/Tera, Calm Mind escala e Recover mantém Arceus saudável.",
       },
@@ -961,6 +966,7 @@ export const RAID_TIER_LIST: RaidTierEntry[] = [
         ability: "Multitype",
         item: "Pixie Plate",
         moves: ["Judgment", "Calm Mind", "Focus Blast", "Recover"],
+        effectiveMoveTypes: { Judgment: "Fairy" },
         evs: { HP: 252, Atk: 0, Def: 0, SpA: 252, SpD: 4, Spe: 0 },
         strategy: "Pixie Plate transforma Judgment em Fairy STAB. Recover para sustain confiável. Calm Mind para escalar. Focus Blast para Fighting coverage.",
       },

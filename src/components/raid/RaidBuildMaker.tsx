@@ -14,6 +14,8 @@ import { TYPES, TYPE_COLORS } from "@/data/types";
 import type { PokemonType } from "@/data/types";
 import { RAID_TIER_LIST, TAG_COLORS, TAG_NAMES, TAG_LABELS, type RaidTag, type RaidRole, type RaidTierEntry, type RaidBuild } from "@/data/raid-tier-list";
 import { RAID_BOSSES } from "@/data/raid-bosses";
+import { getBossAttackCategory, type BossAttackCategory } from "@/data/raid-boss-categories";
+import { getBossRecommendations, type BossRecommendation } from "@/lib/raid-boss-finder";
 import { STAT_NAMES, MAX_EV_PER_STAT, MAX_IV } from "@/lib/constants";
 import type { StatName } from "@/lib/constants";
 import { calculateStat, getNatureModifier } from "@/lib/stat-calculator";
@@ -529,54 +531,16 @@ export function RaidBuildMaker() {
     setCustomEntries((prev) => prev.filter((e) => e.customId !== customId));
   }, [setCustomEntries]);
 
+  const bossAttackCategory = useMemo((): BossAttackCategory | null => {
+    if (!bossPokemon) return null;
+    return getBossAttackCategory(bossPokemon.name);
+  }, [bossPokemon]);
+
   // Boss Finder: score tier list entries by type effectiveness against boss tera type
-  const bossRecommendations = useMemo((): {
-  entry: RaidTierEntry;
-  score: number;
-  seMovesForBoss: string[];
-  bestBuildIndex: number;
-}[] => {
+  const bossRecommendations = useMemo((): BossRecommendation[] => {
     if (!bossTeraType) return [];
-
-    const bossTypeData = allTypesData.find(
-      (td) => td.name.toLowerCase() === bossTeraType.toLowerCase()
-    );
-    const bossWeaknesses = new Set((bossTypeData?.weaknesses ?? []).map((w) => w.toLowerCase()));
-
-    return allTierEntries
-      .map((entry) => {
-        let bestBuildIndex = 0;
-        let bestSeCount = -1;
-        let seMovesForBoss: string[] = [];
-
-        entry.builds.forEach((build, idx) => {
-          const seMoves: string[] = [];
-          for (const moveName of build.moves) {
-            const moveData = findMoveByName(moveName);
-            if (isDamagingMove(moveData) && bossWeaknesses.has(moveData!.type.toLowerCase())) {
-              seMoves.push(moveName);
-            }
-          }
-
-          if (seMoves.length > bestSeCount) {
-            bestSeCount = seMoves.length;
-            bestBuildIndex = idx;
-            seMovesForBoss = seMoves;
-          }
-        });
-
-        let score = seMovesForBoss.length * 2;
-        if (entry.tags.includes("Top Pick")) score += 1;
-        if (entry.tags.includes("Solo Viable")) score += 1;
-        if (entry.tags.includes("7★ Ready") && bossStars === 7) score += 1;
-        if (entry.tags.includes("Budget Pick")) score += 0.5;
-
-        return { entry, score, seMovesForBoss, bestBuildIndex };
-      })
-      .filter((r) => r.seMovesForBoss.length > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 6);
-  }, [allTierEntries, bossTeraType, bossStars]);
+    return getBossRecommendations(allTierEntries, bossTeraType, bossStars, bossAttackCategory);
+  }, [allTierEntries, bossTeraType, bossStars, bossAttackCategory]);
 
   const pokemonFilter = useCallback((p: Pokemon, q: string) => p.name.toLowerCase().includes(q), []);
   const moveFilter = useCallback((m: Move, q: string) => m.name.toLowerCase().includes(q), []);
@@ -829,7 +793,7 @@ export function RaidBuildMaker() {
           {/* Recommended builds section */}
           {bossTeraType && (
             <div className="mb-6">
-              <div className="mb-3 flex items-center gap-2">
+              <div className="mb-3 flex flex-wrap items-center gap-2">
                 <span className="text-base">⭐</span>
                 <span className="text-sm font-bold text-yellow-300">{t("raid.recommended")}</span>
                 <span className="rounded-none bg-yellow-500/15 px-2 py-0.5 text-ui-base font-bold text-yellow-400">
@@ -841,6 +805,21 @@ export function RaidBuildMaker() {
                 {bossStars && (
                   <span className="text-xs font-bold text-[var(--pt-text-dim)]">{bossStars}★</span>
                 )}
+                {bossAttackCategory === "physical" && (
+                  <span className="rounded-none border border-orange-500/40 bg-orange-500/10 px-2 py-0.5 text-ui-sm font-bold text-orange-300">
+                    ⚔️ {locale === "pt" ? "Físico — invista em DEF" : "Physical — invest in DEF"}
+                  </span>
+                )}
+                {bossAttackCategory === "special" && (
+                  <span className="rounded-none border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-ui-sm font-bold text-purple-300">
+                    🔮 {locale === "pt" ? "Especial — invista em SpD" : "Special — invest in SpD"}
+                  </span>
+                )}
+                {bossAttackCategory === "both" && (
+                  <span className="rounded-none border border-blue-500/40 bg-blue-500/10 px-2 py-0.5 text-ui-sm font-bold text-blue-300">
+                    ⚔️🔮 {locale === "pt" ? "Físico+Especial — defesas equilibradas" : "Physical+Special — balanced defenses"}
+                  </span>
+                )}
               </div>
 
               {bossRecommendations.length === 0 ? (
@@ -849,7 +828,7 @@ export function RaidBuildMaker() {
                 </div>
               ) : (
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {bossRecommendations.map(({ entry, seMovesForBoss, bestBuildIndex }) => {
+                  {bossRecommendations.map(({ entry, seMovesForBoss, seMoveTypesForBoss, counterMovesForBoss, bestBuildIndex }) => {
                     const spriteNum = entry.spriteId ?? entry.nationalDex;
                     const sprite = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteNum}.png`;
                     const bestBuild = entry.builds[bestBuildIndex];
@@ -888,19 +867,33 @@ export function RaidBuildMaker() {
                                 <span className="text-ui-sm font-bold text-green-400">{t("raid.coverageLabel")}</span>
                                 {seMovesForBoss.map((mv) => {
                                   const moveData = findMoveByName(mv);
+                                  const moveType = seMoveTypesForBoss[mv] ?? moveData?.type;
                                   return (
                                     <span
                                       key={mv}
                                       className="rounded px-1 py-0.5 text-ui-sm font-bold"
                                       style={{
-                                        background: (TYPE_COLORS[moveData?.type as PokemonType] || "#888") + "33",
-                                        color: TYPE_COLORS[moveData?.type as PokemonType] || "#aaa",
+                                        background: (TYPE_COLORS[moveType as PokemonType] || "#888") + "33",
+                                        color: TYPE_COLORS[moveType as PokemonType] || "#aaa",
                                       }}
                                     >
                                       {mv} <span className="text-green-400">SE</span>
                                     </span>
                                   );
                                 })}
+                              </div>
+                            )}
+                            {counterMovesForBoss.length > 0 && (
+                              <div className="mt-1 flex flex-wrap items-center gap-0.5">
+                                <span className="text-ui-sm font-bold text-sky-400">🛡️</span>
+                                {counterMovesForBoss.map((mv) => (
+                                  <span
+                                    key={mv}
+                                    className="rounded border border-sky-500/30 bg-sky-500/10 px-1 py-0.5 text-ui-sm font-bold text-sky-300"
+                                  >
+                                    {mv}
+                                  </span>
+                                ))}
                               </div>
                             )}
                           </div>
