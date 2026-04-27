@@ -1300,6 +1300,7 @@ export const BREEDING_RECIPES: SandwichRecipe[] = [
   },
 ];
 
+// Excludes MASS_OUTBREAK_GUIDE and VGC_ANY_HERBA_GUIDE — those use MassOutbreakRecipe (no name/herba fields).
 export const ALL_RECIPES: SandwichRecipe[] = [
   ...SHINY_GUIDE.flatMap((e) => e.recipes),
   ...ENCOUNTER_GUIDE.flatMap((e) => e.recipes),
