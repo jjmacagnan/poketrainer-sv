@@ -19,7 +19,8 @@ const typeFilterOptions = TYPES.map((tp) => ({
   icon: `${SV_SYMBOL}/${TYPE_ID[tp]}.png`,
 }));
 
-import { ALL_RECIPES, MEAL_POWERS } from "@/data/sandwich-recipes";
+import { ALL_RECIPES } from "@/data/sandwich-guide";
+import { MEAL_POWERS } from "@/data/sandwich-recipes";
 import type { SandwichRecipe } from "@/data/sandwich-recipes";
 import {
   SHINY_GUIDE,
