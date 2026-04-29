@@ -134,6 +134,14 @@ const HELD_ITEMS = [
 ];
 const allTypesData = typesData as { name: string; weaknesses: string[]; resistances: string[]; immunities: string[] }[];
 
+const TYPE_ID: Record<string, number> = {
+  Normal: 1, Fighting: 2, Flying: 3, Poison: 4, Ground: 5,
+  Rock: 6, Bug: 7, Ghost: 8, Steel: 9, Fire: 10,
+  Water: 11, Grass: 12, Electric: 13, Psychic: 14, Ice: 15,
+  Dragon: 16, Dark: 17, Fairy: 18,
+};
+const SV_TYPE_SYMBOL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small";
+
 function normalizeLookupName(name: string) {
   return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
@@ -282,6 +290,8 @@ function MatchupPills({
               borderColor: TYPE_COLORS[type] + "99",
             }}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`${SV_TYPE_SYMBOL}/${TYPE_ID[type]}.png`} alt="" aria-hidden style={{ width: 14, height: 14 }} />
             {type}
             {multiplier !== null && <span className="text-white/70">{multiplier}x</span>}
           </span>
@@ -806,13 +816,15 @@ export function RaidBuildMaker() {
                         <button
                           key={tp}
                           onClick={() => setBossTeraType(bossTeraType === tp ? null : tp)}
-                          className="rounded-none border px-2 py-0.5 text-ui-base font-bold text-white transition-all"
+                          className="flex items-center gap-1 rounded-none border px-2 py-0.5 text-ui-base font-bold text-white transition-all"
                           style={{
                             background: bossTeraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
                             borderColor: bossTeraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.1)",
                             opacity: bossTeraType === tp ? 1 : 0.5,
                           }}
                         >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={`${SV_TYPE_SYMBOL}/${TYPE_ID[tp]}.png`} alt="" aria-hidden style={{ width: 16, height: 16 }} />
                           {tp}
                         </button>
                       ))}
@@ -1308,13 +1320,15 @@ export function RaidBuildMaker() {
                     <button
                       key={type}
                       onClick={() => toggleTypeChartType(type)}
-                      className="rounded-none border px-2.5 py-1 text-ui-base font-bold text-white transition-all"
+                      className="flex items-center gap-1 rounded-none border px-2.5 py-1 text-ui-base font-bold text-white transition-all"
                       style={{
                         background: selected ? TYPE_COLORS[type] : "rgba(255,255,255,0.05)",
                         borderColor: selected ? TYPE_COLORS[type] : "rgba(255,255,255,0.1)",
                         opacity: selected ? 1 : 0.55,
                       }}
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`${SV_TYPE_SYMBOL}/${TYPE_ID[type]}.png`} alt="" aria-hidden style={{ width: 16, height: 16 }} />
                       {type}
                     </button>
                   );
@@ -1547,18 +1561,20 @@ export function RaidBuildMaker() {
             <div className="rounded-none border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-4">
               <div className="mb-2 text-xs font-[family-name:var(--font-share-tech-mono)] uppercase tracking-[2px] text-[var(--pt-gold)]">{t("raid.teraType")}</div>
               <div className="flex flex-wrap gap-1">
-                {TYPES.map((t) => (
+                {TYPES.map((tp) => (
                   <button
-                    key={t}
-                    onClick={() => setBuild((prev) => ({ ...prev, teraType: build.teraType === t ? null : t }))}
-                    className="rounded-none border px-2 py-0.5 text-ui-base font-bold text-white transition-all"
+                    key={tp}
+                    onClick={() => setBuild((prev) => ({ ...prev, teraType: build.teraType === tp ? null : tp }))}
+                    className="flex items-center gap-1 rounded-none border px-2 py-0.5 text-ui-base font-bold text-white transition-all"
                     style={{
-                      background: build.teraType === t ? TYPE_COLORS[t] : "rgba(255,255,255,0.05)",
-                      borderColor: build.teraType === t ? TYPE_COLORS[t] : "rgba(255,255,255,0.1)",
-                      opacity: build.teraType === t ? 1 : 0.5,
+                      background: build.teraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.05)",
+                      borderColor: build.teraType === tp ? TYPE_COLORS[tp] : "rgba(255,255,255,0.1)",
+                      opacity: build.teraType === tp ? 1 : 0.5,
                     }}
                   >
-                    {t}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`${SV_TYPE_SYMBOL}/${TYPE_ID[tp]}.png`} alt="" aria-hidden style={{ width: 16, height: 16 }} />
+                    {tp}
                   </button>
                 ))}
               </div>

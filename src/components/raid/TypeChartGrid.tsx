@@ -85,30 +85,34 @@ export function TypeChartGrid({ highlightTypes = [] }: TypeChartGridProps) {
       {/* Legend */}
       <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-1.5">
         <div className="flex items-center gap-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={symbolIcon("Fighting")} alt="Fighting" width={20} height={20} style={{ objectFit: "contain" }} />
+          <span
+            className="flex h-5 w-8 items-center justify-center rounded-sm font-[family-name:var(--font-share-tech-mono)] text-[11px] font-black"
+            style={{ background: "rgba(239,68,68,0.18)", color: "#f87171", border: "1px solid rgba(239,68,68,0.35)" }}
+          >
+            2×
+          </span>
           <span className="font-[family-name:var(--font-share-tech-mono)] text-[10px] uppercase tracking-widest text-[var(--pt-text-dim)]">
             {pt ? "Super efetivo" : "Super effective"}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={symbolIcon("Water")} alt="Water" width={20} height={20} style={{ objectFit: "contain" }} />
+          <span
+            className="flex h-5 w-8 items-center justify-center rounded-sm font-[family-name:var(--font-share-tech-mono)] text-[11px] font-black"
+            style={{ background: "rgba(96,165,250,0.15)", color: "#93c5fd", border: "1px solid rgba(96,165,250,0.3)" }}
+          >
+            ½×
+          </span>
           <span className="font-[family-name:var(--font-share-tech-mono)] text-[10px] uppercase tracking-widest text-[var(--pt-text-dim)]">
             {pt ? "Pouco efetivo" : "Not very effective"}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="relative flex-shrink-0" style={{ width: 20, height: 20 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={symbolIcon("Ghost")} alt="Ghost" width={20} height={20} style={{ objectFit: "contain", opacity: 0.35 }} />
-            <div
-              className="absolute inset-0 flex items-center justify-center"
-              style={{ fontSize: "10px", fontWeight: 900, color: TYPE_COLORS["Ghost"], lineHeight: 1 }}
-            >
-              ✕
-            </div>
-          </div>
+          <span
+            className="flex h-5 w-8 items-center justify-center rounded-sm font-[family-name:var(--font-share-tech-mono)] text-[11px] font-black"
+            style={{ background: "rgba(113,113,122,0.15)", color: "#a1a1aa", border: "1px solid rgba(113,113,122,0.3)", opacity: 0.7 }}
+          >
+            0×
+          </span>
           <span className="font-[family-name:var(--font-share-tech-mono)] text-[10px] uppercase tracking-widest text-[var(--pt-text-dim)]">
             {pt ? "Sem efeito" : "No effect"}
           </span>
