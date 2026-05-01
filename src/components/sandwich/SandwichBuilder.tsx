@@ -13,7 +13,6 @@ import {
   BREEDING_RECIPES,
   UTILITY_RECIPES,
   MASS_OUTBREAK_GUIDE,
-  VGC_ANY_HERBA_GUIDE,
 } from "@/data/sandwich-guide";
 import type { SandwichGuideEntry, UtilityRecipeGoal } from "@/data/sandwich-guide";
 import { useI18n } from "@/i18n";
@@ -230,11 +229,6 @@ export function SandwichBuilder() {
   const filteredOutbreakGuide = useMemo(() => {
     if (!selectedType) return MASS_OUTBREAK_GUIDE;
     return MASS_OUTBREAK_GUIDE.filter((recipe) => recipe.type === selectedType);
-  }, [selectedType]);
-
-  const filteredVgcAnyHerbaGuide = useMemo(() => {
-    if (!selectedType) return VGC_ANY_HERBA_GUIDE;
-    return VGC_ANY_HERBA_GUIDE.filter((recipe) => recipe.type === selectedType);
   }, [selectedType]);
 
   // Detail view
@@ -559,71 +553,6 @@ export function SandwichBuilder() {
             ))}
           </div>
 
-          <div className="mb-2 mt-5 flex items-center gap-2">
-            <span className="border border-[var(--pt-border-dim)] bg-black/20 px-2 py-0.5 font-[family-name:var(--font-share-tech-mono)] text-ui-xs font-bold uppercase tracking-[2px] text-[var(--pt-text-dim)]">
-              VGC
-            </span>
-            <h3 className="text-sm font-bold text-gray-100">{t("sandwich.vgcAnyHerbaTitle")}</h3>
-          </div>
-          <p className="mb-3 text-xs text-[var(--pt-text-dim)]">{t("sandwich.vgcAnyHerbaInfo")}</p>
-
-          <div className="grid items-start gap-3 lg:grid-cols-2">
-            {filteredVgcAnyHerbaGuide.map((recipe) => (
-              <button
-                key={recipe.type}
-                onClick={() =>
-                  setSelectedRecipe({
-                    name: `VGC Any Herba ${recipe.type}`,
-                    type: recipe.type,
-                    ingredients: recipe.ingredients,
-                    condiments: recipe.condiments,
-                    powers: recipe.powers,
-                    herba: [],
-                  })
-                }
-                className="border border-[var(--pt-border-dim)] bg-[var(--pt-card)] p-3 text-left transition-colors hover:border-yellow-500/40 hover:bg-yellow-500/8"
-              >
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <span
-                    className="inline-flex items-center gap-1 rounded-sm px-2.5 py-1 text-xs font-bold text-white"
-                    style={{ background: TYPE_COLORS[recipe.type] }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`${SV_SYMBOL}/${TYPE_ID[recipe.type]}.png`} alt="" aria-hidden style={{ height: 12, width: "auto", display: "block" }} />
-                    {recipe.type}
-                  </span>
-                  <span className="text-sm font-bold text-gray-100">
-                    Any Herba
-                  </span>
-                </div>
-                <p className="mb-2 text-xs text-[var(--pt-text-dim)]">{recipe.note}</p>
-                <div className="mb-2">
-                  <div className="mb-1 text-ui-base font-bold text-[var(--pt-gold)]">
-                    {t("sandwich.ingredients")}
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {recipe.ingredients.map((ingredient) => (
-                      <span key={ingredient} className="border border-[var(--pt-border-dim)] bg-black/20 px-1.5 py-0.5 text-ui-sm text-gray-200">
-                        {ingredient}
-                      </span>
-                    ))}
-                    {recipe.condiments.map((condiment) => (
-                      <span key={condiment} className="border border-[var(--pt-gold)] bg-[rgba(255,215,0,0.08)] px-1.5 py-0.5 text-ui-sm text-[var(--pt-gold)]">
-                        {condiment}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  {recipe.powers.map((power) => (
-                    <span key={power} className="border border-yellow-500/30 bg-yellow-500/10 px-1.5 py-0.5 text-ui-sm text-yellow-300">
-                      {power}
-                    </span>
-                  ))}
-                </div>
-              </button>
-            ))}
-          </div>
         </div>
       )}
 
